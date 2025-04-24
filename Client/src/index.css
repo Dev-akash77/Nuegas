@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "tailwindcss";
+
+* {
+  font-family: "Outfit", serif;
+}
+@theme {
+  --color-text: #121212;
+  --color-dark-900: #040815;
+  --color-dark-800: #060713;
+  --color-dark-700: #0a0a18;
+  --color-dark-600: #0e0f1d;
+  --color-default: #141522;
+  --color-light-400: #54577a;
+  --color-light-300: #8e92bc;
+  --color-light-200: #c2c6e8;
+  --color-light-100: #dfe1f3;
+  --color-white: #ffffff;
+  --color-background: #fafafa;
+  --color-gray: #f5f5f7;
+}
+/* ! all the color */
+:root {
+  --text: #121212;
+  --dark-900: #040815;
+  --dark-800: #060713;
+  --dark-700: #0a0a18;
+  --dark-600: #0e0f1d;
+  --default: #141522;
+  --light-400: #54577a;
+  --light-300: #8e92bc;
+  --light-200: #c2c6e8;
+  --light-100: #dfe1f3;
+  --white: #ffffff;
+  --background: #fafafa;
+  --gray: #f5f5f7;
+}
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  font-family: "Outfit", serif;
+  box-sizing: border-box;
+}
+body {
+  overflow-x: hidden;
+  font-family: "Outfit", serif;
+  scroll-behavior: smooth;
+  color: var(--text);
+  box-sizing: border-box;
+  background-color: var(--background);
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.container {
+  width: 92%;
+  height: 100%;
+}
+.slidebar_width {
+  width: 80%;
+  height: 100%;
+}
+.cc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.section_margin {
+  margin-top: 6rem;
+}
+.section_gap {
+  margin-top: 5rem;
+}
+
+.page_height_gap {
+  padding: 2rem 0;
+}
+
+@media (max-width: 450px) {
+  .container {
+    width: 95%;
+    height: 100%;
+  }
+  .slidebar_width {
+    width: 80%;
+    height: 100%;
+  }
+}
+
+/* ! help card pseudo element */
+.seudo_help::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  background-color: var(--default);
+  height: 4rem;
+  width: 4rem;
+  border-radius: 0.5rem 0 5rem 0;
+}
+.seudo_help::before {
+  position: absolute;
+  content: "";
+  bottom: 0;
+  right: 0;
+  background-color: var(--default);
+  height: 4rem;
+  width: 4rem;
+  border-radius: 5rem 0 0.5rem 0;
+}
+
+/* !swiper js styling */
+.swiper {
+  padding-bottom: 3rem;
+}
+
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.swiper-pagination-bullet {
+  background-color: var(--dark-600) !important;
+  opacity: 1;
+  margin: 0 8px;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: var(--dark-900) !important;
+}
+
