@@ -5,8 +5,9 @@ import Mentor from "./Pages/Mentor";
 import Message from "./Pages/Message";
 import Task from "./Pages/Task";
 import AddTask from "./Pages/AddTask";
-import Profile from './Pages/Profile';
-import Layout from './Layout/Layout';
+import Profile from "./Pages/Profile";
+import Layout from "./Layout/Layout";
+import { GlobalContextProvider } from "./Context/GlobalContext";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -41,8 +42,12 @@ const App = () => {
       ],
     },
   ]);
-  
-  return <RouterProvider router={router}></RouterProvider>;
+
+  return (
+    <GlobalContextProvider>
+      <RouterProvider router={router}></RouterProvider>;
+    </GlobalContextProvider>
+  );
 };
 
 export default App;

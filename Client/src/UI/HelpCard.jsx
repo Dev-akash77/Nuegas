@@ -2,7 +2,7 @@ import React from "react";
 
 const HelpCard = () => {
   return (
-    <div className="bg-black rounded-md py-3 px-1 h-[15rem] text-white w-[95%] relative items-center flex flex-col seudo_help">
+    <div className="bg-black rounded-md py-3 px-1 h-[15rem] text-white w-[95%] relative items-center md:flex hidden flex-col seudo_help">
       <h1 className="text-lg cc mt-7">Help Center</h1>
       <p className="w-full text-center mt-3 text-sm">
         Having Trouble in Learning. Please contact us for more questions.

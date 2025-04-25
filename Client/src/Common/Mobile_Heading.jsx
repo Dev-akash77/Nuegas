@@ -1,11 +1,15 @@
 import React from "react";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { CiBellOn } from "react-icons/ci";
+import { useGlobalContext } from "../Context/GlobalContext";
 const Mobile_Heading = () => {
+    const {menuOpen,setMenuOpen} = useGlobalContext();
   return (
-    <div className="flex items-center justify-center z-20 top-0 h-[4rem] bg-background fixed w-screen">
-      <div className="container h-full flex items-center justify-between">
-        <FaBarsStaggered className="text-3xl" />
+    <div className="flex items-center justify-center z-[10] top-0 h-[4rem] bg-background fixed w-screen">
+      <div className="container h-full flex items-center justify-between ">
+        <div className="relative z-[11] cursor-pointer">
+          <FaBarsStaggered className="text-2xl" onClick={()=>{setMenuOpen(true)}}/>
+        </div>
         <div className="flex gap-5 items-center justify-center">
           <div className="relative cursor-pointer">
             <CiBellOn className="text-[1.7rem]" />

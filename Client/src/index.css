@@ -79,11 +79,11 @@ body {
 
 @media (max-width: 450px) {
   .container {
-    width: 92%;
+    width: 90%;
     height: 100%;
   }
   .slidebar_width {
-    width: 80%;
+    width: 85%;
     height: 100%;
   }
   .page_height_gap {
