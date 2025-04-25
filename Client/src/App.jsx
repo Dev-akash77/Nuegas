@@ -1,12 +1,12 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./Components/Layout";
 import Home from "./Pages/Home";
 import Mentor from "./Pages/Mentor";
 import Message from "./Pages/Message";
 import Task from "./Pages/Task";
 import AddTask from "./Pages/AddTask";
 import Profile from './Pages/Profile';
+import Layout from './Layout/Layout';
 
 const App = () => {
   const router = createBrowserRouter([

@@ -39,12 +39,12 @@ const Chart = () => {
     { name: "Compleate", value: 3 },
   ];
 
-  const COLORS = ["#546FFF", "#FFC73A", "#9CD323"];
+  const COLORS = ["#546FFF", "#FFC73A", "#9CD323"]; 
 
   return (
-    <div className="w-full bg-gray h-full flex items-center justify-between gap-4 p-4 rounded-md">
+    <div className="w-full bg-gray h-full flex md:flex-row flex-col items-center justify-between gap-4 p-4 rounded-md">
       {/* Weekly chart */}
-      <div className="w-[60%] h-full">
+      <div className="md:w-[60%] w-full h-full">
         <div className="w-full flex items-center justify-between mb-2">
           <p className="text-lg font-medium">Activity</p>
           <p className="text-md text-black">This Week</p>
@@ -138,7 +138,7 @@ const Chart = () => {
       </div>
 
       {/* Chart status - can be used for stats/-progress,-pending,-compleate */}
-      <div className="w-[40%] h-full bg-white rounded-md flex flex-col items-center justify-center p-4">
+      <div className="md:w-[40%] w-full h-full bg-white rounded-md flex flex-col items-center justify-center p-4">
         <ResponsiveContainer width="100%" height={100}>
           <PieChart>
             <Pie

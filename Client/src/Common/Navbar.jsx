@@ -19,10 +19,10 @@ const Navbar = () => {
       <div className="w-full">
         {/* logo */}
         <Link to={"/"} className="flex items-center justify-start gap-3 w-full">
-          <span className="text-xl bg-dark-900 p-2 rounded-md text-white">
+          <span className="text-xl bg-default p-2 rounded-md text-white">
             <FaBookOpen className="font-semibold" />
           </span>
-          <h1 className="text-4xl">Nuegas</h1>
+          <h1 className="text-4xl text-dark-800">Nuegas</h1>
         </Link>
 
         {/* navigation bar */}

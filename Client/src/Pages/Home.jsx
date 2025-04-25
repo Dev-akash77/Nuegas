@@ -3,22 +3,17 @@ import Heading_page from "../Common/Heading_page";
 import Activity from "../Components/Activity";
 import Chart from "../Components/Chart";
 import Members from "../Common/Members";
-import { Swiper, SwiperSlide } from "swiper/react";
-//! Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "../index.css"
-// !import required modules
-import { Pagination ,Autoplay} from "swiper/modules";
+import Swiper_component from "../Common/Swiper_component";
+import Heading from "../Common/Heading";
+import Taks_upcoming from './../Common/Taks_upcoming';
 
 const Home = () => {
-  
   return (
     <div className="w-full h-full">
       {/* ! headoing */}
       <Heading_page />
 
-      <div className="my-7 flex items-center justify-between gap-5 h-[15rem]">
+      <div className="my-7 flex md:flex-row flex-col items-center justify-between gap-5 md:h-[15rem]">
         {/* Activity Task*/}
         <Activity />
         {/* chart */}
@@ -27,31 +22,15 @@ const Home = () => {
 
       {/* monthly mentors */}
       <div className="mt-5 pb-10">
-  <h2 className="text-xl font-medium">Monthly Mentors</h2>
-  <Swiper
-    spaceBetween={10}
-    pagination={{ dynamicBullets: true }}
-    autoplay={{
-      delay: 1500,
-      disableOnInteraction: false,
-    }}
-    breakpoints={{
-      640: { slidesPerView: 1 },
-      768: { slidesPerView: 2 },
-      1024: { slidesPerView: 3 },
-      1280: { slidesPerView: 3 },
-    }}
-    modules={[Pagination, Autoplay]}
-    className="mt-5"
-  >
-    {[1, 3, 4, 2, 6, 4, 5, 6].map((id) => (
-      <SwiperSlide key={id}>
-        <Members />
-      </SwiperSlide>
-    ))}
-  </Swiper>
-</div>
+        <Heading text={"Monthly Mentors"} />
+        <Swiper_component data={[1,2,3,4,5,6,7,3,5]} component={<Members />} delay={1500} />
+      </div>
 
+      {/* Upcoming Task */}
+      <div className="pb-5">
+        <Heading text={"Upcoming Task"}/>
+        <Swiper_component data={[1,2,3,4,5,6,7,3,5]} component={<Taks_upcoming />} delay={3000} />
+      </div>
     </div>
   );
 };

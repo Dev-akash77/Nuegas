@@ -1,10 +1,16 @@
 import React from "react";
 import noteIcon from "../assets/note-2.svg";
 import { FaStar } from "react-icons/fa";
+import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
+import { motion } from "framer-motion";
 
-const Members = ({}) => {
+const Members = ({id,cur}) => {    
+  const slideUp = Use_Slie_Up(40, 0.5,id*0.3);
   return (
-    <div className="bg-white px-4 border py-5 w-[23rem] flex-shrink-0 rounded-md flex flex-col justify-center gap-5">
+    <motion.div
+      className="bg-white px-4 py-4 md:w-[22rem] flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer"
+      {...slideUp}
+    >
       <div className="flex items-center gap-3">
         <img
           src="https://res.cloudinary.com/dekfjauox/image/upload/v1745469974/Qubiko_User/yn8vmoysy2evbjpnffwh.webp"
@@ -22,11 +28,11 @@ const Members = ({}) => {
           <p>40 Task</p>
         </div>
         <div className="flex items-center gap-1">
-          <FaStar className="text-yellow-500"/>
+          <FaStar className="text-yellow-500" />
           <p>(300 Reviews)</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

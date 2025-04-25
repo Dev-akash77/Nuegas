@@ -1,14 +1,16 @@
 import React from 'react'
 import { CiBellOn } from 'react-icons/ci';
+import Mobile_Heading from './Mobile_Heading';
 
 const Heading_page = () => {
   return (
-      <div className="w-full flex items-center justify-between">
-           <div>
+      <div className="w-full flex md:flex-row flex-col md:items-center md:justify-between">
+           <div className=''>
              <p className="text-[1.5rem] font-[500]">Hi, Akash Biswas</p>
              <p className="text-gray-600 text-lg">Let's finish your task today!</p>
            </div>
-           <div className="flex gap-5 items-center justify-center">
+
+           <div className="md:flex gap-5 items-center justify-center hidden">
              <div className="relative cursor-pointer">
                <CiBellOn className="text-[1.7rem]" />
                <div className="absolute bg-red-600 p-1 top-0 right-1 rounded-full"></div>
