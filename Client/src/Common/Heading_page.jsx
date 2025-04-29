@@ -1,6 +1,5 @@
 import React from 'react'
 import { CiBellOn } from 'react-icons/ci';
-import Mobile_Heading from './Mobile_Heading';
 
 const Heading_page = () => {
   return (

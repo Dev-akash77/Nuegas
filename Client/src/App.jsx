@@ -1,5 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Home from "./Pages/Home";
 import Mentor from "./Pages/Mentor";
 import Message from "./Pages/Message";
@@ -8,12 +9,15 @@ import AddTask from "./Pages/AddTask";
 import Profile from "./Pages/Profile";
 import Layout from "./Layout/Layout";
 import { GlobalContextProvider } from "./Context/GlobalContext";
+import Auth from "./Pages/Auth";
+import { ToastContainer } from "react-toastify";
+import ProtectRutes from "./Security/ProtectRutes";
 
 const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />,
+      element: <ProtectRutes><Layout /></ProtectRutes>,
       children: [
         {
           index: true,
@@ -41,12 +45,22 @@ const App = () => {
         },
       ],
     },
+    {
+      path: "auth",
+      element: <Auth />,
+    },
   ]);
 
+  // ! query client from tanstack/react query
+  const queryClient = new QueryClient();
+
   return (
-    <GlobalContextProvider>
-      <RouterProvider router={router}></RouterProvider>;
-    </GlobalContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <GlobalContextProvider>
+        <RouterProvider router={router}></RouterProvider>
+        <ToastContainer />
+      </GlobalContextProvider>
+    </QueryClientProvider>
   );
 };
 
