@@ -3,59 +3,57 @@ import { useGlobalContext } from "../Context/GlobalContext";
 import { loginApi, signupApi } from "../Api/GlobalApi";
 import { toast } from "react-toastify";
 import Element_Loader from "../UI/Element_Loader";
-import CheckSecurity from "../Security/CheckSecurity";
 import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
-  const { isLogin, fromData, setFromData, setIsLogin } = useGlobalContext();
+  const {
+    isLogin,
+    fromData,
+    setFromData,
+    setIsLogin,
+    userIsLogin,
+    setUserIsLogin,
+  } = useGlobalContext();
   const [loading, setloading] = useState(false);
-  const { data, isLoading,refetch } = CheckSecurity();
   const navigate = useNavigate();
 
+
+
+
+  // !always redirect to home page
   useEffect(() => {
-    if (!isLoading) {
-      if (!data?.success) {
-        navigate("/auth");
-      }
+    if (userIsLogin) {
+      navigate("/");
     }
-  }, [data, isLoading, navigate]);
+  }, [userIsLogin]);
+  
 
   // ! handle authentication
   const handleAuthentication = async (e) => {
     e.preventDefault();
     setloading(true);
+  
     try {
-      //  ! call api for signup
-      if (!isLogin) {
-        const data = await signupApi(fromData);
-
-        if (data?.success) {
-          toast.success(data?.message);
-          setFromData({
-            name: "",
-            email: "",
-            password: "",
-          });
-          refetch();
-        }
+      let data;
+  
+      if (isLogin) {
+        data = await loginApi(fromData);
       } else {
-        const data = await loginApi(fromData);
-        if (data?.success) {
-          toast.success(data?.message);
-          setFromData({
-            name: "",
-            email: "",
-            password: "",
-          });
-          refetch();
-        }
+        data = await signupApi(fromData);
+      }
+  
+      if (data?.success) {
+        toast.success(data.message || "Success");
+        setUserIsLogin(true); 
+        navigate("/"); 
       }
     } catch (error) {
-      console.log(error);
+      console.log("Auth error", error);
     } finally {
       setloading(false);
     }
   };
+  
 
   // ! changing from data
   const handleInputChange = (e) => {

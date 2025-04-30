@@ -25,6 +25,8 @@ export const signupApi = async (fromData) => {
 // ! ================================================== api call for login ===========================================================================
 export const loginApi = async (fromData) => {
     try {
+        console.log(fromData);
+        
         const { data } = await api.post("/auth/login", fromData);
         return data;
     } catch (error) {
@@ -34,16 +36,3 @@ export const loginApi = async (fromData) => {
 };
 // ! ===================================================================================================================================================
 
-
-
-// ! ================================================== api call for security check =====================================================================
-export const securityApi = async () => {
-    try {
-        const { data } = await api.get("/auth/authProtction");
-        return data;
-    } catch (error) {
-        console.log("securityApi error", error);
-        return { success: false };
-    }
-};
-// ! ===================================================================================================================================================

@@ -1,27 +1,16 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MainLoader from "../UI/MainLoader";
-import CheckSecurity from "./CheckSecurity";
+import { useGlobalContext } from "./../Context/GlobalContext";
 
 const ProtectRutes = ({ children }) => {
-  const { data, isLoading } = CheckSecurity();
+  const { userIsLogin } = useGlobalContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!data?.success) {
-        navigate("/auth");
-      }
+    if (!userIsLogin) {
+      navigate("/auth");
     }
-  }, [data, isLoading, navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="h-screen w-screen cc overflow-hidden">
-        <MainLoader />
-      </div>
-    );
-  }
+  }, [userIsLogin, navigate]);
 
   return children;
 };

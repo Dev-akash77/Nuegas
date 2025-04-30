@@ -151,30 +151,3 @@ export const logoutController = async (req, res) => {
 // !============================================================================================================================================
 // ?============================================================================================================================================
 
-//!=============================================================================================================================================
-// !====================================================  Auth Security Controller =============================================================
-//* - Handles user security check
-//* - Checks if the token exists in the browser cookies
-//* - Responds with a success message if the token is found
-//* - If token is valid, redirects the user to the home page
-//* - Sends a 400 error if no token is found
-//* - Responds with an error message if any issue occurs
-// ?============================================================================================================================================
-
-export const authSecurityController = async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    if (!token) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No token found" });
-    }
-    res.status(200).json({ success: true, message: "Authenticated successfully" });
-  } catch (error) {
-    //? Send a response with status 500 in case of error
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// !============================================================================================================================================
-// ?============================================================================================================================================

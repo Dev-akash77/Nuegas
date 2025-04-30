@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  authSecurityController,
   loginController,
   logoutController,
   registerController,
@@ -28,8 +27,6 @@ router.post("/login", loginController);
 //? POST request to "/logout" to handle user registration
 router.post("/logout", userSecurityMiddleware, logoutController);
 
-//? POST request to "/authProtction" to handle user registration
-router.get("/authProtction", authSecurityController);
 
 //? Export the authentication router for use in the main app
 export const authRouter = router;
