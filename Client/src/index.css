@@ -6,14 +6,14 @@
 }
 @theme {
   --color-text: #121212;
-  --color-dark-900: #10197A;
-  --color-dark-800: #1A2793;
-  --color-dark-700: #2A3BB7;
-  --color-dark-600: #3D53DB;
-  --color-default: #546FFF;
-  --color-light-400: #9F84FD;
-  --color-light-300: #98ABFF;
-  --color-light-200: #BAC8FF;
+  --color-dark-900: #040815;
+  --color-dark-800: #060713;
+  --color-dark-700: #0A0A18;
+  --color-dark-600: #0E0F1D;
+  --color-default: #141522;
+  --color-light-400: #54577A;
+  --color-light-300: #8E92BC;
+  --color-light-200: #c2c6e8;
   --color-light-100: #DCE4FF;
   --color-white: #ffffff;
   --color-background: #fafafa;
@@ -22,12 +22,12 @@
 /* ! all the color */
 :root {
   --text: #121212;
-  --dark-900: #10197A;
-  --dark-800: #1A2793;
-  --dark-700: #2A3BB7;
-  --dark-600: #3D53DB;
-  --default: #546FFF;
-  --light-400: #54577a;
+  --dark-900: #040815;
+  --dark-800: #060713;
+  --dark-700: #0A0A18;
+  --dark-600: #0E0F1D;
+  --default: #141522;
+  --light-400: #54577A;
   --light-300: #8e92bc;
   --light-200: #c2c6e8;
   --light-100: #DCE4FF;
@@ -301,7 +301,7 @@ body {
 
 .dot-spinner {
   --uib-size: 3.5rem;
-  --uib-speed: .9s;
+  --uib-speed: .3s;
   --uib-color: var(--default);
   position: relative;
   display: flex;
@@ -402,3 +402,58 @@ body {
     opacity: 1;
   }
 }
+
+
+
+
+/* From Uiverse.io by barisdogansutcu */ 
+.ui_button {
+  --color: var(--default);
+  font-family: inherit;
+  display: inline-block;
+  width: 8em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 17px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+}
+
+.ui_button:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+}
+
+.ui_button:hover {
+  color: #fff;
+}
+
+.ui_button:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.ui_button:hover:before {
+  top: -30px;
+  left: -30px;
+}
+
+.ui_button:active:before {
+  background: var(--default);
+  transition: background 0s;
+}
+

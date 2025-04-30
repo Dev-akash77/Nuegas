@@ -9,6 +9,7 @@ import { CiSquarePlus } from "react-icons/ci";
 import { Link, NavLink } from "react-router-dom";
 import HelpCard from "../UI/HelpCard";
 import { useGlobalContext } from "../Context/GlobalContext";
+import nuegasLogo from "../assets/nuegas_logo-removebg-preview.png"
 const Navbar = () => {
   
     const {setMenuOpen} = useGlobalContext();
@@ -23,8 +24,8 @@ const Navbar = () => {
       <div className="w-full">
         {/* logo */}
         <Link to={"/"} className="flex items-center justify-start gap-3 w-full md:mt-0 mt-10">
-          <span className="text-xl bg-default p-2 rounded-md text-white">
-            <FaBookOpen className="font-semibold" />
+          <span className="rounded-md text-white">
+            <img src={nuegasLogo} alt="nuegas Logo" className="w-[3.3rem]" />
           </span>
           <h1 className="text-4xl text-dark-800">Nuegas</h1>
         </Link>

@@ -4,6 +4,7 @@ import "dotenv/config";
 import { DataBaseConnect } from "./Config/database.config.js";
 import { authRouter } from "./Routes/auth.routes.js";
 import cookieParser from "cookie-parser";
+import { userRouter } from "./Routes/user.routes.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -37,6 +38,10 @@ DataBaseConnect();
 
 //* { Auth Rutes Endpoints }
 app.use("/auth",authRouter)
+
+//* { user Rutes Endpoints }
+app.use("/user",userRouter)
+
 //! ===================================================
 
 

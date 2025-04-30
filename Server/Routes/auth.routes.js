@@ -10,9 +10,9 @@ import { userSecurityMiddleware } from "../Middleware/user.middleware.js";
 // ?==============  Authentication Routes ============
 // ?===================================================
 //* - Handles user signup requests for registration
-//* - Routes POST request to "/signup" to the registerController function
-//* - The registerController is responsible for handling user registration logic
-//* - It ensures proper error handling for failed registration attempts
+//* - Handles user login requests for login
+//* - Handles user logout requests for logout
+
 // !===================================================
 
 //? Initialize the express router for authentication routes
@@ -26,7 +26,6 @@ router.post("/login", loginController);
 
 //? POST request to "/logout" to handle user registration
 router.post("/logout", userSecurityMiddleware, logoutController);
-
 
 //? Export the authentication router for use in the main app
 export const authRouter = router;
