@@ -3,12 +3,18 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../Common/Navbar";
 import Mobile_Heading from "../Common/Mobile_Heading";
 import { useGlobalContext } from "../Context/GlobalContext";
+import MainLoader from './../UI/MainLoader';
 
 const Layout = () => {
-  const {menuOpen,setMenuOpen} = useGlobalContext();
+  const {menuOpen,setMenuOpen,profileIsLoading} = useGlobalContext();
+
+  if (profileIsLoading) {
+   return <div className="h-screen cc w-screen"><MainLoader/></div>
+  }
+
   return (
     <div className="flex items-center justify-between w-full overflow-hidden">
-      <nav className={`md:bg-white flex flex-row md:flex-col justify-center items-center md:w-[18%] md:static fixed overflow-hidden z-[999] w-screen h-[100dvh] top-0 ${menuOpen?"right-0":"right-100"} duration-300`}>
+      <nav className={`md:bg-white flex flex-row md:flex-col justify-center items-center md:w-[18%] md:static fixed overflow-hidden z-[999] w-screen h-[100dvh] top-0 ${menuOpen?"right-0":"right-200"} duration-300`}>
         <div className="slidebar_width bg-white md:px-0 px-5">
           <Navbar />
         </div>

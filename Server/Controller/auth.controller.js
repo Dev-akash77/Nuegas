@@ -29,7 +29,7 @@ export const registerController = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "User already exists" });
-    }
+    } 
 
     if (password.length < 6) {
       return res

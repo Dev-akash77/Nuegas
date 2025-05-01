@@ -29,3 +29,4 @@ router.post("/logout", userSecurityMiddleware, logoutController);
 
 //? Export the authentication router for use in the main app
 export const authRouter = router;
+ 

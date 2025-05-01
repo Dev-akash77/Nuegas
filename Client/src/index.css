@@ -52,6 +52,10 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+::selection{
+  background-color: var(--dark-900);
+  color: var(--white);
+}
 .container {
   width: 95%;
   height: 100%;
@@ -159,6 +163,7 @@ body {
 
 
 /* !loader */
+/* !loader */
 .spinner {
   font-size: 24px;
   position: relative;
@@ -184,105 +189,67 @@ body {
   height: 0.2777em;
   border-radius: 0.0555em;
   background-color: transparent;
-  -webkit-transform-origin: center -0.2222em;
-  -ms-transform-origin: center -0.2222em;
   transform-origin: center -0.2222em;
-  animation: spinner-fade9234 1s infinite linear;
+  animation: spinner-fade9234 0.8s infinite linear; /* slower than 0.5s */
 }
 
 .spinner .spinner-blade:nth-child(1) {
-  -webkit-animation-delay: 0s;
   animation-delay: 0s;
-  -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
   transform: rotate(0deg);
 }
 
 .spinner .spinner-blade:nth-child(2) {
-  -webkit-animation-delay: 0.083s;
-  animation-delay: 0.083s;
-  -webkit-transform: rotate(30deg);
-  -ms-transform: rotate(30deg);
+  animation-delay: 0.067s;
   transform: rotate(30deg);
 }
 
 .spinner .spinner-blade:nth-child(3) {
-  -webkit-animation-delay: 0.166s;
-  animation-delay: 0.166s;
-  -webkit-transform: rotate(60deg);
-  -ms-transform: rotate(60deg);
+  animation-delay: 0.134s;
   transform: rotate(60deg);
 }
 
 .spinner .spinner-blade:nth-child(4) {
-  -webkit-animation-delay: 0.249s;
-  animation-delay: 0.249s;
-  -webkit-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
+  animation-delay: 0.201s;
   transform: rotate(90deg);
 }
 
 .spinner .spinner-blade:nth-child(5) {
-  -webkit-animation-delay: 0.332s;
-  animation-delay: 0.332s;
-  -webkit-transform: rotate(120deg);
-  -ms-transform: rotate(120deg);
+  animation-delay: 0.268s;
   transform: rotate(120deg);
 }
 
 .spinner .spinner-blade:nth-child(6) {
-  -webkit-animation-delay: 0.415s;
-  animation-delay: 0.415s;
-  -webkit-transform: rotate(150deg);
-  -ms-transform: rotate(150deg);
+  animation-delay: 0.335s;
   transform: rotate(150deg);
 }
 
 .spinner .spinner-blade:nth-child(7) {
-  -webkit-animation-delay: 0.498s;
-  animation-delay: 0.498s;
-  -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
+  animation-delay: 0.402s;
   transform: rotate(180deg);
 }
 
 .spinner .spinner-blade:nth-child(8) {
-  -webkit-animation-delay: 0.581s;
-  animation-delay: 0.581s;
-  -webkit-transform: rotate(210deg);
-  -ms-transform: rotate(210deg);
+  animation-delay: 0.469s;
   transform: rotate(210deg);
 }
 
 .spinner .spinner-blade:nth-child(9) {
-  -webkit-animation-delay: 0.664s;
-  animation-delay: 0.664s;
-  -webkit-transform: rotate(240deg);
-  -ms-transform: rotate(240deg);
+  animation-delay: 0.536s;
   transform: rotate(240deg);
 }
 
 .spinner .spinner-blade:nth-child(10) {
-  -webkit-animation-delay: 0.747s;
-  animation-delay: 0.747s;
-  -webkit-transform: rotate(270deg);
-  -ms-transform: rotate(270deg);
+  animation-delay: 0.603s;
   transform: rotate(270deg);
 }
 
 .spinner .spinner-blade:nth-child(11) {
-  -webkit-animation-delay: 0.83s;
-  animation-delay: 0.83s;
-  -webkit-transform: rotate(300deg);
-  -ms-transform: rotate(300deg);
+  animation-delay: 0.67s;
   transform: rotate(300deg);
 }
 
 .spinner .spinner-blade:nth-child(12) {
-  -webkit-animation-delay: 0.913s;
-  animation-delay: 0.913s;
-  -webkit-transform: rotate(330deg);
-  -ms-transform: rotate(330deg);
+  animation-delay: 0.737s;
   transform: rotate(330deg);
 }
 
@@ -299,9 +266,10 @@ body {
 
 
 
+
 .dot-spinner {
   --uib-size: 3.5rem;
-  --uib-speed: .3s;
+  --uib-speed: .9s;
   --uib-color: var(--default);
   position: relative;
   display: flex;
@@ -407,53 +375,97 @@ body {
 
 
 /* From Uiverse.io by barisdogansutcu */ 
+ /* From Uiverse.io by zjssun */ 
 .ui_button {
-  --color: var(--default);
-  font-family: inherit;
-  display: inline-block;
-  width: 8em;
-  height: 2.6em;
-  line-height: 2.5em;
-  margin: 20px;
   position: relative;
-  cursor: pointer;
-  overflow: hidden;
-  border: 2px solid var(--color);
-  transition: color 0.5s;
-  z-index: 1;
-  font-size: 17px;
+  padding: 10px 22px;
   border-radius: 6px;
-  font-weight: 500;
-  color: var(--color);
-}
-
-.ui_button:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  background: var(--color);
-  height: 150px;
-  width: 200px;
-  border-radius: 50%;
-}
-
-.ui_button:hover {
+  border: none;
   color: #fff;
+  cursor: pointer;
+  background-color: var(--dark-700);
+  transition: all 0.2s ease;
 }
 
-.ui_button:before {
-  top: 100%;
-  left: 100%;
-  transition: all 0.7s;
+.ui_button:active {
+  transform: scale(0.96);
+}
+
+.ui_button:before,
+.ui_button:after {
+  position: absolute;
+  content: "";
+  width: 150%;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1000;
+  background-repeat: no-repeat;
 }
 
 .ui_button:hover:before {
-  top: -30px;
-  left: -30px;
+  top: -70%;
+  background-image: radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, transparent 20%, var(--dark-700) 20%, transparent 30%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, var(--dark-700) 15%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%);
+  background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+    10% 10%, 18% 18%;
+  background-position: 50% 120%;
+  animation: greentopBubbles 0.6s ease;
 }
 
-.ui_button:active:before {
-  background: var(--default);
-  transition: background 0s;
+@keyframes greentopBubbles {
+  0% {
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+      40% 90%, 55% 90%, 70% 90%;
+  }
+
+  50% {
+    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+      50% 50%, 65% 20%, 90% 30%;
+  }
+
+  100% {
+    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+      50% 40%, 65% 10%, 90% 20%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
 }
 
+.ui_button:hover::after {
+  bottom: -70%;
+  background-image: radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, var(--dark-700) 15%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%),
+    radial-gradient(circle, var(--dark-700) 20%, transparent 20%);
+  background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+  background-position: 50% 0%;
+  animation: greenbottomBubbles 0.6s ease;
+}
+
+@keyframes greenbottomBubbles {
+  0% {
+    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+      70% -10%, 70% 0%;
+  }
+
+  50% {
+    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+      105% 0%;
+  }
+
+  100% {
+    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+      110% 10%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}

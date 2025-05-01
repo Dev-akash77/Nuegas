@@ -22,7 +22,7 @@ export const GlobalContextProvider = ({ children }) => {
 
   // ! get user profile via tanstack query
   const {
-    data: profileData,
+    data: profileData, 
     refetch: profileRefetch,
     isLoading: profileIsLoading,
   } = useQuery({
