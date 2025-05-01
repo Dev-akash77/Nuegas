@@ -5,6 +5,7 @@ import { DataBaseConnect } from "./Config/database.config.js";
 import { authRouter } from "./Routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./Routes/user.routes.js";
+import { cloudenaryConnection } from "./Config/cloudenary.config.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -16,7 +17,7 @@ const PORT = process.env.PORT;
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "https://nuegas-akash.vercel.app",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","PUT"],
     credentials: true,
   })
 ); 
@@ -29,6 +30,9 @@ app.use(cookieParser())
 //! ===================================================
 //? { MongoDB Connection }
 DataBaseConnect();
+
+//? { Cloudenary Connection }
+cloudenaryConnection();
 //! ===================================================
 
 

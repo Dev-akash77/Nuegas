@@ -53,3 +53,15 @@ export const profileApi = async () => {
   }
 };
 // ! ===================================================================================================================================================
+
+// ! ================================================== api call for profile ===========================================================================
+export const profile_UpdateApi = async (fromData) => {
+  try {
+    const { data } = await api.put("/user/profile-update",fromData);
+    return data;
+  } catch (error) {
+    console.log("profile Update Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===================================================================================================================================================
