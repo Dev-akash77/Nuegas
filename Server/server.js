@@ -6,6 +6,7 @@ import { authRouter } from "./Routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./Routes/user.routes.js";
 import { cloudenaryConnection } from "./Config/cloudenary.config.js";
+import { taskRouter } from "./Routes/task.routes.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -22,6 +23,7 @@ app.use(
   })
 ); 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 //! ===================================================
 
@@ -45,6 +47,9 @@ app.use("/auth",authRouter)
 
 //* { user Rutes Endpoints }
 app.use("/user",userRouter)
+
+//* { task Rutes Endpoints }
+app.use("/task",taskRouter)
 
 //! ===================================================
 

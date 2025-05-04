@@ -57,10 +57,34 @@ export const profileApi = async () => {
 // ! ================================================== api call for profile ===========================================================================
 export const profile_UpdateApi = async (fromData) => {
   try {
-    const { data } = await api.put("/user/profile-update",fromData);
+    const { data } = await api.put("/user/profile-update", fromData);
     return data;
   } catch (error) {
     console.log("profile Update Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===================================================================================================================================================
+
+// ! ================================================== api call for all user Data =====================================================================
+export const getAllUserApi = async () => {
+  try {
+    const { data } = await api.get("/user/all-user");
+    return data;
+  } catch (error) {
+    console.log("getAllUserApi Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===================================================================================================================================================
+
+// ! ================================================== api call for add task Data =====================================================================
+export const addTaskApi = async (fromData) => {
+  try {
+    const { data } = await api.post("/task/add-task",fromData);
+    return data;
+  } catch (error) {
+    console.log("addTaskApi Api error", error);
     toast.error(error.response.data.message);
   }
 };

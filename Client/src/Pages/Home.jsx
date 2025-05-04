@@ -6,8 +6,10 @@ import Members from "../Common/Members";
 import Swiper_component from "../Common/Swiper_component";
 import Heading from "../Common/Heading";
 import Taks_upcoming from './../Common/Taks_upcoming';
+import { useTaskContext } from "../Context/Task_Context";
 
 const Home = () => {
+  const {allUserData} = useTaskContext();
   return (
     <div className="w-full h-full">
       {/* ! headoing */}
@@ -23,7 +25,7 @@ const Home = () => {
       {/* monthly mentors */}
       <div className="mt-5 pb-10">
         <Heading text={"Monthly Mentors"} />
-        <Swiper_component data={[1,2,3,4,5,6,7,3,5]} component={<Members />} delay={1500} />
+        <Swiper_component data={allUserData?.alluser} component={<Members />} delay={1500} />
       </div>
 
       {/* Upcoming Task */}

@@ -14,13 +14,16 @@ import { model, Schema } from "mongoose";
 const TaskSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User" },
-    description: { type: String, default: "" },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
     deadline: { type: Date, default: Date.now },
-    priority: { type: String, enum: ["low", "normal", "high"], required:true },
+    priority: { type: String, enum: ["low", "normal", "high"], required: true },
     members: [
       {
         name: { type: String },
         professions: { type: String },
+        email: { type: String },
+        image: { type: String },
         role: { type: String },
       },
     ],
@@ -29,15 +32,24 @@ const TaskSchema = new Schema(
         link: { type: String },
       },
     ],
-    progress: { type: String, enum: ["pending", "progress", "complete"],default:"pending" },
+    progress: {
+      type: String,
+      enum: ["pending", "progress", "complete"],
+      default: "pending",
+    },
     assesment: [
       {
-        name: { type: String },
-        compleatedBy: { type: Schema.Types.ObjectId, ref: "User" },
+        name: { type: String, required: true },
+        compleatedBy: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          default: null,
+        },
         checked: { type: Boolean, default: false },
+        id: { type: Number, required: true },
       },
     ],
-    image: { type: String, required:true },
+    image: { type: String, required: true },
   },
   {
     timestamps: true,

@@ -10,10 +10,10 @@ const Swiper_component = ({ data, component,delay }) => {
   return (
     <Swiper
       spaceBetween={10}
-      pagination={{ dynamicBullets: true }}
+      // pagination={{ dynamicBullets: true }}
       autoplay={{
         delay: delay,
-        disableOnInteraction: false,
+        disableOnInteraction: true,
       }}
       breakpoints={{
         640: { slidesPerView: 1 },
@@ -23,7 +23,7 @@ const Swiper_component = ({ data, component,delay }) => {
       }}
       modules={[Pagination,Autoplay]}
     >
-      {data.map((cur,id) => (
+      {data?.map((cur,id) => (
         <SwiperSlide key={id} className="py-1 px-1 mt-3"> {cloneElement(component, { id: id, data: cur })}</SwiperSlide>
       ))}
     </Swiper>

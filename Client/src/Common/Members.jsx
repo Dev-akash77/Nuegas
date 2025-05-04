@@ -4,8 +4,9 @@ import { FaStar } from "react-icons/fa";
 import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
 import { motion } from "framer-motion";
 
-const Members = ({id,cur}) => {    
-  const slideUp = Use_Slie_Up(40, 0.5,id*0.3);
+const Members = ({ id, data }) => {
+
+  const slideUp = Use_Slie_Up(40, 0.5, id * 0.3);
   return (
     <motion.div
       className="bg-white px-4 py-4 md:w-[22rem] flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer"
@@ -13,23 +14,23 @@ const Members = ({id,cur}) => {
     >
       <div className="flex items-center gap-3">
         <img
-          src="https://res.cloudinary.com/dekfjauox/image/upload/v1745469974/Qubiko_User/yn8vmoysy2evbjpnffwh.webp"
+          src={data.image}
           alt="mentor image"
-          className="w-[3rem] h-[3rem] rounded-full"
+          className="w-[3rem] h-[3rem] rounded-full overflow-hidden aspect-square object-cover"
         />
         <div className="flex flex-col justify-center">
-          <p className="text-xl font-medium">Akash Biswas</p>
-          <p className="text-[.8rem] text-gray-600">Software Developer</p>
+          <p className="text-xl font-medium capitalize">{data.name}</p>
+          <p className="text-[.8rem] text-gray-600">{data.professions}</p>
         </div>
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img src={noteIcon} alt="note icon" />
-          <p>40 Task</p>
+          <p>{data.tasks.length} Task</p>
         </div>
         <div className="flex items-center gap-1">
           <FaStar className="text-yellow-500" />
-          <p>(300 Reviews)</p>
+          <p>({data.totalStar} Point)</p>
         </div>
       </div>
     </motion.div>

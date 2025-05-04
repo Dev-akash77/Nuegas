@@ -26,10 +26,8 @@ export const userProfileController = async (req, res) => {
 
 //!=============================================================================================================================================
 // !====================================================  Logout Controller =====================================================================
-//* - Handles user logout logic
-//* - Clears the authentication token cookie
-//* - Sets secure cookie options based on environment (production/development)
-//* - Responds with success message on successful logout
+//* - Handles user update profile logic
+//* - get user profile data via cookies
 // ?============================================================================================================================================
 
 export const updateProfileController = async (req, res) => {
@@ -69,3 +67,34 @@ export const updateProfileController = async (req, res) => {
   
   // !============================================================================================================================================
   // ?============================================================================================================================================
+
+
+
+
+
+
+  //!=============================================================================================================================================
+// !====================================================  Logout Controller =====================================================================
+//* - Handles user logout logic
+//* - Clears the authentication token cookie
+//* - Sets secure cookie options based on environment (production/development)
+//* - Responds with success message on successful logout
+// ?============================================================================================================================================
+
+export const getAllUserController = async (req, res) => {
+  try {
+    const alluser = await userModel.find();
+
+    if (!alluser) {
+      return res.status(400).json({success:false,message:"User not found"});
+    }
+
+    res.status(200).json({ success: true, alluser});
+  } catch (error) {
+    //? Send a response with status 500 in case of error
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================

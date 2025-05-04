@@ -7,6 +7,8 @@ export const globalContext = createContext();
 export const GlobalContextProvider = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [popup, setPopup] = useState(false);
+
   const [userIsLogin, setUserIsLogin] = useState(
     JSON.parse(localStorage.getItem("isLoginUser")) || false
   );
@@ -22,7 +24,7 @@ export const GlobalContextProvider = ({ children }) => {
 
   // ! get user profile via tanstack query
   const {
-    data: profileData, 
+    data: profileData,
     refetch: profileRefetch,
     isLoading: profileIsLoading,
   } = useQuery({
@@ -30,7 +32,6 @@ export const GlobalContextProvider = ({ children }) => {
     queryFn: profileApi,
     enabled: !!userIsLogin,
   });
-
 
   return (
     <globalContext.Provider
@@ -45,7 +46,9 @@ export const GlobalContextProvider = ({ children }) => {
         setUserIsLogin,
         profileData,
         profileRefetch,
-        profileIsLoading
+        profileIsLoading,
+        popup,
+        setPopup,
       }}
     >
       {children}

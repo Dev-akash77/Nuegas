@@ -12,12 +12,18 @@ import { GlobalContextProvider } from "./Context/GlobalContext";
 import Auth from "./Pages/Auth";
 import { ToastContainer } from "react-toastify";
 import ProtectRutes from "./Security/ProtectRutes";
+import { TaskContextProvider } from "./Context/Task_Context";
 
 const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element:<ProtectRutes> <Layout /></ProtectRutes> ,
+      element: (
+        <ProtectRutes>
+          {" "}
+          <Layout />
+        </ProtectRutes>
+      ),
       children: [
         {
           index: true,
@@ -57,7 +63,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalContextProvider>
-        <RouterProvider router={router}></RouterProvider>
+        <TaskContextProvider>
+          <RouterProvider router={router}></RouterProvider>
+        </TaskContextProvider>
         <ToastContainer />
       </GlobalContextProvider>
     </QueryClientProvider>

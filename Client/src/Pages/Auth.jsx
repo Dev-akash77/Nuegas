@@ -17,35 +17,35 @@ const Auth = () => {
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
 
-
-
-
   // !always redirect to home page
   useEffect(() => {
     if (userIsLogin) {
       navigate("/");
     }
   }, [userIsLogin]);
-  
 
   // ! handle authentication
   const handleAuthentication = async (e) => {
     e.preventDefault();
     setloading(true);
-  
+
     try {
-      let data;
-  
       if (isLogin) {
-        data = await loginApi(fromData);
+        const data = await loginApi(fromData);
+        if (data?.success) {
+          toast.success(data?.message);
+          setUserIsLogin(true);
+          setloading(false)
+          navigate("/");
+        }
       } else {
-        data = await signupApi(fromData);
-      }
-  
-      if (data?.success) {
-        toast.success(data.message || "Success");
-        setUserIsLogin(true); 
-        navigate("/"); 
+       const data = await signupApi(fromData);
+        if (data?.success) {
+          toast.success(data?.message);
+          setUserIsLogin(true);
+          setloading(false)
+          navigate("/");
+        }
       }
     } catch (error) {
       console.log("Auth error", error);
@@ -53,7 +53,6 @@ const Auth = () => {
       setloading(false);
     }
   };
-  
 
   // ! changing from data
   const handleInputChange = (e) => {
