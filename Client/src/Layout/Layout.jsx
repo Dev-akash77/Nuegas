@@ -20,11 +20,11 @@ const Layout = () => {
         </div>
         <div className="md:hidden w-[40%] bg-[rgba(0,0,0,.5)] h-full" onClick={()=>{setMenuOpen(false)}}></div>
       </nav>
-      <div className="md:w-[calc(100%-18%)] w-full h-[100dvh] page_height_gap flex flex-col justify-center items-center">
+      <div className="md:w-[calc(100%-18%)] w-full h-[100dvh] flex flex-col justify-center items-center">
         <div className="md:hidden flex w-full">
           <Mobile_Heading />
         </div>
-        <div className="container h-full w-full overflow-y-auto overflow-x-hidden mt-[4rem] md:mt-0">
+        <div className="h-full w-full overflow-y-auto overflow-x-hidden mt-[4rem] md:mt-0">
           <Outlet />
         </div>
       </div>

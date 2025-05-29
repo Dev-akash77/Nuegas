@@ -20,11 +20,11 @@ const Popup_Members = () => {
   }
 
   const handleOnclick = (user) => {
-    setTaskMembers((prev) => {
-      const exists = prev.some((u) => u.email === user.email);
+    setTaskMembers((prev) => {      
+      const exists = prev.some((u) => u.id === user._id);
       if (exists) {
         //! Remove if already selected
-        return prev.filter((u) => u.email !== user.email);
+        return prev.filter((u) => u.id !== user._id);
       } else {
         //! Add new
         return [
@@ -35,6 +35,7 @@ const Popup_Members = () => {
             role: user.role,
             email: user.email,
             image: user.image,
+            id: user._id,
           },
         ];
       }

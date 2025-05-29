@@ -10,7 +10,9 @@ import Popup_Members from "../Components/Popup_Members";
 import { useTaskContext } from "../Context/Task_Context";
 import Stacked_Avtar from "../Common/Stacked_Avtar";
 import { toast } from "react-toastify";
-import Element_Loader from './../UI/Element_Loader';
+import Element_Loader from "./../UI/Element_Loader";
+import { motion } from "framer-motion";
+import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
 
 const AddTask = () => {
   const { profileData, popup, setPopup } = useGlobalContext();
@@ -25,14 +27,14 @@ const AddTask = () => {
     setTaskDeadline,
     taskAttachments,
     setTAskattachments,
-    taskImage,
     setTaskImage,
     taskAssesment,
     setTaskAssesment,
     taskMembers,
-    setTaskMembers,
     handleAddTaskSubmit,
-    createdTaskLoader
+    createdTaskLoader,
+    aiLoader,
+    generateChecklist_LLM,
   } = useTaskContext();
 
   const navigate = useNavigate();
@@ -52,16 +54,15 @@ const AddTask = () => {
     if (!subTodo.trim()) {
       return toast.error("Checklist not found");
     }
-    const id = Math.floor(Math.random() * 999999);
     setTaskAssesment((prev) => [
       ...prev,
-      { name: subTodo, compleatedBy: null, checked: false, id },
+      { name: subTodo, compleatedBy: null, checked: false },
     ]);
     setSubTodo("");
   };
 
-  const handleDeleteSubtodo = (id) => {
-    setTaskAssesment((prev) => prev.filter((u) => u.id !== id));
+  const handleDeleteSubtodo = (name) => {
+    setTaskAssesment((prev) => prev.filter((u) => u.name !== name));
   };
 
   const handleImageUpload = (e) => {
@@ -85,8 +86,9 @@ const AddTask = () => {
   };
 
   return (
-    <div className="overflow-hidden">
-      <form
+    <div className="overflow-hidden cc w-full page_height_gap">
+      <div className="container">
+        <form
         className="bg-white rounded-md h-full p-4 px-10 w-[70%] overflow-y-auto"
         onSubmit={(e) => {
           handleAddTaskSubmit(e);
@@ -175,18 +177,29 @@ const AddTask = () => {
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-medium">Todo Checklist</h2>
             <button
-              className="py-[.4rem] px-3 rounded-md bg-default text-white flex items-center gap-2"
+              onClick={generateChecklist_LLM}
+              className="py-[.4rem] px-3 rounded-md bg-default text-white flex items-center gap-2 cursor-pointer relative"
               type="button"
             >
-              <LuBrain className="text-[1rem]" />
-              <p className="text-md">Generate From AI</p>
+              {aiLoader ? (
+                <div className="py-3 px-10">
+                  <Element_Loader />
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-1">
+                  <LuBrain className="text-[1rem]" />
+                  <p className="text-md">Generate From AI</p>
+                </div>
+              )}
             </button>
           </div>
 
-          {taskAssesment?.map((cur, id) => (
-            <div
+          {taskAssesment?.map((cur, id) => { 
+              const slideUp = Use_Slie_Up(40, 0.5, id * 0.3);
+          return  <motion.div
               className="flex items-center mb-2 justify-between px-3 py-1 rounded-md bg-gray-100"
-              key={cur.id}
+              {...slideUp}
+              key={id}
             >
               <div className="flex items-center gap-3">
                 <p className="text-gray-500 text-lg">{id + 1}</p>
@@ -194,10 +207,10 @@ const AddTask = () => {
               </div>
               <MdDeleteOutline
                 className="text-red-500 text-xl cursor-pointer"
-                onClick={() => handleDeleteSubtodo(cur.id)}
+                onClick={() => handleDeleteSubtodo(cur.name)}
               />
-            </div>
-          ))}
+            </motion.div>
+})}
 
           <div className="flex items-center gap-3">
             <input
@@ -293,14 +306,19 @@ const AddTask = () => {
           className="bg-default rounded-md gap-1 py-2 px-2 flex items-center justify-center text-white cursor-pointer mt-3 w-full relative"
           type="submit"
         >
-          {createdTaskLoader? <div className="py-3"><Element_Loader /></div>:
-          <div className="flex items-center justify-center gap-1">
-            <GoPlus className="text-xl" />
-            <p className="uppercase">Create Task</p>
-          </div>
-          }
+          {createdTaskLoader ? (
+            <div className="py-3">
+              <Element_Loader />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-1">
+              <GoPlus className="text-xl" />
+              <p className="uppercase">Create Task</p>
+            </div>
+          )}
         </button>
       </form>
+      </div>
 
       {popup && (
         <div className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.3)] cc">

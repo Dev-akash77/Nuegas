@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
-import { addTaskApi, getAllUserApi } from "../Api/GlobalApi";
+import { addTaskApi, allTaskApi, getAllUserApi } from "../Api/GlobalApi";
 import { useGlobalContext } from "./GlobalContext";
 import { toast } from "react-toastify";
+import { generateSubTodo } from "../Config/Gemini.config";
 
 export const TaskContext = createContext();
 
 export const TaskContextProvider = ({ children }) => {
-  const { userIsLogin } = useGlobalContext();
-  const [createdTaskLoader, setcreatedTaskLoader] = useState(false)
+  const { userIsLogin,profileRefetch } = useGlobalContext();
+  const [createdTaskLoader, setcreatedTaskLoader] = useState(false);
+  const [aiLoader, setaiLoader] = useState(false);
+
   // ! adding task state
   const [taskTile, setTaskTile] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
@@ -25,6 +28,16 @@ export const TaskContextProvider = ({ children }) => {
     queryFn: getAllUserApi,
     enabled: !!userIsLogin,
   });
+
+
+  const { data: allTaskData, isLoading: allTaskLoading, refetch:allTaskRefetch } = useQuery({
+    queryKey: ["all_task_user"],
+    queryFn: allTaskApi,
+    enabled: !!userIsLogin,
+  });
+
+
+
 
   // ! add task
   const handleAddTaskSubmit = async (e) => {
@@ -45,9 +58,11 @@ export const TaskContextProvider = ({ children }) => {
 
     try {
       const data = await addTaskApi(formData);
-      
+
       if (data?.success) {
         toast.success(data?.message);
+        profileRefetch();
+        allTaskRefetch();
         setcreatedTaskLoader(false);
         setTaskTile("");
         setTaskDescription("");
@@ -58,13 +73,54 @@ export const TaskContextProvider = ({ children }) => {
         setTaskAssesment([]);
         setTaskMembers([]);
       }
+
+      console.log(data);
     } catch (error) {
       console.log(error);
-    }finally{
-      setcreatedTaskLoader(false)
+    } finally {
+      setcreatedTaskLoader(false);
     }
   };
 
+  //! generate sub todo via gemini llm
+  const generateChecklist_LLM = async () => {
+    setaiLoader(true);
+    try {
+      if (!taskTile) return toast.error("Add Title");
+      if (!taskDeadline) return toast.error("Add Deadline");
+      if (!taskDescription) return toast.error("Add Description");
+      if (!taskPriority) return toast.error("Add Priority");
+      if (taskMembers.length === 0) return toast.error("Add Members");
+
+      // ! Convert to prompt string
+
+      const rawPrompt = `
+      Title: ${taskTile}
+      Description: ${taskDescription}
+      Priority: ${taskPriority}
+      Members: ${taskMembers.join(", ")}
+      Deadline: ${taskDeadline} `;
+
+      const response = await generateSubTodo(rawPrompt);
+      const text = response.split("\n").map((line) => line.replace(/^-\s*/, "").trim()).filter(Boolean);
+
+      const updatedChecklist = text.map((item) => ({
+        name: item,
+        completedBy: null,
+        checked: false,
+      }));
+  
+      //! State update karte hain
+      setTaskAssesment(updatedChecklist);
+     
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    } finally {
+      setaiLoader(false);
+    }
+  };
+  
   return (
     <TaskContext.Provider
       value={{
@@ -85,16 +141,24 @@ export const TaskContextProvider = ({ children }) => {
         setTaskAssesment,
         taskMembers,
         setTaskMembers,
+        generateChecklist_LLM,
 
         // ! all user data
         allUserData,
         alluserLoading,
+        aiLoader,
 
         // ! add task
         handleAddTaskSubmit,
 
         // !loader
-        createdTaskLoader
+        createdTaskLoader,
+
+
+        // !all task data
+        allTaskData,
+        allTaskLoading, 
+        allTaskRefetch
       }}
     >
       {children}

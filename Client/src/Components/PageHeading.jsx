@@ -1,15 +1,14 @@
 import React from 'react'
-import { CiBellOn } from 'react-icons/ci';
 import { useGlobalContext } from '../Context/GlobalContext';
 import { Link } from 'react-router-dom';
+import { CiBellOn } from 'react-icons/ci';
 
-const Heading_page = () => {
-  const { profileData } =useGlobalContext();
+const PageHeading = ({text}) => {
+    const { profileData } =useGlobalContext();
   return (
       <div className="w-full flex md:flex-row flex-col md:items-center md:justify-between">
            <div className=''>
-             <p className="text-[1.5rem] font-[500]">Hi, Akash Biswas</p>
-             <p className="text-gray-600 text-lg">Let's finish your task today!</p>
+             <p className="text-[1.5rem] font-[500]">{text}</p>
            </div>
 
            <div className="md:flex gap-5 items-center justify-center hidden">
@@ -31,4 +30,5 @@ const Heading_page = () => {
   )
 }
 
-export default Heading_page
+
+export default PageHeading

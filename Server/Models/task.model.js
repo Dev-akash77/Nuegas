@@ -20,11 +20,12 @@ const TaskSchema = new Schema(
     priority: { type: String, enum: ["low", "normal", "high"], required: true },
     members: [
       {
-        name: { type: String },
+        name: { type: String }, 
         professions: { type: String },
         email: { type: String },
         image: { type: String },
         role: { type: String },
+        id: { type: String },
       },
     ],
     attachments: [
@@ -46,7 +47,6 @@ const TaskSchema = new Schema(
           default: null,
         },
         checked: { type: Boolean, default: false },
-        id: { type: Number, required: true },
       },
     ],
     image: { type: String, required: true },

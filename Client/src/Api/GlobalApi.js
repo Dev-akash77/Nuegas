@@ -81,7 +81,19 @@ export const getAllUserApi = async () => {
 // ! ================================================== api call for add task Data =====================================================================
 export const addTaskApi = async (fromData) => {
   try {
-    const { data } = await api.post("/task/add-task",fromData);
+    const { data } = await api.post("/task/add-task", fromData);
+    return data;
+  } catch (error) {
+    console.log("addTaskApi Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===================================================================================================================================================
+
+// ! ================================================== api call for all task Data =====================================================================
+export const allTaskApi = async () => {
+  try {
+    const { data } = await api.get("/task/all-task-user");
     return data;
   } catch (error) {
     console.log("addTaskApi Api error", error);
