@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
 import { addTaskApi, allTaskApi, getAllUserApi } from "../Api/GlobalApi";
 import { useGlobalContext } from "./GlobalContext";
-import { toast } from "react-toastify";
 import { generateSubTodo } from "../Config/Gemini.config";
+import toast from "react-hot-toast";
 
 export const TaskContext = createContext();
 

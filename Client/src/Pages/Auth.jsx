@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../Context/GlobalContext";
 import { loginApi, signupApi } from "../Api/GlobalApi";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Element_Loader from "../UI/Element_Loader";
 import { useNavigate } from "react-router-dom";
 

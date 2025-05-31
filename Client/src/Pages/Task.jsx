@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useTaskContext } from "./../Context/Task_Context";
 import PageHeading from "../Components/PageHeading";
 import { FaSearch } from "react-icons/fa";
@@ -9,7 +9,12 @@ import Swiper_component from "../Common/Swiper_component";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
 const Task = () => {
-  const { allTaskData, allTaskLoading } = useTaskContext();
+  const { allTaskData } = useTaskContext();
+  const [search, setSearch] = useState("");
+
+  const searchMembers = allTaskData?.allTasks?.filter((cur) => {
+    return cur.title.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
     <div className="w-full h-full flex items-center flex-col justify-between">
@@ -21,6 +26,10 @@ const Task = () => {
             <div className="md:w-[30%] rounded-md border-2 border-gray-200 overflow-hidden relative cc">
               <input
                 type="text"
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+                value={search}
                 name="search"
                 placeholder="Search Task"
                 className="w-full h-full text-lg px-3 py-2 border-0 outline-0"
@@ -47,7 +56,7 @@ const Task = () => {
             </div>
 
             <div className="block md:hidden border-2 border-gray-200 p-2 rounded-md">
-              <HiAdjustmentsHorizontal className="text-xl text-gray-600"/>
+              <HiAdjustmentsHorizontal className="text-xl text-gray-600" />
             </div>
           </div>
         </div>
@@ -59,7 +68,7 @@ const Task = () => {
           <div className="mt-5 w-full">
             <h2 className="text-2xl font-medium">Time Limit</h2>
             <Swiper_component
-              data={allTaskData?.allTasks}
+              data={searchMembers}
               component={<Taks_upcoming />}
               delay={3000}
             />
@@ -68,7 +77,7 @@ const Task = () => {
           <div className="mt-5 w-full">
             <h2 className="text-2xl font-medium">New Task</h2>
             <Swiper_component
-              data={allTaskData?.allTasks}
+              data={searchMembers}
               component={<Taks_upcoming />}
               delay={3000}
             />

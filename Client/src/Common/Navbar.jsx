@@ -50,7 +50,7 @@ const Navbar = () => {
               setMenuOpen(false);
             }}
             className={navLinkClass}
-            to={"task"}
+            to={"/task"}
           >
             <IoBookOutline className="text-2xl" />
             <p className="text-lg">Task</p>
@@ -61,7 +61,7 @@ const Navbar = () => {
               setMenuOpen(false);
             }}
             className={navLinkClass}
-            to={"mentor"}
+            to={"/mentor"}
           >
             <FiUser className="text-2xl" />
             <p className="text-lg">Mentor</p>
@@ -72,7 +72,7 @@ const Navbar = () => {
               setMenuOpen(false);
             }}
             className={navLinkClass}
-            to={"message"}
+            to={"/message"}
           >
             <RiMessage3Line className="text-2xl" />
             <p className="text-lg">Message</p>
@@ -83,7 +83,7 @@ const Navbar = () => {
               setMenuOpen(false);
             }}
             className={navLinkClass}
-            to={"profile"}
+            to={"/profile"}
           >
             <IoSettingsOutline className="text-2xl" />
             <p className="text-lg">Profile</p>
@@ -95,7 +95,7 @@ const Navbar = () => {
                 setMenuOpen(false);
               }}
               className={navLinkClass}
-              to={"add-task"}
+              to={"/add-task"}
             >
               <CiSquarePlus className="text-2xl" />
               <p className="text-lg">Add Task</p>

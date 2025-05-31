@@ -24,7 +24,7 @@ const Swiper_component = ({ data, component,delay }) => {
       modules={[Pagination,Autoplay]}
     >
       {data?.map((cur,id) => (
-        <SwiperSlide key={id} className="py-1 px-1 mt-3"> {cloneElement(component, { id: id, data: cur })}</SwiperSlide>
+        <SwiperSlide key={id} className="py-1 px-1 mt-3"> {cloneElement(component, { id: id, data: cur ,fixWidth:true})}</SwiperSlide>
       ))}
     </Swiper>
   );

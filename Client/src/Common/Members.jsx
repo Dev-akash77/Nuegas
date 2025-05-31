@@ -4,12 +4,13 @@ import { FaStar } from "react-icons/fa";
 import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
 import { motion } from "framer-motion";
 
-const Members = ({ id, data }) => {
-
+const Members = ({ id, data, fixWidth }) => {
   const slideUp = Use_Slie_Up(40, 0.5, id * 0.3);
   return (
     <motion.div
-      className="bg-white px-4 py-4 md:w-[22rem] flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer"
+      className={`bg-white px-4 py-4 ${
+        fixWidth && "md:w-[22rem]"
+      } flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer`}
       {...slideUp}
     >
       <div className="flex items-center gap-3">

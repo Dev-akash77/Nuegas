@@ -10,7 +10,7 @@ import Profile from "./Pages/Profile";
 import Layout from "./Layout/Layout";
 import { GlobalContextProvider } from "./Context/GlobalContext";
 import Auth from "./Pages/Auth";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from 'react-hot-toast';
 import ProtectRutes from "./Security/ProtectRutes";
 import { TaskContextProvider } from "./Context/Task_Context";
 
@@ -66,7 +66,7 @@ const App = () => {
         <TaskContextProvider>
           <RouterProvider router={router}></RouterProvider>
         </TaskContextProvider>
-        <ToastContainer />
+       <Toaster />
       </GlobalContextProvider>
     </QueryClientProvider>
   );
