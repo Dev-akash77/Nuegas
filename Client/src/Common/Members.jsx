@@ -1,20 +1,17 @@
 import React from "react";
 import noteIcon from "../assets/note-2.svg";
 import { FaStar } from "react-icons/fa";
-import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
-import { motion } from "framer-motion";
 
-const Members = ({ id, data, fixWidth }) => {
-  const slideUp = Use_Slie_Up(40, 0.5, id * 0.3);
+const Members = ({ data, fixWidth }) => {
   return (
-    <motion.div
+    <div
       className={`bg-white px-4 py-4 ${
         fixWidth && "md:w-[22rem]"
       } flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer`}
-      {...slideUp}
     >
       <div className="flex items-center gap-3">
         <img
+          loading="lazy"
           src={data.image}
           alt="mentor image"
           className="w-[3rem] h-[3rem] rounded-full overflow-hidden aspect-square object-cover"
@@ -26,7 +23,7 @@ const Members = ({ id, data, fixWidth }) => {
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src={noteIcon} alt="note icon" />
+          <img src={noteIcon} alt="note icon" loading="lazy" />
           <p>{data.tasks.length} Task</p>
         </div>
         <div className="flex items-center gap-1">
@@ -34,7 +31,7 @@ const Members = ({ id, data, fixWidth }) => {
           <p>({data.totalStar} Point)</p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

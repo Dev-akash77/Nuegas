@@ -22,6 +22,7 @@ export const addTaskController = async (req, res) => {
       members,
       attachments,
       assesment,
+      heading,
     } = req.body;
     const image = req.file;
     const user = req.user;
@@ -36,7 +37,8 @@ export const addTaskController = async (req, res) => {
       !deadline ||
       !priority ||
       !members ||
-      !assesment
+      !assesment ||
+      !heading
     ) {
       return res
         .status(400)
@@ -71,6 +73,7 @@ export const addTaskController = async (req, res) => {
       attachments: attachments,
       assesment: assesment,
       image: imageUrl,
+      heading:heading
     });
 
     await task.save();

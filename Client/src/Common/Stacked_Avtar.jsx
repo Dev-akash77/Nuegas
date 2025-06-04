@@ -17,7 +17,7 @@ const Stacked_Avtar = ({ arr, imageperview }) => {
       ))}
 
       {/* Extra count circle */}
-      {arr.length > imageperview && (
+      {arr?.length > imageperview && (
         <div
           className="w-8 h-8 rounded-full bg-gray-200 text-sm text-black flex items-center justify-center border-2 border-white absolute z-10"
           style={{ left: `${imageperview * overlap}px`, zIndex: 1 }}

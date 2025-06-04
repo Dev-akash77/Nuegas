@@ -7,6 +7,7 @@ import { IoFilterSharp } from "react-icons/io5";
 import Taks_upcoming from "../Common/Taks_upcoming";
 import Swiper_component from "../Common/Swiper_component";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
+import { IoCode } from "react-icons/io5";
 
 const Task = () => {
   const { allTaskData } = useTaskContext();
@@ -66,7 +67,10 @@ const Task = () => {
         <div className="container">
           {/* time limit */}
           <div className="mt-5 w-full">
-            <h2 className="text-2xl font-medium">Time Limit</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-medium">Time Limit</h2>
+              <IoCode className="text-2xl"/>
+            </div>
             <Swiper_component
               data={searchMembers}
               component={<Taks_upcoming />}
@@ -75,7 +79,11 @@ const Task = () => {
           </div>
           {/* New Task */}
           <div className="mt-5 w-full">
-            <h2 className="text-2xl font-medium">New Task</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-medium">New Task</h2>
+              <IoCode className="text-2xl"/>
+            </div>
+
             <Swiper_component
               data={searchMembers}
               component={<Taks_upcoming />}

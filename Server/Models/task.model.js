@@ -11,11 +11,12 @@ import { model, Schema } from "mongoose";
 //* - Auto-generates createdAt and updatedAt timestamps
 // !===================================================
 
-const TaskSchema = new Schema(
+const TaskSchema = new Schema( 
   {
     userId: { type: Schema.Types.ObjectId, ref: "User" },
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: true }, 
+    heading: { type: String, required: true },
     deadline: { type: Date, default: Date.now },
     priority: { type: String, enum: ["low", "normal", "high"], required: true },
     members: [
