@@ -13,6 +13,7 @@ import Auth from "./Pages/Auth";
 import { Toaster } from 'react-hot-toast';
 import ProtectRutes from "./Security/ProtectRutes";
 import { TaskContextProvider } from "./Context/Task_Context";
+import TaskDetails from './Pages/TaskDetails';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -40,6 +41,10 @@ const App = () => {
         {
           path: "task",
           element: <Task />,
+        },
+        {
+          path: "task/:id",
+          element: <TaskDetails />,
         },
         {
           path: "add-task",

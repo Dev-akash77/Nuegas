@@ -1,5 +1,5 @@
 import express  from 'express';
-import { addTaskController, allTaskController } from '../Controller/task.controller.js';
+import { addTaskController, allTaskController, getTaskViaId } from '../Controller/task.controller.js';
 import { userSecurityMiddleware } from './../Middleware/user.middleware.js';
 import { upload } from '../Middleware/multer.middleware.js';
 
@@ -9,8 +9,11 @@ const router = express.Router();
 //? POST request to "/add-task" to handle adding task
 router.post("/add-task", upload.single("image"),userSecurityMiddleware,addTaskController);
 
-//? POST request to "/add-task" to handle adding task
-router.get("/all-task-user",userSecurityMiddleware,allTaskController);
+//? POST request to "/add-task-user" to handle adding task
+router.get("/",userSecurityMiddleware,allTaskController);
+
+//? POST request to "/task/:id" to handle adding task
+router.get("/:id",userSecurityMiddleware,getTaskViaId);
 
 
 export const taskRouter = router;

@@ -5,7 +5,6 @@ import { FaSearch } from "react-icons/fa";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoFilterSharp } from "react-icons/io5";
 import Taks_upcoming from "../Common/Taks_upcoming";
-import Swiper_component from "../Common/Swiper_component";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { IoCode } from "react-icons/io5";
 
@@ -69,26 +68,42 @@ const Task = () => {
           <div className="mt-5 w-full">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-medium">Time Limit</h2>
-              <IoCode className="text-2xl"/>
+              <IoCode className="text-2xl" />
             </div>
-            <Swiper_component
-              data={searchMembers}
-              component={<Taks_upcoming />}
-              delay={3000}
-            />
+            <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
+              {allTaskData?.allTasks.map((cur, id) => {
+                return (
+                  <Taks_upcoming
+                    data={cur}
+                    id={id}
+                    fixWidth={true}
+                    task_id={cur?._id}
+                    key={id}
+                  />
+                );
+              })}
+            </div>
           </div>
           {/* New Task */}
           <div className="mt-5 w-full">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-medium">New Task</h2>
-              <IoCode className="text-2xl"/>
+              <IoCode className="text-2xl" />
             </div>
 
-            <Swiper_component
-              data={searchMembers}
-              component={<Taks_upcoming />}
-              delay={3000}
-            />
+            <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
+              {allTaskData?.allTasks.map((cur, id) => {
+                return (
+                  <Taks_upcoming
+                    data={cur}
+                    id={id}
+                    task_id={cur?._id}
+                    fixWidth={true}
+                    key={id}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

@@ -3,7 +3,6 @@ import Heading_page from "../Common/Heading_page";
 import Activity from "../Components/Activity";
 import Chart from "../Components/Chart";
 import Members from "../Common/Members";
-import Swiper_component from "../Common/Swiper_component";
 import Heading from "../Common/Heading";
 import Taks_upcoming from "./../Common/Taks_upcoming";
 import { useTaskContext } from "../Context/Task_Context";
@@ -26,22 +25,37 @@ const Home = () => {
         {/* monthly mentors */}
         <div className="mt-5 pb-10">
           <Heading text={"Monthly Mentors"} />
-          <Swiper_component
+
+          <div className="flex items-start justify-start overflow-x-auto gap-5 py-2 px-1">
+            {
+              allUserData?.alluser.map((cur,id)=>{
+                return <Members data={cur} id={id} fixWidth={true} key={id}/>
+              })
+            }
+          </div>
+          {/* <Swiper_component
             data={allUserData?.alluser}
             component={<Members />}
             delay={1500}
-          />
+          /> */}
         </div>
 
         {/* Upcoming Task */}
-        <div className="pb-5">
+         <div className="pb-5">
           <Heading text={"Upcoming Task"} />
-          <Swiper_component
+          <div className="flex items-start justify-start overflow-x-auto gap-5 py-2 px-1">
+            {
+              allTaskData?.allTasks.map((cur,id)=>{
+                return <Taks_upcoming data={cur} id={id} fixWidth={true} key={id}/>
+              })
+            }
+          </div>
+          {/* <Swiper_component
             data={allTaskData?.allTasks}
             component={<Taks_upcoming />}
             delay={3000}
-          />
-        </div>
+          /> */}
+        </div> 
       </div>
     </div>
   );

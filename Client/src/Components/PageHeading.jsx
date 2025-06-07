@@ -16,7 +16,7 @@ const PageHeading = ({text}) => {
                <CiBellOn className="text-[1.7rem]" />
                <div className="absolute bg-red-600 w-4 h-4 text-white cc text-[.7rem] -top-1 right-0 rounded-full">1</div>
              </div>
-             <Link to={"profile"} className="overflow-hidden rounded-full bg-gray w-[2.5rem] h-[2.5rem] cursor-pointer">
+             <Link to={"/profile"} className="overflow-hidden rounded-full bg-gray w-[2.5rem] h-[2.5rem] cursor-pointer">
                <img
                  src={
                   profileData?.profile?.image

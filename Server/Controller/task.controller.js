@@ -73,7 +73,7 @@ export const addTaskController = async (req, res) => {
       attachments: attachments,
       assesment: assesment,
       image: imageUrl,
-      heading:heading
+      heading: heading,
     });
 
     await task.save();
@@ -108,7 +108,10 @@ export const addTaskController = async (req, res) => {
 
 //!=============================================================================================================================================
 // !====================================================  Add task Controller =====================================================================
-//* - Handles logic to get alltask for spcific users
+//* - Handles logic to get all tasks for a specific user
+//* - Assumes `req.user.tasks` contains an array of task references (_id)
+//* - Fetches full task details for each task id using `taskModel.findById`
+//* - Returns all tasks in JSON response
 // ?============================================================================================================================================
 
 export const allTaskController = async (req, res) => {
@@ -124,6 +127,32 @@ export const allTaskController = async (req, res) => {
     res.status(200).json({
       success: true,
       allTasks,
+    });
+  } catch (error) {
+    console.error("Error adding task controller:", error);
+
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+// !====================================================  Get task Via task id =====================================================================
+//* - Handles logic to get a single task by its ID passed in URL params (`req.params.id`)
+//* - Finds task document by ID using `taskModel.findById`
+//* - Returns the task data as JSON response
+// ?============================================================================================================================================
+
+export const getTaskViaId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const task = await taskModel.findById(id);
+
+    res.status(200).json({
+      success: true,
+      task,
     });
   } catch (error) {
     console.error("Error adding task controller:", error);

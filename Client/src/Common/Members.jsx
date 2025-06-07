@@ -5,7 +5,7 @@ import { FaStar } from "react-icons/fa";
 const Members = ({ data, fixWidth }) => {
   return (
     <div
-      className={`bg-white px-4 py-4 ${
+      className={`bg-white px-4 py-4 w-full ${
         fixWidth && "md:w-[22rem]"
       } flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer`}
     >

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import clockIcon from "../assets/clock.svg";
 import Stacked_Avtar from "./Stacked_Avtar";
+import { Link } from "react-router-dom";
 
 //! In-memory cache to avoid duplicate API calls for same title
 
-const Taks_upcoming = ({data }) => {
-
+const Taks_upcoming = ({data,task_id }) => {
 
   // ! Calculate progress from data.assessment
   const totalTasks = data?.assessment?.length || 0;
@@ -15,22 +15,38 @@ const Taks_upcoming = ({data }) => {
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   // ! Calculate days left from deadline
-  const calculateDaysLeft = (deadlineStr) => {
-    if (!deadlineStr) return 0;
+  const getSmartTimeLeft = (deadlineStr) => {
+    if (!deadlineStr) return "Invalid deadline";
+
     const deadline = new Date(deadlineStr);
-    const today = new Date();
-    deadline.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    const diffTime = deadline - today;
-    return Math.max(Math.ceil(diffTime / (1000 * 60 * 60 * 24)), 0);
+    const now = new Date();
+
+    const diffMs = deadline - now;
+    if (diffMs <= 0) return "Deadline passed";
+
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.floor(diffDays / 30); // rough approx
+
+    if (diffMonths >= 1) {
+      return `${diffMonths} Month${diffMonths > 1 ? "s" : ""}`;
+    } else if (diffDays >= 1) {
+      return `${diffDays} Day${diffDays > 1 ? "s" : ""}`;
+    } else if (diffHours >= 1) {
+      return `${diffHours} Hour${diffHours > 1 ? "s" : ""}`;
+    } else {
+      return `${diffMinutes} Minute${diffMinutes > 1 ? "s" : ""}`;
+    }
   };
 
-  const daysLeft = calculateDaysLeft(data?.deadline);
+  const daysLeft = getSmartTimeLeft(data?.deadline);
 
 
   return (
-    <div
-      className="bg-white border-gray-200 border-2 p-5 md:w-[22rem] flex-shrink-0 rounded-2xl flex flex-col justify-center cursor-pointer"
+    <Link
+    to={`${task_id}`}
+      className="bg-white border-gray-200 border-2 p-5 md:w-[22rem] w-full flex-shrink-0 rounded-2xl flex flex-col justify-center cursor-pointer"
     >
       <img
        loading="lazy"
@@ -59,12 +75,12 @@ const Taks_upcoming = ({data }) => {
         <div className="flex items-center justify-between mt-5">
           <div className="flex items-center gap-2">
             <img src={clockIcon} alt="clock icon" />
-            <p>{daysLeft} Days Left</p>
+            <p>{daysLeft} Left</p>
           </div>
           <Stacked_Avtar arr={data?.members} imageperview={3} />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
