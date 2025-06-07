@@ -4,16 +4,16 @@ import { generate_jwt_token } from "../Services/jwt.service.js";
 import { loginService } from "../Services/login.service.js";
 import { registerService } from "../Services/register.service.js";
 import { sendEmail } from "../Services/sendEmail.service.js";
-
+ 
 //!=============================================================================================================================================
 // !====================================================  Register Controller =====================================================================
 //* - Handles the user registration logic
 //* - Receives user data from the request body
-//* - Ensures proper validation and handles OTP verification
+//* - Ensures proper validation and handles OTP verification 
 //* - Responds with success or error messages based on the outcome
 // ?============================================================================================================================================
 
-export const registerController = async (req, res) => {
+export const registerController = async (req, res) => { 
   try {
     const { name, email, password } = req.body;
 

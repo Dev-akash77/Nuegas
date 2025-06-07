@@ -7,15 +7,24 @@ import { IoFilterSharp } from "react-icons/io5";
 import Taks_upcoming from "../Common/Taks_upcoming";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { IoCode } from "react-icons/io5";
+import MainLoader from "../UI/MainLoader";
 
 const Task = () => {
-  const { allTaskData } = useTaskContext();
+  const { allTaskData,allTaskLoading } = useTaskContext();
   const [search, setSearch] = useState("");
 
   const searchMembers = allTaskData?.allTasks?.filter((cur) => {
     return cur.title.toLowerCase().includes(search.toLowerCase());
   });
 
+  if (allTaskLoading) {
+     return (
+      <div className="fixed z-[99999] top-0 left-0 w-screen h-screen cc">
+        <MainLoader />
+      </div>
+    );
+  }
+  
   return (
     <div className="w-full h-full flex items-center flex-col justify-between">
       <div className="md:bg-white page_height_gap w-full cc">
@@ -71,13 +80,12 @@ const Task = () => {
               <IoCode className="text-2xl" />
             </div>
             <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
-              {allTaskData?.allTasks.map((cur, id) => {
+              {searchMembers.map((cur, id) => {
                 return (
                   <Taks_upcoming
                     data={cur}
                     id={id}
                     fixWidth={true}
-                    task_id={cur?._id}
                     key={id}
                   />
                 );
@@ -92,12 +100,11 @@ const Task = () => {
             </div>
 
             <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
-              {allTaskData?.allTasks.map((cur, id) => {
+              {searchMembers.map((cur, id) => {
                 return (
                   <Taks_upcoming
                     data={cur}
                     id={id}
-                    task_id={cur?._id}
                     fixWidth={true}
                     key={id}
                   />

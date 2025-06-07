@@ -6,7 +6,7 @@ import "swiper/css/pagination";
 // !import required modules
 import { Autoplay, Pagination } from "swiper/modules";
 
-const Swiper_component = ({ data, component,delay }) => {
+const Swiper_component = ({ data, component, delay }) => {
   return (
     <Swiper
       spaceBetween={10}
@@ -21,10 +21,13 @@ const Swiper_component = ({ data, component,delay }) => {
         1024: { slidesPerView: 3 },
         1280: { slidesPerView: 3 },
       }}
-      modules={[Pagination,Autoplay]}
+      modules={[Pagination, Autoplay]}
     >
-      {data?.map((cur,id) => (
-        <SwiperSlide key={id} className="py-1 px-1 mt-3"> {cloneElement(component, { id: id, data: cur ,fixWidth:true})}</SwiperSlide>
+      {data?.map((cur, id) => (
+        <SwiperSlide key={id} className="py-1 px-1 mt-3">
+          {" "}
+          {cloneElement(component, { id: id, data: cur, fixWidth: true })}
+        </SwiperSlide>
       ))}
     </Swiper>
   );

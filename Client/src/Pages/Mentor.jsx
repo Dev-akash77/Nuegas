@@ -6,15 +6,24 @@ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { FaSearch } from "react-icons/fa";
 import { useTaskContext } from "../Context/Task_Context";
 import Members from "../Common/Members";
+import MainLoader from "../UI/MainLoader";
+
 
 const Mentor = () => {
-  const { allUserData } = useTaskContext();
+  const { allUserData,alluserLoading } = useTaskContext();
   const [search, setSearch] = useState("");
 
   const searchMembers = allUserData?.alluser?.filter((cur) =>
     cur.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  if (alluserLoading) {
+    return (
+      <div className="fixed z-[99999] top-0 left-0 w-screen h-screen cc">
+        <MainLoader />
+      </div>
+    );
+  }
   return (
     <div className="w-full flex items-center flex-col">
       <div className="md:bg-white page_height_gap w-full cc">
@@ -76,7 +85,10 @@ const Mentor = () => {
                   })}
               </div>
             ) : (
-              <div className=" cc w-full mt-[5rem] font-semibold text-2xl"> No Mentor Found</div>
+              <div className=" cc w-full mt-[5rem] font-semibold text-2xl">
+                {" "}
+                No Mentor Found
+              </div>
             )}
           </div>
         </div>
