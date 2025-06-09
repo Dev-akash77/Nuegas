@@ -99,16 +99,16 @@ const TaskDetails = () => {
                 <button className="md:h-[2.5rem] md:w-[8rem] h-[2rem] w-[7rem] text-sm md:text-default flex items-center justify-center gap-2 bg-dark-600 rounded-md text-white capitalize">
                   <p className="text-white">{progress} Task</p>
                 </button>
-              </div>
+              </div> 
 
               <p className="text-lg text-gray-500 py-2">{title}</p>
               <div className="flex items-center justify-start gap-4">
-                <div className="flex items-center justify-start gap-2 text-xl">
+                <div className="flex items-center justify-start gap-2 md:text-xl text-md">
                   <HiOutlineUsers />
                   {members.length} Students Involved
                 </div>
 
-                <div className="flex items-center justify-start gap-1 text-xl">
+                <div className="flex items-center justify-start gap-1 md:text-xl text-lg">
                   <img src={clockIcon} alt="clock avatar" />
                   {daysLeft}
                 </div>

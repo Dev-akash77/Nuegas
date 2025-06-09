@@ -6,14 +6,19 @@ import { useDropzone } from "react-dropzone";
 import { BsFolder2Open } from "react-icons/bs";
 import { toast } from "react-hot-toast";
 import Element_Loader from "./../UI/Element_Loader";
-import { addAttachment } from './../Api/GlobalApi';
+import { addAttachment } from "./../Api/GlobalApi";
+import { RxCross2 } from "react-icons/rx";
+import DeleteAttachment from "./DeleteAttachment";
 
 const TaskDetailsRight = ({ data, refetch }) => {
   const { profileData } = useGlobalContext();
   const [loading, setloading] = useState(false);
   const { title, heading, attachments, userId, _id } = data?.task || {};
-
+  const [popup, setPopup] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePopup, setImagePopup] = useState(false);
+  const [img, setImg] = useState("");
+  const [deleteAttachmentData, setDeleteAttachmentData] = useState();
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -29,7 +34,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
   // ! handle submit
   const handleSubmitUpdateAttachment = async (e) => {
     e.preventDefault();
-    setloading(true);
+
     if (!selectedFile) {
       return toast.error("Please select an image file.");
     }
@@ -42,10 +47,11 @@ const TaskDetailsRight = ({ data, refetch }) => {
     formData.append("taskID", _id);
 
     try {
+      setloading(true);
       const data = await addAttachment(formData);
 
       if (data?.success) {
-        toast(data.message);
+        toast.success(data.message);
         refetch();
         setSelectedFile(null);
       }
@@ -54,6 +60,12 @@ const TaskDetailsRight = ({ data, refetch }) => {
     } finally {
       setloading(false);
     }
+  };
+
+  // ! Optimized Cloudinary image
+  const getOptimizedImage = (url) => {
+    if (!url?.includes("cloudinary")) return url;
+    return url.replace("/upload/", "/upload/w_400,h_250,c_fill,q_auto,f_auto/");
   };
 
   return (
@@ -95,31 +107,45 @@ const TaskDetailsRight = ({ data, refetch }) => {
         {/* attachment section */}
         <h2 className="text-2xl font-medium">Attachments</h2>
 
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-4 mt-2">
           {attachments.map((cur, id) => {
             const isCloudinaryImage = cur.link.includes("cloudinary");
 
             return (
-              <div key={id} className="flex items-center gap-2">
-                <p className="text-blue-600">{id + 1})</p>
+              <div key={id} className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <p className="text-blue-600">{id + 1})</p>
 
-                {!isCloudinaryImage ? (
-                  <a
-                    href={cur.link}
-                    target="_blank"
-                    className="text-blue-600 hover:underline flex items-center gap-1"
-                  >
-                    <span className="text-base">View Link</span>
-                    <FiExternalLink className="text-xl" />
-                  </a>
-                ) : (
-                  <img
-                    src={cur.link}
-                    alt="task attachment image"
-                    loading="lazy"
-                    className="w-[5rem] object-cover rounded-sm border-2 border-gray-200"
-                  />
-                )}
+                  {!isCloudinaryImage ? (
+                    <a
+                      href={cur.link}
+                      target="_blank"
+                      className="text-blue-600 hover:underline flex items-center gap-1"
+                    >
+                      <span className="text-base">View Link</span>
+                      <FiExternalLink className="text-xl" />
+                    </a>
+                  ) : (
+                    <img
+                      src={getOptimizedImage(cur.link)}
+                      alt="task attachment image"
+                      loading="lazy"
+                      onClick={() => {
+                        setImagePopup(true), setImg(cur.link);
+                      }}
+                      className="w-[5rem] object-cover rounded-sm border-2 border-gray-200 cursor-pointer"
+                    />
+                  )}
+                </div>
+                <div
+                  className="cursor-pointer p-1 rounded-md bs border-1 border-gray-400"
+                  onClick={() => {
+                    setPopup(true);
+                    setDeleteAttachmentData({ ...cur, taskId: data?.task._id });
+                  }}
+                >
+                  <RxCross2 />
+                </div>
               </div>
             );
           })}
@@ -163,6 +189,32 @@ const TaskDetailsRight = ({ data, refetch }) => {
           {loading ? <Element_Loader /> : "Submit"}
         </button>
       </form>
+
+      {popup && (
+        <div className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.7)] cc">
+          <DeleteAttachment
+            setPopup={setPopup}
+            data={deleteAttachmentData}
+            refetch={refetch}
+          />
+        </div>
+      )}
+
+      {imagePopup && !popup && (
+        <div
+          className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.7)] cc"
+          onClick={() => {
+            setImagePopup(false), setImg(false);
+          }}
+        >
+          <img
+            src={img}
+            alt="image task attachment"
+            className="md:w-[80%] w-[90%]"
+            loading="lazy"
+          />
+        </div>
+      )}
     </>
   );
 };

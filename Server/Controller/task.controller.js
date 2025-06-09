@@ -221,3 +221,56 @@ export const UpdateTaskAttachmentController = async (req, res) => {
 
 // !============================================================================================================================================
 // ?============================================================================================================================================
+
+//!=============================================================================================================================================
+// !================================================  Update task Attachment Controller ========================================================
+//* - Updates task attachments by uploading image to Cloudinary
+//* - Requires task ID and image in the request
+//* - Validates task and image presence
+//* - Appends new attachment object to the task's attachments array
+//* - Saves to MongoDB and responds with a success message
+// ?============================================================================================================================================
+
+export const DeleteTaskAttachmentController = async (req, res) => {  
+  try {
+    const { link, id, user, public_id,taskId } = req.body;
+    const { _id, role } = req.user; 
+
+    //! Validate required fields
+    if (!link || !id || !user || !taskId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Data Not Found" });
+    }
+
+    //! Authorization check: Only uploader or admin can delete
+    if (user !== _id.toString() && role !== "admin") {
+      return res
+        .status(400)
+        .json({ success: false, message: "You are not allowed" });
+    }
+
+    //! Optional: Delete image from Cloudinary if public_id is present
+    if (public_id) {
+      await cloudinary.uploader.destroy(public_id);
+    }
+
+    //! Remove attachment from the task in DB
+    await taskModel.findByIdAndUpdate(taskId, {
+      $pull: {
+        attachments: { link },
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Attachment Deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error updating attachment task controller:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================

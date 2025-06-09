@@ -114,15 +114,28 @@ export const getTaskById = async (id) => {
 };
 // ! ================================================================================================================================================
 
-
 // ! ================================================== api call for all task Data =================================================================
 export const addAttachment = async (fromData) => {
   try {
-    const { data } = await api.put(`/task/attachment-update`,fromData);
+    const { data } = await api.put(`/task/attachment-update`, fromData);
     return data;
   } catch (error) {
     console.log("addTaskApi Api error", error);
     toast.error(error.response.data.message);
   }
 };
-// ! ===================================================================================================================================================
+// ! ================================================================================================================================================
+
+// ! ================================================== api call for all task Data =================================================================
+export const DeleteAttachmentApi = async (DeleteData) => {
+  try {
+    const { data } = await api.delete(`/task/attachment-delete`, {
+      data: DeleteData,
+    });
+    return data;
+  } catch (error) {
+    console.log("addTaskApi Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ================================================================================================================================================
