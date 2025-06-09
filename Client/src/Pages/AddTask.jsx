@@ -16,6 +16,7 @@ import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
 
 const AddTask = () => {
   const { profileData, popup, setPopup } = useGlobalContext();
+
   const {
     taskTile,
     setTaskTile,
@@ -42,7 +43,7 @@ const AddTask = () => {
   const [subTodo, setSubTodo] = useState("");
   const [attachment, setAttachment] = useState("");
   const [imageUploaded, setImageUploaded] = useState(false);
-  const [heading, setheading] = useState("")
+  const [heading, setheading] = useState("");
 
   useEffect(() => {
     if (profileData?.profile?.role === "employee") {
@@ -78,7 +79,10 @@ const AddTask = () => {
   const handleAttachmentAdd = () => {
     if (!attachment.trim()) return toast.error("URL not found");
     const id = Math.floor(Math.random() * 999999);
-    setTAskattachments((prev) => [...prev, { link: attachment, id }]);
+    setTAskattachments((prev) => [
+      ...prev,
+      { link: attachment, id, user: profileData?.profile._id },
+    ]);
     setAttachment("");
   };
 
@@ -86,241 +90,241 @@ const AddTask = () => {
     setTAskattachments((prev) => prev.filter((u) => u.id !== id));
   };
 
-  
-
   return (
     <div className="overflow-hidden cc w-full page_height_gap">
       <div className="container">
         <form
-        className="bg-white rounded-md h-full p-4 px-10 w-[70%] overflow-y-auto"
-        onSubmit={(e) => {
-          handleAddTaskSubmit(e);
-        }}
-      >
-        <h1 className="text-xl font-medium">Create Task</h1>
+          className="bg-white rounded-md h-full p-4 px-10 w-[70%] overflow-y-auto"
+          onSubmit={(e) => {
+            handleAddTaskSubmit(e);
+          }}
+        >
+          <h1 className="text-xl font-medium">Create Task</h1>
 
-        {/* Task Title */}
-        <div className="mt-3 flex flex-col gap-2">
-          <h2 className="text-md font-medium">Task Title</h2>
-          <input
-            type="text"
-            name="title"
-            required
-            value={taskTile}
-            onChange={(e) => setTaskTile(e.target.value)}
-            placeholder="Create App UI"
-            className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
-          />
-        </div>
-
-        {/* Description */}
-        <div className="mt-3 flex flex-col gap-2">
-          <h2 className="text-md font-medium">Description</h2>
-          <textarea
-            required
-            value={taskDescription}
-            onChange={(e) => setTaskDescription(e.target.value)}
-            name="description"
-            placeholder="Describe Task"
-            className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
-          />
-        </div>
-
-        {/* Priority, Deadline, Assign To */}
-        <div className="flex items-center justify-between gap-3 pt-1 mt-3">
-          <div className="flex flex-col gap-2 w-full">
-            <h2 className="text-md font-medium">Priority</h2>
-            <select
-              value={taskPriority}
-              onChange={(e) => setTaskPriority(e.target.value)}
-              name="priority"
-              className="border outline-0 border-[#dddd] cursor-pointer p-2 rounded-md"
-            >
-              <option value="normal">Normal</option>
-              <option value="low">Low</option>
-              <option value="high">High</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-2 w-full">
-            <h2 className="text-md font-medium">Deadline</h2>
-            <input
-              type="date"
-              name="deadline"
-              required
-              value={taskDeadline}
-              onChange={(e) => setTaskDeadline(e.target.value)}
-              className="border outline-0 border-[#dddd] cursor-pointer p-2 rounded-md"
-            />
-          </div>
-
-          <div
-            className="flex flex-col gap-2 w-max"
-            onClick={() => setPopup(true)}
-          >
-            <h2 className="text-md font-medium">Assign To</h2>
-            {taskMembers.length === 0 ? (
-              <button
-                className="p-2 rounded-md bg-gray-100 flex items-center justify-between cursor-pointer w-max gap-2"
-                type="button"
-              >
-                <FiUser className="text-[1rem]" />
-                <p className="text-md">Add Members</p>
-              </button>
-            ) : (
-              <div className="pt-3">
-                <Stacked_Avtar arr={taskMembers} imageperview={3} />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Todo Checklist */}
-        <div className="mt-6 flex flex-col gap-2">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-medium">Todo Checklist</h2>
-            <button
-              onClick={generateChecklist_LLM}
-              className="py-[.4rem] px-3 rounded-md bg-default text-white flex items-center gap-2 cursor-pointer relative"
-              type="button"
-            >
-              {aiLoader ? (
-                <div className="py-3 px-10">
-                  <Element_Loader />
-                </div>
-              ) : (
-                <div className="flex items-center justify-center gap-1">
-                  <LuBrain className="text-[1rem]" />
-                  <p className="text-md">Generate From AI</p>
-                </div>
-              )}
-            </button>
-          </div>
-
-          {taskAssesment?.map((cur, id) => { 
-              const slideUp = Use_Slie_Up(40, 0.5, id * 0.3);
-          return  <motion.div
-              className="flex items-center mb-2 justify-between px-3 py-1 rounded-md bg-gray-100"
-              {...slideUp}
-              key={id}
-            >
-              <div className="flex items-center gap-3">
-                <p className="text-gray-500 text-lg">{id + 1}</p>
-                <p className="text-md">{cur.name}</p>
-              </div>
-              <MdDeleteOutline
-                className="text-red-500 text-xl cursor-pointer"
-                onClick={() => handleDeleteSubtodo(cur.name)}
-              />
-            </motion.div>
-})}
-
-          <div className="flex items-center gap-3">
+          {/* Task Title */}
+          <div className="mt-3 flex flex-col gap-2">
+            <h2 className="text-md font-medium">Task Title</h2>
             <input
               type="text"
-              value={subTodo}
-              onChange={(e) => setSubTodo(e.target.value)}
-              name="assesment"
-              placeholder="Enter Tasks"
+              name="title"
+              required
+              value={taskTile}
+              onChange={(e) => setTaskTile(e.target.value)}
+              placeholder="Create App UI"
               className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
             />
-            <button
-              className="bg-gray-100 rounded-md gap-1 py-2 px-5 flex items-center cursor-pointer"
-              type="button"
-              onClick={handleClickSubtodo}
-            >
-              <GoPlus className="text-xl" />
-              <p>Add</p>
-            </button>
           </div>
-        </div>
 
-        {/* Attachments */}
-        <div className="mt-5 flex flex-col gap-2">
-          <h2 className="text-md font-medium">Add Attachments</h2>
+          {/* Description */}
+          <div className="mt-3 flex flex-col gap-2">
+            <h2 className="text-md font-medium">Description</h2>
+            <textarea
+              required
+              value={taskDescription}
+              onChange={(e) => setTaskDescription(e.target.value)}
+              name="description"
+              placeholder="Describe Task"
+              className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
+            />
+          </div>
 
-          {taskAttachments?.map((cur, id) => (
-            <div
-              className="flex items-center mb-2 justify-between px-3 py-1 rounded-md bg-gray-100"
-              key={cur.id}
-            >
-              <div className="flex items-center gap-3">
-                <PiLinkSimpleBold className="text-xl text-gray-400" />
-                <p className="text-md">{cur.link}</p>
-              </div>
-              <MdDeleteOutline
-                className="text-red-500 text-xl cursor-pointer"
-                onClick={() => handleDeleteAttachment(cur.id)}
-              />
+          {/* Priority, Deadline, Assign To */}
+          <div className="flex items-center justify-between gap-3 pt-1 mt-3">
+            <div className="flex flex-col gap-2 w-full">
+              <h2 className="text-md font-medium">Priority</h2>
+              <select
+                value={taskPriority}
+                onChange={(e) => setTaskPriority(e.target.value)}
+                name="priority"
+                className="border outline-0 border-[#dddd] cursor-pointer p-2 rounded-md"
+              >
+                <option value="normal">Normal</option>
+                <option value="low">Low</option>
+                <option value="high">High</option>
+              </select>
             </div>
-          ))}
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 md:rounded-md md:border md:border-[#dddd] border-b p-2 text-light-400 w-full">
-              <PiLinkSimpleBold className="text-xl text-gray-400" />
+            <div className="flex flex-col gap-2 w-full">
+              <h2 className="text-md font-medium">Deadline</h2>
               <input
-                type="link"
-                name="attachments"
-                value={attachment}
-                onChange={(e) => {
-                  setAttachment(e.target.value);
-                }}
-                placeholder="Add Link"
-                className="outline-none w-full"
+                type="date"
+                name="deadline"
+                required
+                value={taskDeadline}
+                onChange={(e) => setTaskDeadline(e.target.value)}
+                className="border outline-0 border-[#dddd] cursor-pointer p-2 rounded-md"
               />
             </div>
-            <button
-              className="bg-gray-100 rounded-md gap-1 py-2 px-5 flex items-center cursor-pointer"
-              type="button"
-              onClick={handleAttachmentAdd}
+
+            <div
+              className="flex flex-col gap-2 w-max"
+              onClick={() => setPopup(true)}
             >
-              <GoPlus className="text-xl" />
-              <p>Add</p>
-            </button>
+              <h2 className="text-md font-medium">Assign To</h2>
+              {taskMembers.length === 0 ? (
+                <button
+                  className="p-2 rounded-md bg-gray-100 flex items-center justify-between cursor-pointer w-max gap-2"
+                  type="button"
+                >
+                  <FiUser className="text-[1rem]" />
+                  <p className="text-md">Add Members</p>
+                </button>
+              ) : (
+                <div className="pt-3">
+                  <Stacked_Avtar arr={taskMembers} imageperview={3} />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Upload Task Image */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageUpload}
-        />
+          {/* Todo Checklist */}
+          <div className="mt-6 flex flex-col gap-2">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-medium">Todo Checklist</h2>
+              <button
+                onClick={generateChecklist_LLM}
+                className="py-[.4rem] px-3 rounded-md bg-default text-white flex items-center gap-2 cursor-pointer relative"
+                type="button"
+              >
+                {aiLoader ? (
+                  <div className="py-3 px-10">
+                    <Element_Loader />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-1">
+                    <LuBrain className="text-[1rem]" />
+                    <p className="text-md">Generate From AI</p>
+                  </div>
+                )}
+              </button>
+            </div>
 
-        <button
-          className="bg-default rounded-md gap-1 py-2 px-2 flex items-center justify-center text-white cursor-pointer mt-5 w-full"
-          type="button"
-          onClick={() => fileInputRef.current.click()}
-        >
-          {imageUploaded ? (
-            "✔ Uploaded"
-          ) : (
-            <div className="flex items-center justify-center gap-1">
-              <MdAttachFile className="text-xl" />
-              <p>Upload Image</p>
-            </div>
-          )}
-        </button>
+            {taskAssesment?.map((cur, id) => {
+              const slideUp = Use_Slie_Up(40, 0.5, id * 0.3);
+              return (
+                <motion.div
+                  className="flex items-center mb-2 justify-between px-3 py-1 rounded-md bg-gray-100"
+                  {...slideUp}
+                  key={id}
+                >
+                  <div className="flex items-center gap-3">
+                    <p className="text-gray-500 text-lg">{id + 1}</p>
+                    <p className="text-md">{cur.name}</p>
+                  </div>
+                  <MdDeleteOutline
+                    className="text-red-500 text-xl cursor-pointer"
+                    onClick={() => handleDeleteSubtodo(cur.name)}
+                  />
+                </motion.div>
+              );
+            })}
 
-        {/* Create Task */}
-        <button
-          className="bg-default rounded-md gap-1 py-2 px-2 flex items-center justify-center text-white cursor-pointer mt-3 w-full relative"
-          type="submit"
-        >
-          {createdTaskLoader ? (
-            <div className="py-3">
-              <Element_Loader />
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={subTodo}
+                onChange={(e) => setSubTodo(e.target.value)}
+                name="assesment"
+                placeholder="Enter Tasks"
+                className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
+              />
+              <button
+                className="bg-gray-100 rounded-md gap-1 py-2 px-5 flex items-center cursor-pointer"
+                type="button"
+                onClick={handleClickSubtodo}
+              >
+                <GoPlus className="text-xl" />
+                <p>Add</p>
+              </button>
             </div>
-          ) : (
-            <div className="flex items-center justify-center gap-1">
-              <GoPlus className="text-xl" />
-              <p className="uppercase">Create Task</p>
+          </div>
+
+          {/* Attachments */}
+          <div className="mt-5 flex flex-col gap-2">
+            <h2 className="text-md font-medium">Add Attachments</h2>
+
+            {taskAttachments?.map((cur, id) => (
+              <div
+                className="flex items-center mb-2 justify-between px-3 py-1 rounded-md bg-gray-100"
+                key={cur.id}
+              >
+                <div className="flex items-center gap-3">
+                  <PiLinkSimpleBold className="text-xl text-gray-400" />
+                  <p className="text-md">{cur.link}</p>
+                </div>
+                <MdDeleteOutline
+                  className="text-red-500 text-xl cursor-pointer"
+                  onClick={() => handleDeleteAttachment(cur.id)}
+                />
+              </div>
+            ))}
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 md:rounded-md md:border md:border-[#dddd] border-b p-2 text-light-400 w-full">
+                <PiLinkSimpleBold className="text-xl text-gray-400" />
+                <input
+                  type="link"
+                  name="attachments"
+                  value={attachment}
+                  onChange={(e) => {
+                    setAttachment(e.target.value);
+                  }}
+                  placeholder="Add Link"
+                  className="outline-none w-full"
+                />
+              </div>
+              <button
+                className="bg-gray-100 rounded-md gap-1 py-2 px-5 flex items-center cursor-pointer"
+                type="button"
+                onClick={handleAttachmentAdd}
+              >
+                <GoPlus className="text-xl" />
+                <p>Add</p>
+              </button>
             </div>
-          )}
-        </button>
-      </form>
+          </div>
+
+          {/* Upload Task Image */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageUpload}
+          />
+
+          <button
+            className="bg-default rounded-md gap-1 py-2 px-2 flex items-center justify-center text-white cursor-pointer mt-5 w-full"
+            type="button"
+            onClick={() => fileInputRef.current.click()}
+          >
+            {imageUploaded ? (
+              "✔ Uploaded"
+            ) : (
+              <div className="flex items-center justify-center gap-1">
+                <MdAttachFile className="text-xl" />
+                <p>Upload Image</p>
+              </div>
+            )}
+          </button>
+
+          {/* Create Task */}
+          <button
+            className="bg-default rounded-md gap-1 py-2 px-2 flex items-center justify-center text-white cursor-pointer mt-3 w-full relative"
+            type="submit"
+          >
+            {createdTaskLoader ? (
+              <div className="py-3">
+                <Element_Loader />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-1">
+                <GoPlus className="text-xl" />
+                <p className="uppercase">Create Task</p>
+              </div>
+            )}
+          </button>
+        </form>
       </div>
 
       {popup && (

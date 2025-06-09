@@ -79,7 +79,7 @@ export const addTaskController = async (req, res) => {
     await task.save();
 
     //! Update each member with task ID and increment stars
-    const updatedUsers = await Promise.all(
+    await Promise.all(
       members.map(async (cur) => {
         const userDoc = await userModel.findById(cur.id);
         if (userDoc) {
@@ -157,6 +157,64 @@ export const getTaskViaId = async (req, res) => {
   } catch (error) {
     console.error("Error adding task controller:", error);
 
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+// !================================================  Update task Attachment Controller ========================================================
+//* - Updates task attachments by uploading image to Cloudinary
+//* - Requires task ID and image in the request
+//* - Validates task and image presence
+//* - Appends new attachment object to the task's attachments array
+//* - Saves to MongoDB and responds with a success message
+// ?============================================================================================================================================
+
+export const UpdateTaskAttachmentController = async (req, res) => {
+  try {
+    const { taskID } = req.body;
+    const user = req.user;
+    const image = req.file;
+
+    const task = await taskModel.findById(taskID);
+
+    if (!task || task.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Task Not Found" });
+    }
+
+    if (!image) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Image Not Found" });
+    }
+
+    // ! set image url
+    const result = await cloudinary.uploader.upload(image.path, {
+      resource_type: "image",
+      folder: "Nugas_Tasks",
+    });
+
+    const imageUrl = result.secure_url;
+    const public_id = result.public_id;
+    const id = Math.floor(Math.random() * 999999);
+
+    const attachment = { link: imageUrl, id, user: user._id, public_id };
+
+    // ! set attachment
+    task.attachments.push(attachment);
+    await task.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Attachment added successfully",
+    });
+  } catch (error) {
+    console.error("Error updating attachment task controller:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

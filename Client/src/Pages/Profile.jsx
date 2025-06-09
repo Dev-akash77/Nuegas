@@ -86,7 +86,7 @@ const Profile = () => {
 
   return (
     <div className="w-full h-full cc">
-      <div className="container">
+      <div className="container page_height_gap">
         {!isEdit ? (
           <div className="md:w-[70%] md:pb-0 pb-10">
             <img

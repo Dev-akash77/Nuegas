@@ -6,7 +6,8 @@ Your job is to deeply understand the title, description, priority, members, and 
 ### Rules:
 - Always return **only** the sub-todo checklist in plain text.
 - Each sub-todo must begin with a hyphen and a space: "- "
-- Limit the list to a **maximum of 10 sub-tasks**.
+- Limit the list to a **maximum of 5 sub-tasks**.
+- Limit the list to a **maximum of 5 sub-tasks strickly maintained**.
 - Avoid repeating the input details in the response.
 - No greetings, explanations, or extra text — just the checklist.
 - Sub-tasks should be short, specific, and actionable.
