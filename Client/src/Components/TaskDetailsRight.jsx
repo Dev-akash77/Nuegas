@@ -9,10 +9,12 @@ import Element_Loader from "./../UI/Element_Loader";
 import { addAttachment } from "./../Api/GlobalApi";
 import { RxCross2 } from "react-icons/rx";
 import DeleteAttachment from "./DeleteAttachment";
+import DeleteTask from "./DeleteTask";
 
 const TaskDetailsRight = ({ data, refetch }) => {
   const { profileData } = useGlobalContext();
   const [loading, setloading] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const { title, heading, attachments, userId, _id } = data?.task || {};
   const [popup, setPopup] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -75,7 +77,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
           <h2 className="md:text-xl md:font-light">Assigned Assignments</h2>
           {(profileData?.profile.role === "admin" ||
             profileData?.profile._id === userId) && (
-            <div className="bg-default py-2 px-4 rounded-md flex items-center justify-center cursor-pointer text-white gap-1">
+            <div className="bg-default py-2 px-4 rounded-md flex items-center justify-center cursor-pointer text-white gap-1" onClick={()=>{setDeleteOpen(true)}}>
               <RiDeleteBin6Line className="text-lg" />
               Delete
             </div>
@@ -200,6 +202,15 @@ const TaskDetailsRight = ({ data, refetch }) => {
         </div>
       )}
 
+      {deleteOpen && (
+        <div className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.7)] cc">
+          <DeleteTask
+            setPopup={setDeleteOpen}
+            refetch={refetch}
+          />
+        </div>
+      )}
+
       {imagePopup && !popup && (
         <div
           className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.7)] cc"
@@ -210,7 +221,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
           <img
             src={img}
             alt="image task attachment"
-            className="md:w-[80%] w-[90%]"
+            className="md:w-[80%] w-[90%] md:h-[90%]"
             loading="lazy"
           />
         </div>

@@ -84,7 +84,7 @@ const TaskDetails = () => {
                 </div>
               )}
               <img
-                src={image}
+                src={image.image}
                 alt={title}
                 onLoad={() => {
                   setimageLoading(false);

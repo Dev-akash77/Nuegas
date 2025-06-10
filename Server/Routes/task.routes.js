@@ -3,6 +3,7 @@ import {
   addTaskController,
   allTaskController,
   DeleteTaskAttachmentController,
+  DeleteTaskController,
   getTaskViaId,
   UpdateTaskAttachmentController,
 } from "../Controller/task.controller.js";
@@ -40,6 +41,13 @@ router.delete(
   "/attachment-delete",
   userSecurityMiddleware,
   DeleteTaskAttachmentController
+);
+
+//? POST request to "/attachment-delete" to handle delete task attachment
+router.delete(
+  "/delete/:taskId",
+  userSecurityMiddleware,
+  DeleteTaskController
 );
 
 export const taskRouter = router;

@@ -1,6 +1,7 @@
 import { taskModel } from "../Models/task.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import { userModel } from "./../Models/user.model.js";
+import mongoose from "mongoose";
 
 //!=============================================================================================================================================
 // !====================================================  Add task Controller =====================================================================
@@ -37,6 +38,7 @@ export const addTaskController = async (req, res) => {
       !deadline ||
       !priority ||
       !members ||
+      !image ||
       !assesment ||
       !heading
     ) {
@@ -52,7 +54,7 @@ export const addTaskController = async (req, res) => {
     }
 
     let imageUrl = null;
-
+    let public_id = null;
     // ! set image url
     if (image) {
       const result = await cloudinary.uploader.upload(image.path, {
@@ -60,7 +62,10 @@ export const addTaskController = async (req, res) => {
         folder: "Nugas_Tasks",
       });
       imageUrl = result.secure_url;
+      public_id = result.public_id;
     }
+
+    const images = { image: imageUrl, public_id };
 
     // ! adding data into database task collection
     const task = new taskModel({
@@ -72,7 +77,7 @@ export const addTaskController = async (req, res) => {
       members: members,
       attachments: attachments,
       assesment: assesment,
-      image: imageUrl,
+      image: images,
       heading: heading,
     });
 
@@ -83,7 +88,7 @@ export const addTaskController = async (req, res) => {
       members.map(async (cur) => {
         const userDoc = await userModel.findById(cur.id);
         if (userDoc) {
-          userDoc.tasks.push(task._id);
+          userDoc.tasks.push({ taskId: task._id });
           userDoc.totalStar = (userDoc.totalStar || 0) + 5;
           await userDoc.save();
           return userDoc;
@@ -120,7 +125,7 @@ export const allTaskController = async (req, res) => {
 
     const allTasks = await Promise.all(
       userTasks.map(async (cur) => {
-        return await taskModel.findById(cur._id);
+        return await taskModel.findById(cur.taskId);
       })
     );
 
@@ -223,18 +228,20 @@ export const UpdateTaskAttachmentController = async (req, res) => {
 // ?============================================================================================================================================
 
 //!=============================================================================================================================================
-// !================================================  Update task Attachment Controller ========================================================
-//* - Updates task attachments by uploading image to Cloudinary
-//* - Requires task ID and image in the request
-//* - Validates task and image presence
-//* - Appends new attachment object to the task's attachments array
-//* - Saves to MongoDB and responds with a success message
+// !============================================ Delete Task Attachment Controller =============================================================
+//* - Deletes a specific attachment from a task's attachment list
+//* - Requires: link, id (attachment ID), user (uploader ID), taskId, and optionally public_id (Cloudinary)
+//* - Validates input fields for completeness
+//* - Authorizes deletion: Only the original uploader or an admin can delete
+//* - If a public_id is present, deletes the image from Cloudinary
+//* - Updates the task document in MongoDB to remove the attachment object
+//* - Returns a success or error response accordingly
 // ?============================================================================================================================================
 
-export const DeleteTaskAttachmentController = async (req, res) => {  
+export const DeleteTaskAttachmentController = async (req, res) => {
   try {
-    const { link, id, user, public_id,taskId } = req.body;
-    const { _id, role } = req.user; 
+    const { link, id, user, public_id, taskId } = req.body;
+    const { _id, role } = req.user;
 
     //! Validate required fields
     if (!link || !id || !user || !taskId) {
@@ -265,6 +272,77 @@ export const DeleteTaskAttachmentController = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Attachment Deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error updating attachment task controller:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+// !============================================ Delete Task Controller =============================================================
+//* - Deletes a specific attachment from a task's attachment list
+//* - Requires: link, id (attachment ID), user (uploader ID), taskId, and optionally public_id (Cloudinary)
+//* - Validates input fields for completeness
+//* - Authorizes deletion: Only the original uploader or an admin can delete
+//* - If a public_id is present, deletes the image from Cloudinary
+//* - Updates the task document in MongoDB to remove the attachment object
+//* - Returns a success or error response accordingly
+// ?============================================================================================================================================
+
+export const DeleteTaskController = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const user = req.user;
+    const task = await taskModel.findById(taskId);
+
+    //! Authorization check: Only uploader or admin can delete
+    if (user._id !== task?.userId.toString() && user.role !== "admin") {
+      return res
+        .status(400)
+        .json({ success: false, message: "You are not allowed" });
+    }
+
+    //! Validate required fields
+    if (!taskId || !task) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Task Not Found" });
+    }
+
+    //! Delete image from Cloudinary if public_id is present
+    if (task?.image.public_id) {
+      await cloudinary.uploader.destroy(task?.image.public_id);
+    }
+
+    //! Delete all attachments from Cloudinary
+    if (task.attachments?.length > 0) {
+      for (const attachment of task.attachments) {
+        if (attachment?.public_id) {
+          await cloudinary.uploader.destroy(attachment?.public_id);
+        }
+      }
+    }
+
+    //! Remove task ID from all members’ task arrays
+    const idToRemove = new mongoose.Types.ObjectId(taskId);
+
+    const updatePromises = task.members.map(async (cur) => {
+      await userModel.findByIdAndUpdate(cur.id, {
+        $pull: { tasks: { taskId: idToRemove } },
+      });
+    });
+    await Promise.all(updatePromises);
+
+    //! Delete the task from database
+    await taskModel.findByIdAndDelete(taskId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Task Deleted successfully",
     });
   } catch (error) {
     console.error("Error updating attachment task controller:", error);

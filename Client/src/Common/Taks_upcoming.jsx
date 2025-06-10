@@ -3,7 +3,7 @@ import clockIcon from "../assets/clock.svg";
 import Stacked_Avtar from "./Stacked_Avtar";
 import { useNavigate } from "react-router-dom";
 
-const Taks_upcoming = React.memo(({ data }) => {
+const Taks_upcoming = React.memo(({ data }) => {  
   const navigate = useNavigate();
 
   // ! Memoized progress calculation
@@ -47,7 +47,7 @@ const Taks_upcoming = React.memo(({ data }) => {
     >
       <img
         loading="lazy"
-        src={getOptimizedImage(data?.image)}
+        src={getOptimizedImage(data?.image.image)}
         alt="task image"
         className="w-full h-[10rem] object-cover object-center rounded-2xl"
       />

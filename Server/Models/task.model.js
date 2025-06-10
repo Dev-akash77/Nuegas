@@ -9,7 +9,7 @@ import { model, Schema } from "mongoose";
 //* - Stores assessments and whether they have been checked
 //* - Optionally stores an image associated with the task
 //* - Auto-generates createdAt and updatedAt timestamps
-// !=================================================== 
+// !===================================================
 
 const TaskSchema = new Schema(
   {
@@ -46,7 +46,7 @@ const TaskSchema = new Schema(
         checked: { type: Boolean, default: false },
       },
     ],
-    image: { type: String, required: true },
+    image: { type: Object, required: true },
   },
   {
     timestamps: true,

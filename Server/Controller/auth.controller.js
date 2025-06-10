@@ -12,7 +12,7 @@ import { sendEmail } from "../Services/sendEmail.service.js";
 //* - Ensures proper validation and handles OTP verification 
 //* - Responds with success or error messages based on the outcome
 // ?============================================================================================================================================
-
+ 
 export const registerController = async (req, res) => { 
   try {
     const { name, email, password } = req.body;

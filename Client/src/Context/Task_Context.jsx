@@ -4,6 +4,7 @@ import { addTaskApi, allTaskApi, getAllUserApi } from "../Api/GlobalApi";
 import { useGlobalContext } from "./GlobalContext";
 import { generateSubTodo } from "../Config/Gemini.config";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const TaskContext = createContext();
 
@@ -53,7 +54,7 @@ export const TaskContextProvider = ({ children }) => {
   formData.append("attachments", JSON.stringify(taskAttachments));
   formData.append("assesment", JSON.stringify(taskAssesment));
 
-  // Append image if valid
+  //! Append image if valid
   if (taskImage instanceof File && taskImage.type.startsWith("image/")) {
     formData.append("image", taskImage);
   }
@@ -64,7 +65,7 @@ export const TaskContextProvider = ({ children }) => {
     const response = await generateSubTodo(headingPrompt);
 
     let cleanHeading = (typeof response === "string" ? response : String(response)).trim();
-    cleanHeading = cleanHeading.replace(/^["']|["']$/g, ""); // remove surrounding quotes
+    cleanHeading = cleanHeading.replace(/^["']|["']$/g, ""); //! remove surrounding quotes
 
     if (!cleanHeading) {
       toast.error("AI failed to generate a task heading.");
@@ -92,6 +93,7 @@ export const TaskContextProvider = ({ children }) => {
       setTAskattachments([]);
       setTaskAssesment([]);
       setTaskMembers([]);
+
     } else {
       toast.error(data?.message || "Task creation failed.");
     }

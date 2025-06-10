@@ -21,7 +21,7 @@ const UserSchema = new Schema(
     role: { type: String, default: "employee" },
     professions: { type: String, default: "" },
     totalStar: { type: Number, default: 0 },
-    tasks: [{ taskId: { type: Schema.Types.ObjectId, ref: "Task" } }],
+    tasks: [],
   },
   { timestamps: true }
 );

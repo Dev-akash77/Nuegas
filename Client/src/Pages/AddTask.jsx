@@ -89,12 +89,12 @@ const AddTask = () => {
   const handleDeleteAttachment = (id) => {
     setTAskattachments((prev) => prev.filter((u) => u.id !== id));
   };
-
+ 
   return (
     <div className="overflow-hidden cc w-full page_height_gap">
-      <div className="container">
+      <div className="container pb-7 md:pb-0 overflow-y-scroll ">
         <form
-          className="bg-white rounded-md h-full p-4 px-10 w-[70%] overflow-y-auto"
+          className="bg-white rounded-md h-full md:w-max md:py-4 md:px-10 p-4 border-2 border-gray-200"
           onSubmit={(e) => {
             handleAddTaskSubmit(e);
           }}
@@ -129,8 +129,8 @@ const AddTask = () => {
           </div>
 
           {/* Priority, Deadline, Assign To */}
-          <div className="flex items-center justify-between gap-3 pt-1 mt-3">
-            <div className="flex flex-col gap-2 w-full">
+          <div className="grid md:grid-cols-3 grid-cols-2 items-center justify-between gap-3 pt-1 mt-3">
+            <div className="flex flex-col gap-2">
               <h2 className="text-md font-medium">Priority</h2>
               <select
                 value={taskPriority}
@@ -144,7 +144,7 @@ const AddTask = () => {
               </select>
             </div>
 
-            <div className="flex flex-col gap-2 w-full">
+            <div className="flex flex-col gap-2">
               <h2 className="text-md font-medium">Deadline</h2>
               <input
                 type="date"
@@ -157,13 +157,13 @@ const AddTask = () => {
             </div>
 
             <div
-              className="flex flex-col gap-2 w-max"
+              className="flex flex-col gap-2 w-full md:col-span-1 col-span-full"
               onClick={() => setPopup(true)}
             >
               <h2 className="text-md font-medium">Assign To</h2>
               {taskMembers.length === 0 ? (
                 <button
-                  className="p-2 rounded-md bg-gray-100 flex items-center justify-between cursor-pointer w-max gap-2"
+                  className="p-2 rounded-md bg-gray-100 flex items-center justify-center  cursor-pointer gap-2"
                   type="button"
                 >
                   <FiUser className="text-[1rem]" />
@@ -193,7 +193,8 @@ const AddTask = () => {
                 ) : (
                   <div className="flex items-center justify-center gap-1">
                     <LuBrain className="text-[1rem]" />
-                    <p className="text-md">Generate From AI</p>
+                    <p className="text-md md:block hidden">Generate From AI</p>
+                    <p className="text-md md:hidden block">Generate AI</p>
                   </div>
                 )}
               </button>
@@ -234,7 +235,7 @@ const AddTask = () => {
                 onClick={handleClickSubtodo}
               >
                 <GoPlus className="text-xl" />
-                <p>Add</p>
+                <p className="md:block hidden">Add</p>
               </button>
             </div>
           </div>
@@ -279,7 +280,7 @@ const AddTask = () => {
                 onClick={handleAttachmentAdd}
               >
                 <GoPlus className="text-xl" />
-                <p>Add</p>
+                <p className="md:block hidden">Add</p>
               </button>
             </div>
           </div>
