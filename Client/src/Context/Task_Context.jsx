@@ -10,6 +10,7 @@ export const TaskContext = createContext();
 
 export const TaskContextProvider = ({ children }) => {
   const { userIsLogin, profileRefetch } = useGlobalContext();
+  const navigate = useNavigate();
   const [createdTaskLoader, setcreatedTaskLoader] = useState(false);
   const [aiLoader, setaiLoader] = useState(false);
 
@@ -83,7 +84,8 @@ export const TaskContextProvider = ({ children }) => {
       toast.success(data?.message);
       profileRefetch();
       allTaskRefetch();
-
+      
+      navigate(`/task/${data?.task._id}`);
       // ! Reset form
       setTaskTile("");
       setTaskDescription("");
@@ -93,7 +95,6 @@ export const TaskContextProvider = ({ children }) => {
       setTAskattachments([]);
       setTaskAssesment([]);
       setTaskMembers([]);
-
     } else {
       toast.error(data?.message || "Task creation failed.");
     }

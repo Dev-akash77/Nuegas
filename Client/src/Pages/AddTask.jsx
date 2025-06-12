@@ -94,7 +94,7 @@ const AddTask = () => {
     <div className="overflow-hidden cc w-full page_height_gap">
       <div className="container pb-7 md:pb-0 overflow-y-scroll ">
         <form
-          className="bg-white rounded-md h-full md:w-max md:py-4 md:px-10 p-4 border-2 border-gray-200"
+          className="bg-white rounded-md h-full md:w-max md:py-4 md:px-10 p-4 border-2 border-gray-200 overflow-x-hidden"
           onSubmit={(e) => {
             handleAddTaskSubmit(e);
           }}
@@ -111,7 +111,7 @@ const AddTask = () => {
               value={taskTile}
               onChange={(e) => setTaskTile(e.target.value)}
               placeholder="Create App UI"
-              className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
+              className="w-full border border-[#dddd] border-b p-2 text-light-400 outline-none rounded-md"
             />
           </div>
 
@@ -124,7 +124,7 @@ const AddTask = () => {
               onChange={(e) => setTaskDescription(e.target.value)}
               name="description"
               placeholder="Describe Task"
-              className="w-full md:border md:border-[#dddd] border-b p-2 text-light-400 outline-none md:rounded-md"
+              className="w-full border border-[#dddd] border-b p-2 text-light-400 outline-none rounded-md"
             />
           </div>
 

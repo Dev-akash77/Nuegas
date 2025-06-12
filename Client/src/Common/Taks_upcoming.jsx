@@ -53,8 +53,8 @@ const Taks_upcoming = React.memo(({ data }) => {
       />
 
       <div className="pt-3">
-        <h2 className="text-xl font-medium">{data?.title}</h2>
-        <p className="text-gray-600">{data?.heading}</p>
+        <h2 className="text-xl font-medium capitalize">{data?.title}</h2>
+        <p className="text-gray-600 capitalize">{data?.heading}</p>
 
         <div className="flex items-center justify-between">
           <p className="text-xl mt-1">Progress</p>

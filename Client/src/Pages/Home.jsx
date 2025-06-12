@@ -41,7 +41,7 @@ const Home = () => {
             }
           >
             <Swiper_component
-              data={allUserData?.alluser}
+              data={allUserData?.alluser.slice(0,5)}
               component={<Members />}
               delay={1500}
             />

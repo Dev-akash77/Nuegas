@@ -43,7 +43,7 @@ const Popup_Members = () => {
   };
 
   return (
-    <div className="bg-white rounded-md w-[35%] h-[80%] flex flex-col justify-between overflow-hidden">
+    <div className="bg-white rounded-md md:w-[35%] md:h-[80%] h-[95%] w-[90%] flex flex-col justify-between overflow-hidden">
       <div className="flex items-center justify-between pt-5 px-8">
         <h1 className="text-xl font-semibold">Select User</h1>
         <RxCross1
@@ -83,15 +83,15 @@ const Popup_Members = () => {
                   className="w-[2.5rem] h-[2.5rem] rounded-full overflow-hidden aspect-square object-cover"
                 />
                 <div>
-                  <div className="flex gap-2 items-center">
-                    <h2 className="text-xl font-medium capitalize">
+                  <div className="flex flex-col md:flex-row md:gap-2 md:items-center">
+                    <h2 className="md:text-xl text-md font-medium capitalize">
                       {cur.name}
                     </h2>
-                    <span className="border border-gray-500 rounded-full w-[4rem] h-[1.2rem] cc text-[.7rem] text-gray-500">
+                    <span className="md:border border-gray-500 rounded-full md:w-[4rem] md:h-[1.2rem] flex md:items-center md:justify-center  text-[.7rem] text-gray-500">
                       {cur.role}
                     </span>
                   </div>
-                  <p>{cur.email}</p>
+                  <p className="md:block hidden">{cur.email}</p>
                 </div>
               </div>
 

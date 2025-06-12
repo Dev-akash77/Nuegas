@@ -8,7 +8,7 @@ const Heading_page = () => {
   return (
       <div className="w-full flex md:flex-row flex-col md:items-center md:justify-between">
            <div className=''>
-             <p className="text-[1.5rem] font-[500]">Hi, Akash Biswas</p>
+             <p className="text-[1.5rem] font-[500]">Hi, {profileData?.profile.name}</p>
              <p className="text-gray-600 text-lg">Let's finish your task today!</p>
            </div>
 

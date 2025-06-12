@@ -10,10 +10,9 @@ import Profile from "./Pages/Profile";
 import Layout from "./Layout/Layout";
 import { GlobalContextProvider } from "./Context/GlobalContext";
 import Auth from "./Pages/Auth";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import ProtectRutes from "./Security/ProtectRutes";
-import { TaskContextProvider } from "./Context/Task_Context";
-import TaskDetails from './Pages/TaskDetails';
+import TaskDetails from "./Pages/TaskDetails";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -21,7 +20,6 @@ const App = () => {
       path: "/",
       element: (
         <ProtectRutes>
-          {" "}
           <Layout />
         </ProtectRutes>
       ),
@@ -68,10 +66,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalContextProvider>
-        <TaskContextProvider>
-          <RouterProvider router={router}></RouterProvider>
-        </TaskContextProvider>
-       <Toaster />
+        <RouterProvider router={router}></RouterProvider>
+
+        <Toaster />
       </GlobalContextProvider>
     </QueryClientProvider>
   );

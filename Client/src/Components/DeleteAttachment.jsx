@@ -6,7 +6,6 @@ import { DeleteAttachmentApi } from "../Api/GlobalApi";
 
 const DeleteAttachment = ({ setPopup, data, refetch }) => {
   const [loading, setLoading] = useState(false);
-    
   // ! delete attachment
   const handleDeleteAttachment = async () => {
     try {
@@ -15,17 +14,19 @@ const DeleteAttachment = ({ setPopup, data, refetch }) => {
         return toast.error("Data not Found");
       }
       const responseData = await DeleteAttachmentApi(data);
-      
+
       if (responseData?.success) {
         toast.success(responseData?.message);
         refetch();
         setPopup(false);
         setLoading(false);
+        setPopup(false);
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
+      setPopup(false);
     }
   };
 

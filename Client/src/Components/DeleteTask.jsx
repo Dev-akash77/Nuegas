@@ -4,11 +4,13 @@ import { RxCross2 } from "react-icons/rx";
 import Element_Loader from "./../UI/Element_Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../Api/GlobalApi";
+import { useTaskContext } from "../Context/Task_Context";
 
 const DeleteTask = ({ setPopup, refetch }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { allTaskRefetch } = useTaskContext();
 
   // ! delete attachment
   const handleDeleteAttachment = async () => {
@@ -25,12 +27,15 @@ const DeleteTask = ({ setPopup, refetch }) => {
         setPopup(false);
         setLoading(false);
         navigate("/");
+        allTaskRefetch();
       }
     } catch (error) {
       console.log(error);
+      setPopup(false);
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
+      setPopup(false);
     }
   };
 

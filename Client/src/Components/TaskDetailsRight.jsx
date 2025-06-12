@@ -14,14 +14,14 @@ import DeleteTask from "./DeleteTask";
 const TaskDetailsRight = ({ data, refetch }) => {
   const { profileData } = useGlobalContext();
   const [loading, setloading] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const { title, heading, attachments, userId, _id } = data?.task || {};
   const [popup, setPopup] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePopup, setImagePopup] = useState(false);
   const [img, setImg] = useState("");
   const [deleteAttachmentData, setDeleteAttachmentData] = useState();
-
+  const myData = profileData?.profile;
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     setSelectedFile(file);
@@ -77,7 +77,12 @@ const TaskDetailsRight = ({ data, refetch }) => {
           <h2 className="md:text-xl md:font-light">Assigned Assignments</h2>
           {(profileData?.profile.role === "admin" ||
             profileData?.profile._id === userId) && (
-            <div className="bg-default py-2 px-4 rounded-md flex items-center justify-center cursor-pointer text-white gap-1" onClick={()=>{setDeleteOpen(true)}}>
+            <div
+              className="bg-default py-2 px-4 rounded-md flex items-center justify-center cursor-pointer text-white gap-1"
+              onClick={() => {
+                setDeleteOpen(true);
+              }}
+            >
               <RiDeleteBin6Line className="text-lg" />
               Delete
             </div>
@@ -112,6 +117,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
         <div className="flex flex-col gap-4 mt-2">
           {attachments.map((cur, id) => {
             const isCloudinaryImage = cur.link.includes("cloudinary");
+            const attachmentId = cur.user;
 
             return (
               <div key={id} className="flex items-center justify-between gap-2">
@@ -139,15 +145,20 @@ const TaskDetailsRight = ({ data, refetch }) => {
                     />
                   )}
                 </div>
-                <div
-                  className="cursor-pointer p-1 rounded-md bs border-1 border-gray-400"
-                  onClick={() => {
-                    setPopup(true);
-                    setDeleteAttachmentData({ ...cur, taskId: data?.task._id });
-                  }}
-                >
-                  <RxCross2 />
-                </div>
+                {(attachmentId === myData._id || myData.role === "admin") && (
+                  <div
+                    className="cursor-pointer p-1 rounded-md bs border-1 border-gray-400"
+                    onClick={() => {
+                      setPopup(true);
+                      setDeleteAttachmentData({
+                        ...cur,
+                        taskId: data?.task._id,
+                      });
+                    }}
+                  >
+                    <RxCross2 />
+                  </div>
+                )}
               </div>
             );
           })}
@@ -204,10 +215,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
 
       {deleteOpen && (
         <div className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.7)] cc">
-          <DeleteTask
-            setPopup={setDeleteOpen}
-            refetch={refetch}
-          />
+          <DeleteTask setPopup={setDeleteOpen} refetch={refetch} />
         </div>
       )}
 

@@ -100,6 +100,7 @@ export const addTaskController = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Task added successfully",
+      task,
     });
   } catch (error) {
     console.error("Error adding task controller:", error);
@@ -284,13 +285,24 @@ export const DeleteTaskAttachmentController = async (req, res) => {
 
 //!=============================================================================================================================================
 // !============================================ Delete Task Controller =============================================================
-//* - Deletes a specific attachment from a task's attachment list
-//* - Requires: link, id (attachment ID), user (uploader ID), taskId, and optionally public_id (Cloudinary)
-//* - Validates input fields for completeness
-//* - Authorizes deletion: Only the original uploader or an admin can delete
-//* - If a public_id is present, deletes the image from Cloudinary
-//* - Updates the task document in MongoDB to remove the attachment object
-//* - Returns a success or error response accordingly
+//* Deletes a task and all its associated assets.
+//*
+//* Functionality:
+//* - Validates `taskId` from route params and fetches the task
+//* - Authorization: Only the task creator or an admin can delete the task
+//* - If task has a main image (with `public_id`), deletes it from Cloudinary
+//* - Iterates through all attachments, deletes each from Cloudinary if `public_id` exists
+//* - Removes the task reference from each member’s `tasks` array in the user collection
+//* - Deletes the task document from the database
+//*
+//* Expected Request:
+//* - `req.params.taskId`: Task ID to delete
+//* - `req.user`: Authenticated user (available from middleware)
+//*
+//* Response:
+//* - 200: Task deleted successfully
+//* - 400: Unauthorized or task not found
+//* - 500: Internal server error
 // ?============================================================================================================================================
 
 export const DeleteTaskController = async (req, res) => {
