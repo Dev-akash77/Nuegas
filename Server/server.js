@@ -7,12 +7,12 @@ import cookieParser from "cookie-parser";
 import { userRouter } from "./Routes/user.routes.js";
 import { cloudenaryConnection } from "./Config/cloudenary.config.js";
 import { taskRouter } from "./Routes/task.routes.js";
+import { app, server } from "./socket.js";
 
-const app = express();
 const PORT = process.env.PORT;
 
 
-
+ 
 //! ===================================================
 //? { Middleware Initialize }
 app.use(
@@ -58,7 +58,7 @@ app.use("/task",taskRouter)
 
 //! ===================================================
 //? { Server PORT Initialize }
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Server running at the port of " + PORT);
 });
 //! ===================================================
