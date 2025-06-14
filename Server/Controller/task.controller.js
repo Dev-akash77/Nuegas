@@ -2,7 +2,7 @@ import { taskModel } from "../Models/task.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import { userModel } from "./../Models/user.model.js";
 import mongoose from "mongoose";
- 
+
 //!=============================================================================================================================================
 // !====================================================  Add task Controller =====================================================================
 //* - Handles logic to create a new task
@@ -12,7 +12,7 @@ import mongoose from "mongoose";
 //* - Saves task details to MongoDB (taskModel)
 //* - Responds with success message on successful task creation
 // ?============================================================================================================================================
-  
+
 export const addTaskController = async (req, res) => {
   try {
     let {
@@ -358,6 +358,76 @@ export const DeleteTaskController = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating attachment task controller:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+// !============================================ Update Task Assisment Controller =============================================================
+//* - Deletes a specific attachment from a task's attachment list
+//* - Requires: link, id (attachment ID), user (uploader ID), taskId, and optionally public_id (Cloudinary)
+//* - Validates input fields for completeness
+//* - Authorizes deletion: Only the original uploader or an admin can delete
+//* - If a public_id is present, deletes the image from Cloudinary
+//* - Updates the task document in MongoDB to remove the attachment object
+//* - Returns a success or error response accordingly
+// ?============================================================================================================================================
+
+export const toggleAssesmentController = async (req, res) => {
+  try {
+    const { _id, taskId } = req.body;
+    const userData = req.user;
+    const selectedTask = await taskModel.findById(taskId);
+
+    if (!selectedTask) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Task not found" });
+    }
+
+    //! Find the specific assessment by _id
+    const index = selectedTask.assesment.findIndex(
+      (cur) => cur._id.toString() === _id
+    );
+
+    if (index === -1) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Assessment not found" });
+    }
+
+    const currentAssesment = selectedTask.assesment[index];
+
+    //! Toggle checked
+    if (
+      !currentAssesment.checked ||
+     currentAssesment.compleatedBy?.id?.toString() === userData._id.toString()
+    ) {
+      currentAssesment.checked = !currentAssesment.checked;
+
+      if (currentAssesment.checked) {
+        currentAssesment.compleatedBy = {
+          name: userData.name,
+          id: userData._id,
+        };
+      } else {
+        currentAssesment.compleatedBy = null;
+      }
+    }else{
+      return res.status(400).json({success:false,message:"You are not allowed"})
+    }
+
+    //! Save changes
+    await selectedTask.save();
+
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error updating assesment task controller:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

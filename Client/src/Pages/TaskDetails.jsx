@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageHeading from "./../Components/PageHeading";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getTaskById } from "../Api/GlobalApi";
+import { api, getTaskById } from "../Api/GlobalApi";
 import MainLoader from "../UI/MainLoader";
 import clockIcon from "../assets/clock.svg";
 import { HiOutlineUsers } from "react-icons/hi2";
-import { FaRegSquare } from "react-icons/fa6";
+import { MdRadioButtonUnchecked } from "react-icons/md";
+import { FaCircleCheck } from "react-icons/fa6";
 import TaskDetailsRight from "../Components/TaskDetailsRight";
+import toast from "react-hot-toast";
+import { useGlobalContext } from "../Context/GlobalContext";
+import { useTaskContext } from "../Context/Task_Context";
 
 const TaskDetails = () => {
   const { id } = useParams();
+  const { profileData } = useGlobalContext();
+  const { allTaskRefetch } = useTaskContext();
   const [imageLoading, setimageLoading] = useState(true);
+  const [taskassisment, setTaskAssisment] = useState([]);
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["taskDetails", id],
     queryFn: () => getTaskById(id),
     enabled: !!id,
   });
-
-  if (isLoading) {
-    return (
-      <div className="fixed z-[99999] top-0 left-0 w-screen h-screen cc">
-        <MainLoader />
-      </div>
-    );
-  }
 
   const {
     title,
@@ -36,6 +35,65 @@ const TaskDetails = () => {
     assesment,
     progress,
   } = data?.task || {};
+
+  useEffect(() => {
+    if (assesment?.length) {
+      setTaskAssisment([...assesment]);
+    }
+  }, [assesment]);
+
+  // ! handle check task
+
+  const handleCheckTask = async (task) => {
+    const currentUserId = profileData?.profile?._id;
+
+    // ! Only the one who completed it can uncheck it
+    if (task.checked && task.compleatedBy?.id !== currentUserId) {
+      return toast.error("You are not allowed to uncheck this task");
+    }
+
+    try {
+      const user = {
+        name: profileData?.profile?.name,
+        id: currentUserId,
+      };
+
+      const updatedTasks = taskassisment.map((cur) => {
+        if (cur._id === task._id) {
+          const isNowChecked = !cur.checked;
+          return {
+            ...cur,
+            checked: isNowChecked,
+            compleatedBy: isNowChecked ? user : null,
+          };
+        }
+        return cur;
+      });
+
+      setTaskAssisment(updatedTasks);
+
+      const { data } = await api.put(`/task/assesment-update`, {
+        taskId: id,
+        _id: task._id,
+      });
+
+      if (data?.success) {
+        refetch();
+        allTaskRefetch();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="fixed z-[99999] top-0 left-0 w-screen h-screen cc">
+        <MainLoader />
+      </div>
+    );
+  }
 
   // ! Calculate days left from deadline
   const getSmartTimeLeft = (deadlineStr) => {
@@ -84,7 +142,7 @@ const TaskDetails = () => {
                 </div>
               )}
               <img
-                src={image.image}
+                src={image?.image}
                 alt={title}
                 onLoad={() => {
                   setimageLoading(false);
@@ -93,51 +151,68 @@ const TaskDetails = () => {
                 className="w-full h-[18rem] object-cover"
               />
 
-             <div className="md:p-5 p-3">
-               <div className="flex items-center justify-between">
-                <h2 className="md:text-4xl text-lg font-medium">{heading}</h2>
-                <button className="md:h-[2.5rem] md:w-[8rem] h-[2rem] w-[7rem] text-sm md:text-default flex items-center justify-center gap-2 bg-dark-600 rounded-md text-white capitalize">
-                  <p className="text-white">{progress} Task</p>
-                </button>
-              </div> 
-
-              <p className="text-lg text-gray-500 py-2">{title}</p>
-              <div className="flex items-center justify-start gap-4">
-                <div className="flex items-center justify-start gap-2 md:text-xl text-md">
-                  <HiOutlineUsers />
-                  {members.length} Students Involved
+              <div className="md:p-5 p-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="md:text-4xl text-lg font-medium">{heading}</h2>
+                  <button className="md:h-[2.5rem] md:w-[8rem] h-[2rem] w-[7rem] text-sm md:text-default flex items-center justify-center gap-2 bg-dark-600 rounded-md text-white capitalize">
+                    <p className="text-white">{progress} Task</p>
+                  </button>
                 </div>
 
-                <div className="flex items-center justify-start gap-1 md:text-xl text-lg">
-                  <img src={clockIcon} alt="clock avatar" />
-                  {daysLeft}
+                <p className="text-lg text-gray-500 py-2">{title}</p>
+                <div className="flex items-center justify-start gap-4">
+                  <div className="flex items-center justify-start gap-2 md:text-xl text-md">
+                    <HiOutlineUsers />
+                    {members.length} Students Involved
+                  </div>
+
+                  <div className="flex items-center justify-start gap-1 md:text-xl text-lg">
+                    <img src={clockIcon} alt="clock avatar" />
+                    {daysLeft}
+                  </div>
+                </div>
+
+                <h2 className="mt-5 py-2 text-2xl font-medium">Description</h2>
+                <p className="text-[1rem] text-gray-500">{description}</p>
+                <h2 className="mt-5 py-2 text-2xl font-medium">
+                  Essence of Assessment
+                </h2>
+                <div className="flex flex-col gap-3">
+                  {taskassisment?.map((cur) => {
+                    return (
+                      <div
+                        className="flex items-center gap-2 mt-3"
+                        key={cur?._id}
+                      >
+                        <div
+                          className="w-max"
+                          onClick={() => {
+                            handleCheckTask(cur);
+                          }}
+                        >
+                          {cur.checked ? (
+                            <FaCircleCheck className="cursor-pointer text-[1.3rem] text-default" />
+                          ) : (
+                            <MdRadioButtonUnchecked className="cursor-pointer text-[1.5rem] text-gray-400" />
+                          )}
+                        </div>
+
+                        <p className=" md:text-xl text-lg"> {cur.name}</p>
+                        {cur.compleatedBy !== null && (
+                          <p className="text-[.7rem] text-gray-300 ml-1">
+                            /{cur.compleatedBy?.name}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-
-              <h2 className="mt-5 py-2 text-2xl font-medium">Description</h2>
-              <p className="text-[1rem] text-gray-500">{description}</p>
-              <h2 className="mt-5 py-2 text-2xl font-medium">
-                Essence of Assessment
-              </h2>
-              <div className="flex flex-col gap-3">
-                {assesment.map((cur) => {
-                  return (
-                    <div
-                      className="flex items-center gap-2 mt-3 md:text-xl text-lg"
-                      key={cur?._id}
-                    >
-                      <FaRegSquare className="cursor-pointer text-gray-400" />
-                      {cur.name}
-                    </div>
-                  );
-                })}
-              </div>
-             </div>
             </div>
 
             {/* right section */}
             <div className="md:w-[35%] w-full bg-white p-5 rounded-xl border-2 border-gray-200">
-              <TaskDetailsRight data={data} refetch={refetch}/>
+              <TaskDetailsRight data={data} refetch={refetch} />
             </div>
           </div>
         </div>

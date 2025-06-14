@@ -8,11 +8,11 @@ const Taks_upcoming = React.memo(({ data }) => {
 
   // ! Memoized progress calculation
   const progress = useMemo(() => {
-    const total = data?.assessment?.length || 0;
+    const total = data?.assesment?.length || 0;
     const completed =
-      data?.assessment?.filter((item) => item.checked).length || 0;
+      data?.assesment?.filter((item) => item.checked).length || 0;
     return total === 0 ? 0 : Math.round((completed / total) * 100);
-  }, [data?.assessment]);
+  }, [data?.assesment]);
 
   // ! Optimized deadline string
   const daysLeft = useMemo(() => {

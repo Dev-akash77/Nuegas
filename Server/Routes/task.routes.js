@@ -5,6 +5,7 @@ import {
   DeleteTaskAttachmentController,
   DeleteTaskController,
   getTaskViaId,
+  toggleAssesmentController,
   UpdateTaskAttachmentController,
 } from "../Controller/task.controller.js";
 
@@ -22,13 +23,13 @@ router.post(
   addTaskController
 );
 
-//? POST request to "/add-task-user" to handle adding task
+//? GET request to "/add-task-user" to handle adding task
 router.get("/", userSecurityMiddleware, allTaskController);
 
-//? POST request to "/task/:id" to handle adding task
+//? GET request to "/task/:id" to handle adding task
 router.get("/:id", userSecurityMiddleware, getTaskViaId);
 
-//? POST request to "/attachment-update" to handle update task attachment
+//? PUT request to "/attachment-update" to handle update task attachment
 router.put(
   "/attachment-update",
   upload.single("image"),
@@ -36,14 +37,21 @@ router.put(
   UpdateTaskAttachmentController
 );
 
-//? POST request to "/attachment-delete" to handle delete task attachment
+//? PUT request to "/assesment-update" to handle update task assesment
+router.put(
+  "/assesment-update",
+  userSecurityMiddleware,
+  toggleAssesmentController
+);
+
+//? DELETE request to "/attachment-delete" to handle delete task attachment
 router.delete(
   "/attachment-delete",
   userSecurityMiddleware,
   DeleteTaskAttachmentController
 );
 
-//? POST request to "/attachment-delete" to handle delete task attachment
+//? DELETE request to "/attachment-delete" to handle delete task attachment
 router.delete(
   "/delete/:taskId",
   userSecurityMiddleware,

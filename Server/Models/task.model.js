@@ -38,11 +38,7 @@ const TaskSchema = new Schema(
     assesment: [
       {
         name: { type: String, required: true },
-        compleatedBy: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-          default: null,
-        },
+        compleatedBy: {},
         checked: { type: Boolean, default: false },
       },
     ],
