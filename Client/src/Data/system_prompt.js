@@ -12,6 +12,7 @@ Your job is to deeply understand the title, description, priority, members, and 
 - No greetings, explanations, or extra text — just the checklist.
 - Sub-tasks should be short, specific, and actionable.
 - Format should be easy to split into an array for frontend use.
+- Generate short sub-todo checklist 3 - 4 word maximum
 
 ### Output Example:
 - Design wireframe

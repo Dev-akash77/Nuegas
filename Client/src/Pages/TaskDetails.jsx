@@ -12,10 +12,12 @@ import TaskDetailsRight from "../Components/TaskDetailsRight";
 import toast from "react-hot-toast";
 import { useGlobalContext } from "../Context/GlobalContext";
 import { useTaskContext } from "../Context/Task_Context";
+import { useSocket } from "../Context/SocketContext";
 
 const TaskDetails = () => {
   const { id } = useParams();
   const { profileData } = useGlobalContext();
+  const { socket } = useSocket();
   const { allTaskRefetch } = useTaskContext();
   const [imageLoading, setimageLoading] = useState(true);
   const [taskassisment, setTaskAssisment] = useState([]);
@@ -42,8 +44,42 @@ const TaskDetails = () => {
     }
   }, [assesment]);
 
-  // ! handle check task
+  // ! handle check task via socket
+  // join room on mount
+  useEffect(() => {
+    if (socket) {
+      socket?.emit("join-task", id);
+    }
+    return () => {
+      socket?.emit("leave-task", id);
+    };
+  }, [socket, id]);
 
+  // !listen to update
+  useEffect(() => {
+
+    if (socket && id) {
+      socket.on(
+        "assessment-updated",
+        ({ taskId: incomingTaskId, updatedAssessment }) => {
+          if (incomingTaskId === id) {
+            setTaskAssisment(updatedAssessment);
+            refetch();
+          }
+        }
+      );
+
+      socket.on("progress-update-status",({progress})=>{
+        progress = progress
+      })
+    }
+
+    return () => {
+      socket?.off("assessment-updated");
+    };
+  }, [socket, id]);
+
+  // ! handle check task
   const handleCheckTask = async (task) => {
     const currentUserId = profileData?.profile?._id;
 
@@ -56,6 +92,7 @@ const TaskDetails = () => {
       const user = {
         name: profileData?.profile?.name,
         id: currentUserId,
+        image: profileData?.profile?.image,
       };
 
       const updatedTasks = taskassisment.map((cur) => {
@@ -199,9 +236,12 @@ const TaskDetails = () => {
 
                         <p className=" md:text-xl text-lg"> {cur.name}</p>
                         {cur.compleatedBy !== null && (
-                          <p className="text-[.7rem] text-gray-300 ml-1">
-                            /{cur.compleatedBy?.name}
-                          </p>
+                          <img
+                            src={cur.compleatedBy.image}
+                            alt="task user cho complete"
+                            loading="lazy"
+                            className="w-5 h-5 rounded-full object-cover"
+                          />
                         )}
                       </div>
                     );

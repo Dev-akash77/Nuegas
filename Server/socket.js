@@ -14,18 +14,32 @@ export const io = new Server(server, {
 });
 
 // ! start connection
+export const userSocketMap = new Map();
+
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
-  console.log("User connected:", userId);
+  if (userId) userSocketMap.set(userId, socket.id);
+  console.log("User connected:", userSocketMap); 
 
+  // ! Join task room
+  socket.on("join-task", (taskId) => {
+    socket.join(taskId);
+    console.log(`User ${userId} joined task room: ${taskId}`);
+  });
+
+  // ! Leave task room (optional cleanup)
+  socket.on("leave-task", (taskId) => {
+    socket.leave(taskId);
+    console.log(`User ${userId} left task room: ${taskId}`);
+  });
 
   socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`);
-    // for (const key in users) {
-    //   if (users[key] === socket.id) {
-    //     delete users[key];
-    //     break;
-    //   }
-    // }
+    for (const [key, value] of userSocketMap.entries()) {
+      if (value === socket.id) {
+        userSocketMap.delete(key);
+        break;
+      }
+    }
+    console.log("User disconnected:", userSocketMap); 
   });
 });

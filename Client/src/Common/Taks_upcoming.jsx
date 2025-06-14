@@ -1,18 +1,53 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import clockIcon from "../assets/clock.svg";
 import Stacked_Avtar from "./Stacked_Avtar";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../Context/SocketContext";
 
-const Taks_upcoming = React.memo(({ data }) => {  
+const Taks_upcoming = React.memo(({ data }) => {
   const navigate = useNavigate();
+  const { socket } = useSocket();
+  const [progress, setProgress] = useState(0);
 
-  // ! Memoized progress calculation
-  const progress = useMemo(() => {
-    const total = data?.assesment?.length || 0;
-    const completed =
-      data?.assesment?.filter((item) => item.checked).length || 0;
-    return total === 0 ? 0 : Math.round((completed / total) * 100);
-  }, [data?.assesment]);
+  // ! Set initial progress from data.assesment
+  useEffect(() => {
+    if (data?.assesment?.length > 0) {
+      const total = data.assesment.length;
+      const completed = data.assesment.filter((a) => a.checked).length;
+      const initialProgress = Math.round((completed / total) * 100);
+      setProgress(initialProgress);
+    } else {
+      setProgress(0);
+    }
+  }, [data.assesment]);
+
+  // ! join the task room
+  useEffect(() => {
+    if (socket && data?._id) {
+      socket.emit("join-task", data._id);
+
+      return () => {
+        socket.emit("leave-task", data._id);
+      };
+    }
+  }, [socket, data?._id]);
+
+  // ! Realtime progress update from socket
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleProgressUpdate = ({ progress, taskId }) => {
+      if (taskId === data._id) {
+        setProgress(progress);
+      }
+    };
+
+    socket.on("progress-update", handleProgressUpdate);
+
+    return () => {
+      socket.off("progress-update", handleProgressUpdate);
+    };
+  }, [socket, data._id]);
 
   // ! Optimized deadline string
   const daysLeft = useMemo(() => {
@@ -47,7 +82,7 @@ const Taks_upcoming = React.memo(({ data }) => {
     >
       <img
         loading="lazy"
-        src={getOptimizedImage(data?.image.image)}
+        src={getOptimizedImage(data?.image?.image)}
         alt="task image"
         className="w-full h-[10rem] object-cover object-center rounded-2xl"
       />
@@ -62,7 +97,7 @@ const Taks_upcoming = React.memo(({ data }) => {
         </div>
 
         <div className="bg-light-100 rounded-full w-full h-[.5rem] mt-2">
-          {progress !== 0 && (
+          {progress > 0 && (
             <div
               className="bg-default h-full rounded-full duration-300 relative pseudo_progress cc"
               style={{ width: `${progress}%` }}

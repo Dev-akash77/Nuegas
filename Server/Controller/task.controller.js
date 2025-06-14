@@ -2,6 +2,7 @@ import { taskModel } from "../Models/task.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import { userModel } from "./../Models/user.model.js";
 import mongoose from "mongoose";
+import { io } from "../socket.js";
 
 //!=============================================================================================================================================
 // !====================================================  Add task Controller =====================================================================
@@ -404,7 +405,7 @@ export const toggleAssesmentController = async (req, res) => {
     //! Toggle checked
     if (
       !currentAssesment.checked ||
-     currentAssesment.compleatedBy?.id?.toString() === userData._id.toString()
+      currentAssesment.compleatedBy?.id?.toString() === userData._id.toString()
     ) {
       currentAssesment.checked = !currentAssesment.checked;
 
@@ -412,16 +413,59 @@ export const toggleAssesmentController = async (req, res) => {
         currentAssesment.compleatedBy = {
           name: userData.name,
           id: userData._id,
+          image: userData.image,
         };
       } else {
         currentAssesment.compleatedBy = null;
       }
-    }else{
-      return res.status(400).json({success:false,message:"You are not allowed"})
+    } else {
+      return res
+        .status(400)
+        .json({ success: false, message: "You are not allowed" });
     }
+
+    // ! progress tacker on the task like pending progress complete
+    const totalSubTodo = selectedTask.assesment.length;
+    const completedSubtodo = selectedTask.assesment.filter(
+      (a) => a.checked
+    ).length;
+
+    let progressStatus = "pending";
+
+    if (completedSubtodo === 0) {
+      progressStatus = "pending";
+    } else if (completedSubtodo > 0 && completedSubtodo < totalSubTodo) {
+      progressStatus = "progress";
+    } else if (completedSubtodo === totalSubTodo) {
+      progressStatus = "complete";
+    }
+    //! Update progress on task and save
+    selectedTask.progress = progressStatus;
 
     //! Save changes
     await selectedTask.save();
+
+    // ! Emit to specific task room
+    io.to(taskId).emit("assessment-updated", {
+      taskId,
+      updatedAssessment: selectedTask.assesment,
+    });
+
+    //! Calculate progress
+    const total = selectedTask.assesment.length;
+    const completed = selectedTask.assesment.filter((a) => a.checked).length;
+    const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+    io.to(taskId).emit("progress-update", {
+      taskId,
+      progress,
+    });
+
+    //! Emit progress update to clients
+    io.to(taskId).emit("progress-update-status", {
+      taskId,
+      progress: progressStatus,
+    });
 
     return res.status(200).json({
       success: true,
