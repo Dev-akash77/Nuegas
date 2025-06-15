@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
-import { addTaskApi, allTaskApi, getAllUserApi } from "../Api/GlobalApi";
+import {
+  addTaskApi,
+  allTaskApi,
+  getAllUserApi,
+  getTopUserApi,
+  recentTaskApi,
+} from "../Api/GlobalApi";
 import { useGlobalContext } from "./GlobalContext";
 import { generateSubTodo } from "../Config/Gemini.config";
 import toast from "react-hot-toast";
@@ -32,6 +38,16 @@ export const TaskContextProvider = ({ children }) => {
   });
 
   const {
+    data: topUserData,
+    isLoading: topuserLoading,
+    refetch: topUserRefetch,
+  } = useQuery({
+    queryKey: ["top_user"],
+    queryFn: getTopUserApi,
+    enabled: !!userIsLogin,
+  });
+
+  const {
     data: allTaskData,
     isLoading: allTaskLoading,
     refetch: allTaskRefetch,
@@ -41,72 +57,83 @@ export const TaskContextProvider = ({ children }) => {
     enabled: !!userIsLogin,
   });
 
+  const {
+    data: recentTaskData,
+    isLoading: recentTaskLoading,
+    refetch: recentTaskRefetch,
+  } = useQuery({
+    queryKey: ["recent_task_user"],
+    queryFn: recentTaskApi,
+    enabled: !!userIsLogin,
+  });
+
   // ! add task
- const handleAddTaskSubmit = async (e) => {
-  e.preventDefault();
-  setcreatedTaskLoader(true);
+  const handleAddTaskSubmit = async (e) => {
+    e.preventDefault();
+    setcreatedTaskLoader(true);
 
-  const formData = new FormData();
-  formData.append("title", taskTile);
-  formData.append("description", taskDescription);
-  formData.append("deadline", taskDeadline);
-  formData.append("priority", taskPriority);
-  formData.append("members", JSON.stringify(taskMembers));
-  formData.append("attachments", JSON.stringify(taskAttachments));
-  formData.append("assesment", JSON.stringify(taskAssesment));
+    const formData = new FormData();
+    formData.append("title", taskTile);
+    formData.append("description", taskDescription);
+    formData.append("deadline", taskDeadline);
+    formData.append("priority", taskPriority);
+    formData.append("members", JSON.stringify(taskMembers));
+    formData.append("attachments", JSON.stringify(taskAttachments));
+    formData.append("assesment", JSON.stringify(taskAssesment));
 
-  //! Append image if valid
-  if (taskImage instanceof File && taskImage.type.startsWith("image/")) {
-    formData.append("image", taskImage);
-  }
+    //! Append image if valid
+    if (taskImage instanceof File && taskImage.type.startsWith("image/")) {
+      formData.append("image", taskImage);
+    }
 
-  try {
-    // ! Generate task heading using Gemini
-    const headingPrompt = `Summarize the task title into a short, clear heading (max 4–5 words). Title: ${taskTile}`;
-    const response = await generateSubTodo(headingPrompt);
+    try {
+      // ! Generate task heading using Gemini
+      const headingPrompt = `Summarize the task title into a short, clear heading (max 4–5 words). Title: ${taskTile}`;
+      const response = await generateSubTodo(headingPrompt);
 
-    let cleanHeading = (typeof response === "string" ? response : String(response)).trim();
-    cleanHeading = cleanHeading.replace(/^["']|["']$/g, ""); //! remove surrounding quotes
+      let cleanHeading = (
+        typeof response === "string" ? response : String(response)
+      ).trim();
+      cleanHeading = cleanHeading.replace(/^["']|["']$/g, ""); //! remove surrounding quotes
 
-    if (!cleanHeading) {
-      toast.error("AI failed to generate a task heading.");
+      if (!cleanHeading) {
+        toast.error("AI failed to generate a task heading.");
+        setcreatedTaskLoader(false);
+        return;
+      }
+
+      formData.append("heading", cleanHeading);
+      console.log("Generated Heading:", formData.get("heading"));
+
+      // ! Send to backend
+      const data = await addTaskApi(formData);
+
+      if (data?.success) {
+        toast.success(data?.message);
+        profileRefetch();
+        allTaskRefetch();
+        recentTaskRefetch();
+
+        navigate(`/task/${data?.task._id}`);
+        // ! Reset form
+        setTaskTile("");
+        setTaskDescription("");
+        setTaskPriority("normal");
+        setTaskDeadline("");
+        setTaskImage("");
+        setTAskattachments([]);
+        setTaskAssesment([]);
+        setTaskMembers([]);
+      } else {
+        toast.error(data?.message || "Task creation failed.");
+      }
+    } catch (error) {
+      console.error("Task creation error:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
       setcreatedTaskLoader(false);
-      return;
     }
-
-    formData.append("heading", cleanHeading);
-    console.log("Generated Heading:", formData.get("heading"));
-
-    // ! Send to backend
-    const data = await addTaskApi(formData);
-
-    if (data?.success) {
-      toast.success(data?.message);
-      profileRefetch();
-      allTaskRefetch();
-      
-      navigate(`/task/${data?.task._id}`);
-      // ! Reset form
-      setTaskTile("");
-      setTaskDescription("");
-      setTaskPriority("normal");
-      setTaskDeadline("");
-      setTaskImage("");
-      setTAskattachments([]);
-      setTaskAssesment([]);
-      setTaskMembers([]);
-    } else {
-      toast.error(data?.message || "Task creation failed.");
-    }
-
-    console.log(data);
-  } catch (error) {
-    console.error("Task creation error:", error);
-    toast.error("Something went wrong. Please try again.");
-  } finally {
-    setcreatedTaskLoader(false);
-  }
-};
+  };
 
   //! generate sub todo via gemini llm
   const generateChecklist_LLM = async () => {
@@ -176,6 +203,11 @@ export const TaskContextProvider = ({ children }) => {
         alluserLoading,
         aiLoader,
 
+        // ! top user data
+        topUserData,
+        topuserLoading,
+        topUserRefetch,
+
         // ! add task
         handleAddTaskSubmit,
 
@@ -186,6 +218,11 @@ export const TaskContextProvider = ({ children }) => {
         allTaskData,
         allTaskLoading,
         allTaskRefetch,
+
+        // ! recent task data
+        recentTaskData,
+        recentTaskLoading,
+        recentTaskRefetch,
       }}
     >
       {children}

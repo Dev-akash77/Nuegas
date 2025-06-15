@@ -10,7 +10,10 @@ const Taks_upcoming = React.lazy(() => import("./../Common/Taks_upcoming"));
 const Members = React.lazy(() => import("./../Common/Members"));
 
 const Home = () => {
-  const { allUserData, allTaskData } = useTaskContext();
+  const {
+    recentTaskData,
+    topUserData,
+  } = useTaskContext();
   return (
     <div className="w-full h-full cc page_height_gap">
       <div className="container">
@@ -37,11 +40,13 @@ const Home = () => {
           </div> */}
           <Suspense
             fallback={
-              <div className="text-center text-gray-400">Loading Members...</div>
+              <div className="text-center text-gray-400">
+                Loading Members...
+              </div>
             }
           >
             <Swiper_component
-              data={allUserData?.alluser.slice(0,5)}
+              data={topUserData?.data}
               component={<Members />}
               delay={1500}
             />
@@ -50,7 +55,7 @@ const Home = () => {
 
         {/* Upcoming Task */}
         <div className="pb-5">
-          <Heading text={"Upcoming Task"} />
+          <Heading text={"Recent Task"} />
           {/* <div className="flex items-start justify-start overflow-x-auto gap-5 py-2 px-1">
             {
               allTaskData?.allTasks.map((cur,id)=>{
@@ -64,7 +69,7 @@ const Home = () => {
             }
           >
             <Swiper_component
-              data={allTaskData?.allTasks}
+              data={recentTaskData?.data}
               component={<Taks_upcoming />}
               delay={3000}
             />

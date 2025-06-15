@@ -6,11 +6,10 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { IoFilterSharp } from "react-icons/io5";
 import Taks_upcoming from "../Common/Taks_upcoming";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
-import { IoCode } from "react-icons/io5";
 import MainLoader from "../UI/MainLoader";
 
 const Task = () => {
-  const { allTaskData,allTaskLoading } = useTaskContext();
+  const { allTaskData, allTaskLoading } = useTaskContext();
   const [search, setSearch] = useState("");
 
   const searchMembers = allTaskData?.allTasks?.filter((cur) => {
@@ -18,13 +17,13 @@ const Task = () => {
   });
 
   if (allTaskLoading) {
-     return (
+    return (
       <div className="fixed z-[99999] top-0 left-0 w-screen h-screen cc">
         <MainLoader />
       </div>
     );
   }
-  
+
   return (
     <div className="w-full h-full flex items-center flex-col justify-between">
       <div className="md:bg-white page_height_gap w-full cc">
@@ -75,39 +74,11 @@ const Task = () => {
         <div className="container">
           {/* time limit */}
           <div className="mt-5 w-full">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-medium">Time Limit</h2>
-              <IoCode className="text-2xl" />
-            </div>
+            <h2 className="text-2xl font-medium">All Task</h2>
             <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
               {searchMembers.map((cur, id) => {
                 return (
-                  <Taks_upcoming
-                    data={cur}
-                    id={id}
-                    fixWidth={true}
-                    key={id}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          {/* New Task */}
-          <div className="mt-5 w-full">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-medium">New Task</h2>
-              <IoCode className="text-2xl" />
-            </div>
-
-            <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
-              {searchMembers.map((cur, id) => {
-                return (
-                  <Taks_upcoming
-                    data={cur}
-                    id={id}
-                    fixWidth={true}
-                    key={id}
-                  />
+                  <Taks_upcoming data={cur} id={id} fixWidth={true} key={id} />
                 );
               })}
             </div>

@@ -104,8 +104,7 @@ export const addTaskController = async (req, res) => {
       task,
     });
   } catch (error) {
-    console.error("Error adding task controller:", error);
-
+    console.error("Error adding task controller", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -123,7 +122,7 @@ export const addTaskController = async (req, res) => {
 
 export const allTaskController = async (req, res) => {
   try {
-    const userTasks = req.user.tasks;
+    const userTasks = req.user?.tasks;
 
     const allTasks = await Promise.all(
       userTasks.map(async (cur) => {
@@ -136,7 +135,7 @@ export const allTaskController = async (req, res) => {
       allTasks,
     });
   } catch (error) {
-    console.error("Error adding task controller:", error);
+    console.error("Error fetching all task controller:", error);
 
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -367,14 +366,19 @@ export const DeleteTaskController = async (req, res) => {
 // ?============================================================================================================================================
 
 //!=============================================================================================================================================
-// !============================================ Update Task Assisment Controller =============================================================
-//* - Deletes a specific attachment from a task's attachment list
-//* - Requires: link, id (attachment ID), user (uploader ID), taskId, and optionally public_id (Cloudinary)
-//* - Validates input fields for completeness
-//* - Authorizes deletion: Only the original uploader or an admin can delete
-//* - If a public_id is present, deletes the image from Cloudinary
-//* - Updates the task document in MongoDB to remove the attachment object
-//* - Returns a success or error response accordingly
+// !============================================ Toggle Assessment Controller ==================================================================
+//* - Toggles the "checked" status of a specific assessment item within a task
+//* - Requires: _id (assessment ID), taskId from req.body, and authenticated user from req.user
+//* - Finds the task and the target assessment by ID
+//* - Only allows the original completer or if not yet completed, to toggle status
+//* - On toggle: adds/removes user info in "compleatedBy" field
+//* - Automatically updates task's progress status: pending / progress / complete
+//* - Emits real-time updates to all users in the task room via WebSocket
+//*     - "assessment-updated" (entire updated assessment list)
+//*     - "progress-update" (percentage of completion)
+//*     - "progress-update-status" (status string)
+//* - Handles and returns proper error responses for invalid access or data
+//* - Saves the updated task document in MongoDB
 // ?============================================================================================================================================
 
 export const toggleAssesmentController = async (req, res) => {
@@ -476,5 +480,47 @@ export const toggleAssesmentController = async (req, res) => {
   }
 };
 
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+
+//!=============================================================================================================================================
+// !============================================ Get Recent Tasks ==============================================================================
+//* - Retrieves the 5 most recently updated tasks associated with the logged-in user
+//* - Requires: `req.user.tasks` to contain an array of task references (with `taskId` field)
+//* - If the user has no tasks, returns a success response with "No Tasks Available"
+//* - Fetches task documents from MongoDB using `$in` with all taskIds
+//* - Sorts tasks in descending order of `updatedAt` (most recent first)
+//* - Limits the result to only the top 5 tasks
+//* - Returns the list of recent tasks or error if something fails
+// ?============================================================================================================================================
+
+export const recentTaskController = async (req, res) => {
+  try {
+    const { tasks } = req.user;
+
+    // ! if there is no task then show no tasks available
+    if (!tasks.length) {
+      return res.status(400).json({
+        success: false,
+        message: "No Tasks Available",
+      });
+    }
+
+    const allTasks = await taskModel
+      .find({ _id: { $in: tasks.map((task) => task.taskId) } })
+      .sort({ updatedAt: -1 })
+      .limit(5);
+
+    return res.status(200).json({
+      success: true,
+      data: allTasks,
+    });
+  } catch (error) {
+    console.error("Error recent TaskController:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+ 
 // !============================================================================================================================================
 // ?============================================================================================================================================

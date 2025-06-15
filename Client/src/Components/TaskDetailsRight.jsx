@@ -231,7 +231,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
           <img
             src={img}
             alt="image task attachment"
-            className="md:w-[80%] w-[90%] md:h-[90%]"
+            className="md:w-[80%] w-[90%] md:h-[95%] object-cover"
             loading="lazy"
           />
         </div>

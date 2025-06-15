@@ -10,7 +10,7 @@ const DeleteTask = ({ setPopup, refetch }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { allTaskRefetch } = useTaskContext();
+  const { allTaskRefetch ,recentTaskRefetch} = useTaskContext();
 
   // ! delete attachment
   const handleDeleteAttachment = async () => {
@@ -28,6 +28,7 @@ const DeleteTask = ({ setPopup, refetch }) => {
         setLoading(false);
         navigate("/");
         allTaskRefetch();
+        recentTaskRefetch()
       }
     } catch (error) {
       console.log(error);

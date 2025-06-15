@@ -18,7 +18,7 @@ const TaskDetails = () => {
   const { id } = useParams();
   const { profileData } = useGlobalContext();
   const { socket } = useSocket();
-  const { allTaskRefetch } = useTaskContext();
+  const { allTaskRefetch,recentTaskRefetch } = useTaskContext();
   const [imageLoading, setimageLoading] = useState(true);
   const [taskassisment, setTaskAssisment] = useState([]);
   const [taskProgress, setTaskProgress] = useState("pending");
@@ -124,6 +124,7 @@ const TaskDetails = () => {
       if (data?.success) {
         refetch();
         allTaskRefetch();
+        recentTaskRefetch();
       }
     } catch (error) {
       console.error(error);
