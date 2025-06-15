@@ -19,7 +19,7 @@ export const userSocketMap = new Map();
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   if (userId) userSocketMap.set(userId, socket.id);
-  console.log("User connected:", userSocketMap); 
+  console.log("User connected:", userSocketMap);
 
   // ! Join task room
   socket.on("join-task", (taskId) => {
@@ -40,6 +40,6 @@ io.on("connection", (socket) => {
         break;
       }
     }
-    console.log("User disconnected:", userSocketMap); 
+    console.log("User disconnected:", userSocketMap);
   });
 });

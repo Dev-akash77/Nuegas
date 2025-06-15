@@ -67,7 +67,7 @@ const TaskDetailsRight = ({ data, refetch }) => {
   // ! Optimized Cloudinary image
   const getOptimizedImage = (url) => {
     if (!url?.includes("cloudinary")) return url;
-    return url.replace("/upload/", "/upload/w_400,h_250,c_fill,q_auto,f_auto/");
+    return url?.replace("/upload/", "/upload/w_400,h_250,c_fill,q_auto,f_auto/");
   };
 
   return (
@@ -115,8 +115,10 @@ const TaskDetailsRight = ({ data, refetch }) => {
         <h2 className="text-2xl font-medium">Attachments</h2>
 
         <div className="flex flex-col gap-4 mt-2">
-          {attachments.map((cur, id) => {
-            const isCloudinaryImage = cur.link.includes("cloudinary");
+          {attachments?.map((cur, id) => {
+            console.log(cur);
+            
+            const isCloudinaryImage = cur?.link?.includes("cloudinary");
             const attachmentId = cur.user;
 
             return (
@@ -135,11 +137,11 @@ const TaskDetailsRight = ({ data, refetch }) => {
                     </a>
                   ) : (
                     <img
-                      src={getOptimizedImage(cur.link)}
+                      src={getOptimizedImage(cur?.link)}
                       alt="task attachment image"
                       loading="lazy"
                       onClick={() => {
-                        setImagePopup(true), setImg(cur.link);
+                        setImagePopup(true), setImg(cur?.link);
                       }}
                       className="w-[5rem] object-cover rounded-sm border-2 border-gray-200 cursor-pointer"
                     />

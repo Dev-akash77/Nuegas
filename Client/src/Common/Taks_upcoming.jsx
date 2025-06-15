@@ -71,7 +71,7 @@ const Taks_upcoming = React.memo(({ data }) => {
 
   // ! Optimized Cloudinary image
   const getOptimizedImage = (url) => {
-    if (!url?.includes("cloudinary")) return url;
+    if (!(url?.includes("cloudinary"))) return url;
     return url.replace("/upload/", "/upload/w_400,h_250,c_fill,q_auto,f_auto/");
   };
 

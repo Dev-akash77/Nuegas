@@ -21,6 +21,7 @@ const TaskDetails = () => {
   const { allTaskRefetch } = useTaskContext();
   const [imageLoading, setimageLoading] = useState(true);
   const [taskassisment, setTaskAssisment] = useState([]);
+  const [taskProgress, setTaskProgress] = useState("pending");
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["taskDetails", id],
     queryFn: () => getTaskById(id),
@@ -39,13 +40,19 @@ const TaskDetails = () => {
   } = data?.task || {};
 
   useEffect(() => {
+    if (progress) {
+      setTaskProgress(progress);
+    }
+  }, [progress]);
+
+  useEffect(() => {
     if (assesment?.length) {
       setTaskAssisment([...assesment]);
     }
   }, [assesment]);
 
   // ! handle check task via socket
-  // join room on mount
+  //! join room on mount
   useEffect(() => {
     if (socket) {
       socket?.emit("join-task", id);
@@ -57,7 +64,6 @@ const TaskDetails = () => {
 
   // !listen to update
   useEffect(() => {
-
     if (socket && id) {
       socket.on(
         "assessment-updated",
@@ -69,13 +75,14 @@ const TaskDetails = () => {
         }
       );
 
-      socket.on("progress-update-status",({progress})=>{
-        progress = progress
-      })
+      socket.on("progress-update-status", ({ progress }) => {
+        setTaskProgress(progress);
+      });
     }
 
     return () => {
       socket?.off("assessment-updated");
+      socket?.off("progress-update-status");
     };
   }, [socket, id]);
 
@@ -192,7 +199,7 @@ const TaskDetails = () => {
                 <div className="flex items-center justify-between">
                   <h2 className="md:text-4xl text-lg font-medium">{heading}</h2>
                   <button className="md:h-[2.5rem] md:w-[8rem] h-[2rem] w-[7rem] text-sm md:text-default flex items-center justify-center gap-2 bg-dark-600 rounded-md text-white capitalize">
-                    <p className="text-white">{progress} Task</p>
+                    <p className="text-white">{taskProgress} Task</p>
                   </button>
                 </div>
 
@@ -235,10 +242,10 @@ const TaskDetails = () => {
                         </div>
 
                         <p className=" md:text-xl text-lg"> {cur.name}</p>
-                        {cur.compleatedBy !== null && (
+                        {cur?.compleatedBy && cur?.compleatedBy?.image && (
                           <img
                             src={cur.compleatedBy.image}
-                            alt="task user cho complete"
+                            alt="task user who completed"
                             loading="lazy"
                             className="w-5 h-5 rounded-full object-cover"
                           />
