@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { profileApi } from "../Api/GlobalApi";
+import { getAllChartStatApi, profileApi } from "../Api/GlobalApi";
 
 export const globalContext = createContext();
 
@@ -33,6 +33,17 @@ export const GlobalContextProvider = ({ children }) => {
     enabled: !!userIsLogin,
   });
 
+  // ! get user Stat - Chart via tanstack query
+  const {
+    data: stat_ChartData,
+    refetch: stat_ChartRefetch,
+    isLoading: stat_ChartIsLoading,
+  } = useQuery({
+    queryKey: ["stat_Chart"],
+    queryFn: getAllChartStatApi,
+    enabled: !!userIsLogin,
+  });
+
   return (
     <globalContext.Provider
       value={{
@@ -49,6 +60,10 @@ export const GlobalContextProvider = ({ children }) => {
         profileIsLoading,
         popup,
         setPopup,
+        // !chart data
+        stat_ChartData,
+        stat_ChartRefetch,
+        stat_ChartIsLoading,
       }}
     >
       {children}

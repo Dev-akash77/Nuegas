@@ -13,33 +13,20 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useGlobalContext } from "../Context/GlobalContext";
 
 const Chart = () => {
+  const { stat_ChartData } = useGlobalContext();
+
   // !data for line chart
-  const data = [
-    { name: "Sun", activity: 5 },
-    { name: "Mon", activity: 27 },
-    { name: "Tue", activity: 6 },
-    { name: "Wed", activity: 25 },
-    { name: "Thu", activity: 15 },
-    { name: "Fri", activity: 10 },
-    { name: "Sat", activity: 12 },
-  ];
 
   const today = new Date();
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const todayName = weekDays[today.getDay()];
 
-  const customYAxisTicks = [0, 10, 20, 30];
+  const customYAxisTicks = [0, 2, 4, 6];
 
-  // !data for Pi chart
-  const dataPi = [
-    { name: "Pending", value: 13 },
-    { name: "Progress", value: 5 },
-    { name: "Compleate", value: 3 },
-  ];
-
-  const COLORS = ["#546FFF", "#FFC73A", "#9CD323"]; 
+  const COLORS = ["#546FFF", "#FFC73A", "#9CD323"];
 
   return (
     <div className="w-full bg-gray h-full flex md:flex-row flex-col items-center justify-between gap-4 p-4 rounded-md">
@@ -54,7 +41,7 @@ const Chart = () => {
         <div className="w-full h-[10rem] bg-white rounded-lg">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
-              data={data}
+              data={stat_ChartData?.data.chartData}
               margin={{ top: 20, right: 20, bottom: 0, left: 0 }}
             >
               <XAxis
@@ -73,7 +60,7 @@ const Chart = () => {
                 axisLine={false}
                 tickLine={false}
                 ticks={customYAxisTicks}
-                domain={[0, 30]}
+                domain={[0, 6]}
                 interval={0}
                 tickMargin={10}
                 tick={{ fontSize: 13, fill: "#000", fontWeight: "400" }}
@@ -142,17 +129,18 @@ const Chart = () => {
         <ResponsiveContainer width="100%" height={100}>
           <PieChart>
             <Pie
-              data={dataPi}
+              data={stat_ChartData?.data.dataPi}
               cx="50%"
               cy="50%"
               labelLine={false}
               outerRadius={50}
               dataKey="value"
             >
-              {dataPi.map((entry, index) => (
+              {stat_ChartData?.data.dataPi.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
+                  style={{ outline: "none" }}
                 />
               ))}
             </Pie>
@@ -160,7 +148,7 @@ const Chart = () => {
           </PieChart>
         </ResponsiveContainer>
         <div className="flex justify-around w-full mt-4 text-sm">
-          {dataPi.map((entry, index) => (
+          {stat_ChartData?.data.dataPi.map((entry, index) => (
             <div key={entry.name} className="flex items-center gap-2">
               <div
                 className="w-3 h-3 rounded-full"

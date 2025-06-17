@@ -39,16 +39,12 @@ export const addTaskController = async (req, res) => {
       !deadline ||
       !priority ||
       !members ||
+      members.length === 0 ||
+      assesment.length === 0 ||
       !image ||
       !assesment ||
       !heading
     ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
-    }
-
-    if (members.length === 0 || assesment.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -103,7 +99,7 @@ export const addTaskController = async (req, res) => {
       message: "Task added successfully",
       task,
     });
-  } catch (error) {
+  } catch (error) {    
     console.error("Error adding task controller", error);
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -483,7 +479,6 @@ export const toggleAssesmentController = async (req, res) => {
 // !============================================================================================================================================
 // ?============================================================================================================================================
 
-
 //!=============================================================================================================================================
 // !============================================ Get Recent Tasks ==============================================================================
 //* - Retrieves the 5 most recently updated tasks associated with the logged-in user
@@ -499,14 +494,6 @@ export const recentTaskController = async (req, res) => {
   try {
     const { tasks } = req.user;
 
-    // ! if there is no task then show no tasks available
-    if (!tasks.length) {
-      return res.status(400).json({
-        success: false,
-        message: "No Tasks Available",
-      });
-    }
-
     const allTasks = await taskModel
       .find({ _id: { $in: tasks.map((task) => task.taskId) } })
       .sort({ updatedAt: -1 })
@@ -521,6 +508,6 @@ export const recentTaskController = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
- 
+
 // !============================================================================================================================================
 // ?============================================================================================================================================

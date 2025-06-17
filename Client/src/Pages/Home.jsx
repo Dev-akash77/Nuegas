@@ -5,27 +5,30 @@ import Chart from "../Components/Chart";
 import Heading from "../Common/Heading";
 import { useTaskContext } from "../Context/Task_Context";
 import Swiper_component from "./../Common/Swiper_component";
+import { useGlobalContext } from "../Context/GlobalContext";
 
 const Taks_upcoming = React.lazy(() => import("./../Common/Taks_upcoming"));
 const Members = React.lazy(() => import("./../Common/Members"));
 
 const Home = () => {
-  const {
-    recentTaskData,
-    topUserData,
-  } = useTaskContext();
+  const { recentTaskData, topUserData } = useTaskContext();
+  const { stat_ChartIsLoading } = useGlobalContext();
   return (
     <div className="w-full h-full cc page_height_gap">
       <div className="container">
         {/* ! headoing */}
         <Heading_page />
 
-        <div className="my-7 flex md:flex-row flex-col items-center justify-between gap-5 md:h-[15rem]">
-          {/* Activity Task*/}
-          <Activity />
-          {/* chart */}
-          <Chart />
-        </div>
+        {stat_ChartIsLoading ? (
+          "Loading...."
+        ) : (
+          <div className="my-7 flex md:flex-row flex-col items-center justify-between gap-5 md:h-[15rem]">
+            {/* Activity Task*/}
+            <Activity />
+            {/* chart */}
+            <Chart />
+          </div>
+        )}
 
         {/* monthly mentors */}
         <div className="mt-5 pb-10">
@@ -63,17 +66,23 @@ const Home = () => {
               })
             }
           </div> */}
-          <Suspense
-            fallback={
-              <div className="text-center text-gray-400">Loading tasks...</div>
-            }
-          >
-            <Swiper_component
-              data={recentTaskData?.data}
-              component={<Taks_upcoming />}
-              delay={3000}
-            />
-          </Suspense>
+          {recentTaskData?.data.length === 0 ? (
+          <div className="mt-10 w-full cc text-lg"> No Task Available</div>
+          ) : (
+            <Suspense
+              fallback={
+                <div className="text-center text-gray-400">
+                  Loading tasks...
+                </div>
+              }
+            >
+              <Swiper_component
+                data={recentTaskData?.data}
+                component={<Taks_upcoming />}
+                delay={3000}
+              />
+            </Suspense>
+          )}
         </div>
       </div>
     </div>

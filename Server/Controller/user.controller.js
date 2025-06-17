@@ -1,5 +1,7 @@
 import { userModel } from "../Models/user.model.js";
 import { v2 as cloudinary } from "cloudinary";
+import { taskModel } from "./../Models/task.model.js";
+import moment from "moment";
 
 //!=============================================================================================================================================
 // !====================================================  get user profile data ================================================================
@@ -94,7 +96,6 @@ export const getAllUserController = async (req, res) => {
 // !============================================================================================================================================
 // ?============================================================================================================================================
 
-
 //!=============================================================================================================================================
 // !==================================================== to get user profile data ==============================================================
 //* - Handles user logout logic
@@ -111,11 +112,6 @@ export const getTopUserController = async (req, res) => {
       .sort({ totalStar: -1 })
       .limit(5);
 
-    if (!topUsers.length) {
-      return res
-        .status(404)
-        .json({ success: false, message: "No top users found" });
-    }
 
     return res.status(200).json({ success: true, data: topUsers });
   } catch (error) {
@@ -124,6 +120,107 @@ export const getTopUserController = async (req, res) => {
   }
 };
 
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+//!==================================================== Chart Statistics Controller ===============================================================
+//* - Retrieves task statistics for the logged-in user
+//* - Calculates total tasks assigned
+//* - Counts tasks in progress or completed (excluding pending)
+//* - Computes overall checklist progress percentage based on task assessments
+//* - Generates weekly task assignment data for the last 7 days (day-wise count)
+//* - Prepares pie chart data showing distribution of tasks by progress status (Pending, Progress, Complete)
+//* - Returns all above data as JSON response for frontend charts and dashboards
+// ?============================================================================================================================================
+
+export const ChartstatController = async (req, res) => {
+  try {
+    const user = req.user;
+
+    // ! total tasks based on user
+    const totalTask = user.tasks.length || 0;
+
+    // ! only in progrss and completed task
+    const ongoingTaks = await taskModel
+      .find({
+        _id: { $in: user.tasks.map((cur) => cur.taskId) },
+        progress: { $ne: "pending" },
+      })
+      .countDocuments();
+
+    // ! all task based on user
+    const allTasks = await taskModel.find({
+      _id: { $in: user.tasks.map((cur) => cur.taskId) },
+    });
+
+    // ! Calculate overall assessment progress
+    let totalChecklistItems = 0;
+    let totalCompletedItems = 0;
+
+    allTasks.map((task) => {
+      totalChecklistItems += Math.round(task.assesment.length);
+      totalCompletedItems += Math.round(
+        task.assesment.filter((cur) => cur.checked).length
+      );
+    });
+
+    const TaskProgress = Math.round(
+      (totalCompletedItems / totalChecklistItems) * 100
+    );
+
+    //! Create default week data
+    const weekStats = [];
+    const startOfWeek = moment().startOf("week");
+
+    for (let i = 0; i < 7; i++) {
+      const date = startOfWeek.clone().add(i, "days");
+      weekStats.push({
+        name: date.format("ddd"),
+        dateString: date.format("YYYY-MM-DD"),
+        activity: 0,
+      });
+    }
+
+    //! Count tasks assigned on each day
+    allTasks.map((task) => {
+      const createdAt = moment(task.createdAt).format("YYYY-MM-DD");
+      const matchDay = weekStats.find((day) => day.dateString === createdAt);
+      if (matchDay) {
+        matchDay.activity += 1;
+      }
+    });
+
+    const chartData = weekStats.map(({ name, activity }) => ({
+      name,
+      activity,
+    }));
+
+    // ! data for pi chart
+    let pending = 0;
+    let progress = 0;
+    let complete = 0;
+
+    allTasks.map((task) => {
+      if (task.progress === "pending") pending++;
+      else if (task.progress === "progress") progress++;
+      else if (task.progress === "complete") complete++;
+    });
+
+    const dataPi = [
+      { name: "Pending", value: pending },
+      { name: "Progress", value: progress },
+      { name: "Compleate", value: complete },
+    ];
+
+    const data = { totalTask, ongoingTaks, TaskProgress, chartData, dataPi };
+
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error("Error ChartstatController:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 // !============================================================================================================================================
 // ?============================================================================================================================================

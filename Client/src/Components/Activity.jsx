@@ -6,22 +6,27 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { useMotionValue, animate, motion } from "framer-motion";
 import UseZoomIn from "../Hook/Animation/UseZoomIn";
+import { useGlobalContext } from "../Context/GlobalContext";
 
 const Activity = () => {
-  const percentage = 45;
+  const { stat_ChartData } = useGlobalContext();
 
   const progress = useMotionValue(0);
   const [displayedProgress, setDisplayedProgress] = useState(0);
 
   useEffect(() => {
-    const controls = animate(progress, percentage, {
+    const progressValue = stat_ChartData?.data?.TaskProgress;
+
+    if (typeof progressValue !== "number") return;
+
+    const controls = animate(progress, progressValue, {
       duration: 3,
       ease: "linear",
       onUpdate: (latest) => setDisplayedProgress(Math.round(latest)),
     });
 
     return () => controls.stop();
-  }, [percentage]);
+  }, [stat_ChartData?.data?.TaskProgress]);
 
   // !motion animation
   const zoomIn = UseZoomIn(0.5, 0.3);
@@ -32,7 +37,9 @@ const Activity = () => {
     >
       <div>
         <h2 className="text-lg">Running Task</h2>
-        <p className="md:my-6 my-2 text-4xl font-medium">65</p>
+        <p className="md:my-6 my-2 text-4xl font-medium">
+          {stat_ChartData?.data.ongoingTaks}
+        </p>
       </div>
 
       <div className="flex items-center gap-4">
@@ -70,7 +77,9 @@ const Activity = () => {
 
         {/* Task Count */}
         <div>
-          <p className="text-2xl font-medium">100</p>
+          <p className="text-2xl font-medium">
+            {stat_ChartData?.data.totalTask}
+          </p>
           <p className="text-gray-400 text-md">Task</p>
         </div>
       </div>

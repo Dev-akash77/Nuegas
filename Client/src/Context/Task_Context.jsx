@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export const TaskContext = createContext();
 
 export const TaskContextProvider = ({ children }) => {
-  const { userIsLogin, profileRefetch } = useGlobalContext();
+  const { userIsLogin, profileRefetch,stat_ChartRefetch } = useGlobalContext();
   const navigate = useNavigate();
   const [createdTaskLoader, setcreatedTaskLoader] = useState(false);
   const [aiLoader, setaiLoader] = useState(false);
@@ -113,7 +113,7 @@ export const TaskContextProvider = ({ children }) => {
         profileRefetch();
         allTaskRefetch();
         recentTaskRefetch();
-
+        stat_ChartRefetch();
         navigate(`/task/${data?.task._id}`);
         // ! Reset form
         setTaskTile("");
@@ -124,8 +124,6 @@ export const TaskContextProvider = ({ children }) => {
         setTAskattachments([]);
         setTaskAssesment([]);
         setTaskMembers([]);
-      } else {
-        toast.error(data?.message || "Task creation failed.");
       }
     } catch (error) {
       console.error("Task creation error:", error);

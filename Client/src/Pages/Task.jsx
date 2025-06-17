@@ -76,11 +76,13 @@ const Task = () => {
           <div className="mt-5 w-full">
             <h2 className="text-2xl font-medium">All Task</h2>
             <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
-              {searchMembers.map((cur, id) => {
-                return (
+              {searchMembers.length === 0 ? (
+                <div className="mt-10 w-full cc text-lg">No Task Available</div>
+              ) : (
+                searchMembers.map((cur, id) => (
                   <Taks_upcoming data={cur} id={id} fixWidth={true} key={id} />
-                );
-              })}
+                ))
+              )}
             </div>
           </div>
         </div>

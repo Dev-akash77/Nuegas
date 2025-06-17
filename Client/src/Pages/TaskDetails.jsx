@@ -16,9 +16,9 @@ import { useSocket } from "../Context/SocketContext";
 
 const TaskDetails = () => {
   const { id } = useParams();
-  const { profileData } = useGlobalContext();
+  const { profileData, stat_ChartRefetch } = useGlobalContext();
   const { socket } = useSocket();
-  const { allTaskRefetch,recentTaskRefetch } = useTaskContext();
+  const { allTaskRefetch, recentTaskRefetch } = useTaskContext();
   const [imageLoading, setimageLoading] = useState(true);
   const [taskassisment, setTaskAssisment] = useState([]);
   const [taskProgress, setTaskProgress] = useState("pending");
@@ -125,6 +125,7 @@ const TaskDetails = () => {
         refetch();
         allTaskRefetch();
         recentTaskRefetch();
+        stat_ChartRefetch();
       }
     } catch (error) {
       console.error(error);

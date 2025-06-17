@@ -67,7 +67,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <GlobalContextProvider>
         <RouterProvider router={router}></RouterProvider>
-
         <Toaster />
       </GlobalContextProvider>
     </QueryClientProvider>

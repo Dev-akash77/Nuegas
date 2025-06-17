@@ -163,3 +163,17 @@ export const DeleteAttachmentApi = async (DeleteData) => {
   }
 };
 // ! ================================================================================================================================================
+
+
+
+// ! ================================================== api call for all user Data ================================================================
+export const getAllChartStatApi = async () => {
+  try {
+    const { data } = await api.get("/user/chart-stats");
+    return data;
+  } catch (error) {
+    console.log("getAllUserApi Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===============================================================================================================================================

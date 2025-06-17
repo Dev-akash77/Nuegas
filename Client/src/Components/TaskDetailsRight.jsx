@@ -12,7 +12,7 @@ import DeleteAttachment from "./DeleteAttachment";
 import DeleteTask from "./DeleteTask";
 
 const TaskDetailsRight = ({ data, refetch }) => {
-  const { profileData } = useGlobalContext();
+  const { profileData} = useGlobalContext();
   const [loading, setloading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { title, heading, attachments, userId, _id } = data?.task || {};
@@ -67,7 +67,10 @@ const TaskDetailsRight = ({ data, refetch }) => {
   // ! Optimized Cloudinary image
   const getOptimizedImage = (url) => {
     if (!url?.includes("cloudinary")) return url;
-    return url?.replace("/upload/", "/upload/w_400,h_250,c_fill,q_auto,f_auto/");
+    return url?.replace(
+      "/upload/",
+      "/upload/w_400,h_250,c_fill,q_auto,f_auto/"
+    );
   };
 
   return (
@@ -116,8 +119,6 @@ const TaskDetailsRight = ({ data, refetch }) => {
 
         <div className="flex flex-col gap-4 mt-2">
           {attachments?.map((cur, id) => {
-            console.log(cur);
-            
             const isCloudinaryImage = cur?.link?.includes("cloudinary");
             const attachmentId = cur.user;
 
