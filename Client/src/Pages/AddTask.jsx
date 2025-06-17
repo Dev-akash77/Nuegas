@@ -13,7 +13,7 @@ import { toast } from "react-hot-toast";
 import Element_Loader from "./../UI/Element_Loader";
 import { motion } from "framer-motion";
 import Use_Slie_Up from "../Hook/Animation/Use_Slie_Up";
-   
+
 const AddTask = () => {
   const { profileData, popup, setPopup } = useGlobalContext();
 
@@ -89,7 +89,7 @@ const AddTask = () => {
   const handleDeleteAttachment = (id) => {
     setTAskattachments((prev) => prev.filter((u) => u.id !== id));
   };
- 
+
   return (
     <div className="overflow-hidden cc w-full page_height_gap">
       <div className="container pb-7 md:pb-0 overflow-y-scroll ">
@@ -329,7 +329,7 @@ const AddTask = () => {
       </div>
 
       {popup && (
-        <div className="fixed z-[99999] top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,.3)] cc">
+        <div className="fixed z-[99999] top-0 left-0 w-screen h-[100dvh] bg-[rgba(0,0,0,.3)] cc">
           <Popup_Members />
         </div>
       )}
