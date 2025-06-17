@@ -5,6 +5,7 @@ import { IoCheckboxSharp } from "react-icons/io5";
 import { useGlobalContext } from "../Context/GlobalContext";
 import { useTaskContext } from "../Context/Task_Context";
 import MainLoader from "../UI/MainLoader";
+import { motion } from "framer-motion";
 
 const Popup_Members = () => {
   const { setPopup } = useGlobalContext();
@@ -20,7 +21,7 @@ const Popup_Members = () => {
   }
 
   const handleOnclick = (user) => {
-    setTaskMembers((prev) => {      
+    setTaskMembers((prev) => {
       const exists = prev.some((u) => u.id === user._id);
       if (exists) {
         //! Remove if already selected
@@ -43,7 +44,13 @@ const Popup_Members = () => {
   };
 
   return (
-    <div className="bg-white rounded-md md:w-[35%] md:h-[80%] h-[95%] w-[90%] flex flex-col justify-between overflow-hidden">
+    <motion.div
+      className="bg-white rounded-md md:w-[35%] md:h-[80%] h-full w-full flex flex-col justify-between overflow-hidden"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
+    >
       <div className="flex items-center justify-between pt-5 px-8">
         <h1 className="text-xl font-semibold">Select User</h1>
         <RxCross1
@@ -127,7 +134,7 @@ const Popup_Members = () => {
           Done
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
