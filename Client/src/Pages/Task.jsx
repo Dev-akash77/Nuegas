@@ -7,14 +7,13 @@ import { IoFilterSharp } from "react-icons/io5";
 import Taks_upcoming from "../Common/Taks_upcoming";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import MainLoader from "../UI/MainLoader";
+import useSearch from "../Hook/Function/useSearch";
 
 const Task = () => {
   const { allTaskData, allTaskLoading } = useTaskContext();
   const [search, setSearch] = useState("");
 
-  const searchMembers = allTaskData?.allTasks?.filter((cur) => {
-    return cur.title.toLowerCase().includes(search.toLowerCase());
-  });
+  const searchTasks = useSearch(allTaskData?.allTasks, search, "title", 300);
 
   if (allTaskLoading) {
     return (
@@ -31,7 +30,7 @@ const Task = () => {
           <PageHeading text={`Explore Task`} />
           <div className="flex items-center justify-between gap-5 mt-7">
             {/* search */}
-            <div className="md:w-[30%] rounded-md border-2 border-gray-200 overflow-hidden relative cc">
+            <div className="md:w-[30%] w-full rounded-md border-2 border-gray-200 overflow-hidden relative cc">
               <input
                 type="text"
                 onChange={(e) => {
@@ -76,10 +75,10 @@ const Task = () => {
           <div className="mt-5 w-full">
             <h2 className="text-2xl font-medium">All Task</h2>
             <div className="items-center justify-between gap-5 mt-3 grid grid-cols-1 md:grid-cols-3">
-              {searchMembers.length === 0 ? (
+              {searchTasks.length === 0 ? (
                 <div className="mt-10 w-full cc text-lg">No Task Available</div>
               ) : (
-                searchMembers.map((cur, id) => (
+                searchTasks?.map((cur, id) => (
                   <Taks_upcoming data={cur} id={id} fixWidth={true} key={id} />
                 ))
               )}

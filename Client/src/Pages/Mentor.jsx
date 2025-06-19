@@ -7,16 +7,14 @@ import { FaSearch } from "react-icons/fa";
 import { useTaskContext } from "../Context/Task_Context";
 import Members from "../Common/Members";
 import MainLoader from "../UI/MainLoader";
-
+import useSearch from "../Hook/Function/useSearch";
 
 const Mentor = () => {
-  const { allUserData,alluserLoading } = useTaskContext();
+  const { allUserData, alluserLoading } = useTaskContext();
   const [search, setSearch] = useState("");
 
-  const searchMembers = allUserData?.alluser?.filter((cur) =>
-    cur.name.toLowerCase().includes(search.toLowerCase())
-  );
-
+  const searchMembers = useSearch(allUserData?.alluser, search, "name", 300);
+ 
   if (alluserLoading) {
     return (
       <div className="fixed z-[99999] top-0 left-0 w-screen h-screen cc">
@@ -31,7 +29,7 @@ const Mentor = () => {
           <PageHeading text={`All Mentors`} />
           <div className="flex items-center justify-between gap-5 mt-7">
             {/* search */}
-            <div className="md:w-[30%] rounded-md border-2 border-gray-200 overflow-hidden relative cc">
+            <div className="md:w-[30%] w-full rounded-md border-2 border-gray-200 overflow-hidden relative cc">
               <input
                 type="text"
                 name="searchMembers"

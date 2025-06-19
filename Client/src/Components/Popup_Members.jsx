@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { IoCheckboxSharp } from "react-icons/io5";
@@ -6,11 +6,14 @@ import { useGlobalContext } from "../Context/GlobalContext";
 import { useTaskContext } from "../Context/Task_Context";
 import MainLoader from "../UI/MainLoader";
 import { motion } from "framer-motion";
+import useSearch from "../Hook/Function/useSearch";
 
 const Popup_Members = () => {
   const { setPopup } = useGlobalContext();
   const { taskMembers, setTaskMembers, allUserData, alluserLoading } =
     useTaskContext();
+  const [search, setsearch] = useState("");
+  const searchMembers = useSearch(allUserData?.alluser, search, "name", 300);
 
   if (alluserLoading) {
     return (
@@ -65,6 +68,9 @@ const Popup_Members = () => {
       <div className="flex items-center justify-between py-5 px-8">
         <input
           type="text"
+          onChange={(e) => {
+            setsearch(e.target.value);
+          }}
           className="bg-gray-100 px-4 py-2 rounded-md w-full outline-0"
           placeholder="Search Users"
         />
@@ -73,7 +79,7 @@ const Popup_Members = () => {
       <p className="border-gray-200 border w-full"></p>
 
       <div className="flex items-center flex-col py-5 px-8 h-full overflow-auto">
-        {allUserData?.alluser.map((cur, id) => {
+        {searchMembers?.map((cur) => {
           return (
             <div
               className="border-y border-gray-200 flex justify-between items-center gap-2 w-full py-2 cursor-pointer hover:bg-gray-50 duration-300"
