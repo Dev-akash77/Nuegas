@@ -12,7 +12,7 @@ import DeleteAttachment from "./DeleteAttachment";
 import DeleteTask from "./DeleteTask";
 
 const TaskDetailsRight = ({ data, refetch }) => {
-  const { profileData} = useGlobalContext();
+  const { profileData } = useGlobalContext();
   const [loading, setloading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { title, heading, attachments, userId, _id } = data?.task || {};
@@ -40,7 +40,8 @@ const TaskDetailsRight = ({ data, refetch }) => {
     if (!selectedFile) {
       return toast.error("Please select an image file.");
     }
-    if (!selectedFile instanceof File) {
+
+    if (!selectedFile.type.startsWith("image/")) {
       return toast.error("Please select a valid image file.");
     }
 

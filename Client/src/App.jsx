@@ -13,6 +13,7 @@ import Auth from "./Pages/Auth";
 import { Toaster } from "react-hot-toast";
 import ProtectRutes from "./Security/ProtectRutes";
 import TaskDetails from "./Pages/TaskDetails";
+import BinarySearch from "./Layout/BinarySearch";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -57,6 +58,10 @@ const App = () => {
     {
       path: "auth",
       element: <Auth />,
+    },
+    {
+      path: "binarySearch",
+      element: <BinarySearch />,
     },
   ]);
 

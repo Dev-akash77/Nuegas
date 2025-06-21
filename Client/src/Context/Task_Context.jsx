@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   addTaskApi,
   allTaskApi,
@@ -11,11 +11,12 @@ import { useGlobalContext } from "./GlobalContext";
 import { generateSubTodo } from "../Config/Gemini.config";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import useSearch from "../Hook/Function/useSearch";
 
 export const TaskContext = createContext();
 
 export const TaskContextProvider = ({ children }) => {
-  const { userIsLogin, profileRefetch,stat_ChartRefetch } = useGlobalContext();
+  const { userIsLogin, profileRefetch, stat_ChartRefetch } = useGlobalContext();
   const navigate = useNavigate();
   const [createdTaskLoader, setcreatedTaskLoader] = useState(false);
   const [aiLoader, setaiLoader] = useState(false);
@@ -174,6 +175,59 @@ export const TaskContextProvider = ({ children }) => {
     }
   };
 
+  const [searchMentors, setSearchMentors] = useState("");
+  const [filteredMembers, setFilteredMembers] = useState([]); // store final filtered list
+
+  //! Search result
+  const searchMembers = useSearch(
+    allUserData?.alluser,
+    searchMentors,
+    "name",
+    300
+  );
+
+  //! Sync filteredMembers with searchMembers on search change
+  useEffect(() => {
+    setFilteredMembers(searchMembers);
+  }, [searchMembers]);
+
+  //! Filter by category (role)
+  const handleMentorCategory = (mentor) => {
+    if (mentor === "all") {
+      setFilteredMembers(searchMembers);
+    } else {
+      const filtered = searchMembers.filter(
+        (user) => user.role?.toLowerCase() === mentor.toLowerCase()
+      );
+      setFilteredMembers(filtered);
+    }
+  };
+
+  //! sort by catagory name
+
+  const handleMentorFilter = (category) => {
+    //! name
+    let sortedList = [...filteredMembers];
+
+    if (category === "name") {
+      sortedList.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (category === "points") {
+      sortedList.sort((a, b) => (b.totalStar || 0) - (a.totalStar || 0));
+    }
+    if (category === "tasks") {
+      sortedList.sort(
+        (a, b) => (b.tasks?.length || 0) - (a.tasks?.length || 0)
+      );
+    }
+
+    setFilteredMembers(sortedList);
+  };
+
+  const handleClarFilerMentor=()=>{
+    setFilteredMembers(searchMembers)
+  }
+
   return (
     <TaskContext.Provider
       value={{
@@ -196,10 +250,18 @@ export const TaskContextProvider = ({ children }) => {
         setTaskMembers,
         generateChecklist_LLM,
 
-        // ! all user data
+        // ! all mentors data
         allUserData,
         alluserLoading,
         aiLoader,
+
+        //! search and filter mentors
+        filteredMembers,
+        searchMentors,
+        setSearchMentors,
+        handleMentorCategory,
+        handleMentorFilter,
+        handleClarFilerMentor,
 
         // ! top user data
         topUserData,
