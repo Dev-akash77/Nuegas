@@ -432,7 +432,7 @@ export const toggleAssesmentController = async (req, res) => {
 
     let progressStatus = "pending";
 
-    if (completedSubtodo === 0) {
+    if (completedSubtodo === 0) { 
       progressStatus = "pending";
     } else if (completedSubtodo > 0 && completedSubtodo < totalSubTodo) {
       progressStatus = "progress";

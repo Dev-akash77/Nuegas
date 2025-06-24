@@ -10,7 +10,7 @@ const Catagory = ({ name, data, fn, setisCategory }) => {
           return (
             <li
               key={id}
-              className="text-lg capitalize font-medium rounded-lg border border-transparent bs w-full p-3 hover:scale-[1.02] hover:border-black duration-300 box-border"
+              className="text-lg capitalize font-medium rounded-lg border border-transparent bs w-full p-3 hover:scale-[1.02] hover:border-black duration-300 box-border cursor-pointer"
               onClick={() => {
                 fn(cur);
                 setisCategory(false);

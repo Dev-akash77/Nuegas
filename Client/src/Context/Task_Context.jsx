@@ -176,7 +176,7 @@ export const TaskContextProvider = ({ children }) => {
   };
 
   const [searchMentors, setSearchMentors] = useState("");
-  const [filteredMembers, setFilteredMembers] = useState([]); // store final filtered list
+  const [filteredMembers, setFilteredMembers] = useState([]); //! store final filtered list
 
   //! Search result
   const searchMembers = useSearch(
@@ -224,9 +224,51 @@ export const TaskContextProvider = ({ children }) => {
     setFilteredMembers(sortedList);
   };
 
-  const handleClarFilerMentor=()=>{
-    setFilteredMembers(searchMembers)
-  }
+  const handleClarFilerMentor = () => {
+    setFilteredMembers(searchMembers);
+  };
+
+  // ! all task filter category and search function
+  const [search, setSearch] = useState("");
+  const searchTasks = useSearch(allTaskData?.allTasks, search, "title", 300);
+  const [filterTasks, setfilterTasks] = useState([]);
+
+  //! Sync filteredMembers with searchMembers on search change
+  useEffect(() => {
+    setfilterTasks(searchTasks);
+  }, [searchTasks]);
+
+  // ! handle task category filter
+  const handleCatagoryTasks = (category, filterItem) => {
+    const tasks = allTaskData?.allTasks;
+    const filterItems = tasks.filter((cur) => {
+      return cur[category] === filterItem;
+    });
+    setfilterTasks(filterItems);
+  };
+
+  // ! handle click clear all filtertask
+  const handleClearTask = () => {
+    setfilterTasks(searchTasks);
+  };
+
+  // ! handle sort filter in tasks
+  const handleFilterTasks = (category) => {
+    let sortedList = [...filterTasks];
+
+    if (category === "date") {
+      sortedList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else if (category === "deadline") {
+      sortedList.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+    } else if (category === "assesment") {
+      
+      sortedList.sort(
+        (a, b) => (b?.assesment.length || 0) - (a?.assesment.length || 0)
+      );
+    }
+
+    setfilterTasks(sortedList);
+  };
 
   return (
     <TaskContext.Provider
@@ -278,6 +320,15 @@ export const TaskContextProvider = ({ children }) => {
         allTaskData,
         allTaskLoading,
         allTaskRefetch,
+
+        //! search and filter tasks
+        filterTasks,
+        searchTasks,
+        search,
+        setSearch,
+        handleCatagoryTasks,
+        handleClearTask,
+        handleFilterTasks,
 
         // ! recent task data
         recentTaskData,

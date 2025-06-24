@@ -199,13 +199,13 @@ const TaskDetails = () => {
 
               <div className="md:p-5 p-3">
                 <div className="flex items-center justify-between">
-                  <h2 className="md:text-4xl text-lg font-medium">{heading}</h2>
+                  <h2 className="md:text-4xl text-lg font-medium capitalize">{heading}</h2>
                   <button className="md:h-[2.5rem] md:w-[8rem] h-[2rem] w-[7rem] text-sm md:text-default flex items-center justify-center gap-2 bg-dark-600 rounded-md text-white capitalize">
                     <p className="text-white">{taskProgress} Task</p>
                   </button>
                 </div>
 
-                <p className="text-lg text-gray-500 py-2">{title}</p>
+                <p className="text-lg text-gray-500 py-2 capitalize">{title}</p>
                 <div className="flex items-center justify-start gap-4">
                   <div className="flex items-center justify-start gap-2 md:text-xl text-md">
                     <HiOutlineUsers />

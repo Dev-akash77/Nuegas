@@ -5,13 +5,14 @@ import Element_Loader from "./../UI/Element_Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../Api/GlobalApi";
 import { useTaskContext } from "../Context/Task_Context";
+import { useGlobalContext } from "../Context/GlobalContext";
 
 const DeleteTask = ({ setPopup, refetch }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { allTaskRefetch ,recentTaskRefetch} = useTaskContext();
-
+ const {stat_ChartRefetch} = useGlobalContext();
   // ! delete attachment
   const handleDeleteAttachment = async () => {
     if (!id) {
@@ -29,6 +30,7 @@ const DeleteTask = ({ setPopup, refetch }) => {
         navigate("/");
         allTaskRefetch();
         recentTaskRefetch()
+        stat_ChartRefetch();
       }
     } catch (error) {
       console.log(error);

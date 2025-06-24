@@ -24,6 +24,7 @@ const Navbar = () => {
         {/* logo */}
         <Link
           to={"/"}
+          onClick={()=>{setMenuOpen(false)}}
           className="flex items-center justify-start gap-3 w-full md:mt-0 mt-10"
         >
           <span className="rounded-md text-white">

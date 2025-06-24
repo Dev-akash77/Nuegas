@@ -1,7 +1,5 @@
 
 
-
-
 const useCatagory = (data=[],key="") => {
    if (key==="") {
     return data;
