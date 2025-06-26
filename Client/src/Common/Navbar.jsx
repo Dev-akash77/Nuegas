@@ -11,7 +11,7 @@ import HelpCard from "../UI/HelpCard";
 import { useGlobalContext } from "../Context/GlobalContext";
 import nuegasLogo from "../assets/nuegas_logo-removebg-preview.png";
 const Navbar = () => {
-  const { setMenuOpen, profileData } = useGlobalContext();  
+  const { setMenuOpen, profileData } = useGlobalContext();
 
   //!   active nav link class
   const navLinkClass = ({ isActive }) =>
@@ -24,7 +24,9 @@ const Navbar = () => {
         {/* logo */}
         <Link
           to={"/"}
-          onClick={()=>{setMenuOpen(false)}}
+          onClick={() => {
+            setMenuOpen(false);
+          }}
           className="flex items-center justify-start gap-3 w-full md:mt-0 mt-10"
         >
           <span className="rounded-md text-white">

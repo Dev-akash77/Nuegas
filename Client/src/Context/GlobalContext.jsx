@@ -44,8 +44,6 @@ export const GlobalContextProvider = ({ children }) => {
     enabled: !!userIsLogin,
   });
 
-
-
   return (
     <globalContext.Provider
       value={{

@@ -37,7 +37,7 @@ const Mentor = () => {
   }
   return (
     <div className="w-full flex items-center flex-col">
-      <div className="md:bg-white page_height_gap w-full cc">
+      <div className="md:bg-white page_height_gap w-full cc md:border-b md:border-b-gray-100">
         <div className="container">
           <PageHeading text={`All Mentors`} />
           <div className="flex items-center justify-between gap-5 mt-7">
@@ -190,6 +190,7 @@ const Mentor = () => {
           </motion.div>
         </div>
       )}
+
     </div>
   );
 };
