@@ -1,12 +1,16 @@
 import React from "react";
 import { GrAttachment } from "react-icons/gr";
 import { BsSendFill } from "react-icons/bs";
+import { useMessageContext } from "../../Context/MessageContext";
 
 const MessageRight = () => {
+  const { setMessageFromData, messageFromData, handleSendMessage, message } =
+    useMessageContext();
+
   return (
     <div className="w-full h-full flex items-center justify-between flex-col">
       {/* header */}
-      <div className="flex items-center justify-between w-full border-b bg-white border-b-gray-100 p-4">
+      <div className="flex items-center justify-between w-full border-b bg-white border-b-gray-100 py-2 px-5">
         <div className="flex gap-2 items-center">
           <div className="w-[3.5rem] h-[3.5rem] rounded-full overflow-hidden bg-gray-200"></div>
           <div className="flex items-center justify-center flex-col">
@@ -18,22 +22,47 @@ const MessageRight = () => {
           </div>
         </div>
       </div>
+
       {/* body */}
-      {/* input */}
-      <div className="flex items-center justify-between w-full border-t bg-white border-t-gray-100 p-4 h-[4rem]">
+      <div className="p-5 w-full h-full flex flex-col gap-5">
+        {message.length != 0 && message && (
+          message?.map((cur,id)=>{
+            return <div className="flex justify-end items-end" key={id}>
+            <div className="bg-[#f3f4f6] text-lg px-5 py-2 rounded-lg">
+              {cur.message}
+            </div>
+          </div>
+          })
+        )}
+      </div>
+
+      {/* input, send message */}
+      <form
+        onSubmit={(e) => {
+          handleSendMessage(e);
+        }}
+        className="flex items-center justify-between w-full border-t bg-white border-t-gray-100 py-4 px-5 h-[4rem]"
+      >
         <input
           type="text"
+          value={messageFromData}
+          onChange={(e) => {
+            setMessageFromData(e.target.value);
+          }}
           className="border-none outline-0 w-[80%] h-full"
           name="sendMessage"
           placeholder="Send your message…"
         />
         <div className="flex items-center justify-center gap-5">
           <GrAttachment className="cursor-pointer text-xl" />
-          <div className="w-[2.5rem] h-[2.5rem] bg-default text-white rounded-md cc cursor-pointer">
+          <button
+            type="submit"
+            className="w-[2.5rem] h-[2.5rem] bg-default text-white rounded-md cc cursor-pointer"
+          >
             <BsSendFill />
-          </div>
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
