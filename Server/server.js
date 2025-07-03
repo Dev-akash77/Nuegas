@@ -8,6 +8,7 @@ import { userRouter } from "./Routes/user.routes.js";
 import { cloudenaryConnection } from "./Config/cloudenary.config.js";
 import { taskRouter } from "./Routes/task.routes.js";
 import { app, server } from "./socket.js";
+import { messageRouter } from "./Routes/message.routes.js";
 
 const PORT = process.env.PORT;
 
@@ -43,17 +44,18 @@ cloudenaryConnection();
 //? { Server Rutes Setup }
 
 //* { Auth Rutes Endpoints }
-app.use("/auth",authRouter)
+app.use("/auth",authRouter);
 
 //* { user Rutes Endpoints }
-app.use("/user",userRouter)
+app.use("/user",userRouter);
 
 //* { task Rutes Endpoints }
-app.use("/task",taskRouter)
+app.use("/task",taskRouter);
+
+//* { message Rutes Endpoints }
+app.use("/message",messageRouter);
 
 //! ===================================================
-
-
 
 
 //! ===================================================

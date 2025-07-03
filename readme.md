@@ -72,14 +72,14 @@
 - Upload files inside chat (image/docs)
 - Read receipts, timestamps
 - Emojis, reactions, and markdown support
-
+<!-- 
 ### 📞 Video & Audio Calling
 
 - WebRTC-powered calling between users & coordinators
 - Task-specific or general room calls
 - Real-time connection and disconnection events
 - Notification on incoming calls
-- Mic/Camera toggle support
+- Mic/Camera toggle support -->
 
 ### 🤖 AI Assistant
 

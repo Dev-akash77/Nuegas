@@ -107,7 +107,7 @@ export const allTaskApi = async () => {
   try {
     const { data } = await api.get("/task");
     return data;
-  } catch (error) {
+  } catch (error) { 
     console.log("addTaskApi Api error", error);
     toast.error(error.response.data.message);
   }
