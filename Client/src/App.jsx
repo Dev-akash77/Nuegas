@@ -14,6 +14,7 @@ import { Toaster } from "react-hot-toast";
 import ProtectRutes from "./Security/ProtectRutes";
 import TaskDetails from "./Pages/TaskDetails";
 import BinarySearch from "./Layout/BinarySearch";
+import MessageRight from "./Components/Chat/MessageRight";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -36,6 +37,12 @@ const App = () => {
         {
           path: "message",
           element: <Message />,
+          children:[
+            {
+              path:":sender",
+              element:<MessageRight />
+            }
+          ]
         },
         {
           path: "task",

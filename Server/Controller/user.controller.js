@@ -112,10 +112,29 @@ export const getTopUserController = async (req, res) => {
       .sort({ totalStar: -1 })
       .limit(5);
 
-
     return res.status(200).json({ success: true, data: topUsers });
   } catch (error) {
     console.error("Error getTopUserController:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+// !==================================================== to get user data via id ===============================================================
+//* - Get user
+//* - Get Via User ID
+// ?============================================================================================================================================
+
+export const getUserViaId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id).select("name image role professions");
+    return res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    console.error("Error getUserViaIdController:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

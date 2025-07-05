@@ -107,7 +107,7 @@ export const allTaskApi = async () => {
   try {
     const { data } = await api.get("/task");
     return data;
-  } catch (error) { 
+  } catch (error) {
     console.log("addTaskApi Api error", error);
     toast.error(error.response.data.message);
   }
@@ -117,7 +117,7 @@ export const allTaskApi = async () => {
 // ! ================================================== api call for recent task Data =====================================================================
 export const recentTaskApi = async () => {
   try {
-    const { data } = await api.get("/task/recent"); 
+    const { data } = await api.get("/task/recent");
     return data;
   } catch (error) {
     console.log("addTaskApi Api error", error);
@@ -164,15 +164,25 @@ export const DeleteAttachmentApi = async (DeleteData) => {
 };
 // ! ================================================================================================================================================
 
-
-
-// ! ================================================== api call for all user Data ================================================================
+// ! ================================================== api call for all user Data ==================================================================
 export const getAllChartStatApi = async () => {
   try {
     const { data } = await api.get("/user/chart-stats");
     return data;
   } catch (error) {
     console.log("getAllUserApi Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===============================================================================================================================================
+
+// ! ================================================== api call for all user Data ==================================================================
+export const getAllMessageUserApi = async () => {
+  try {
+    const { data } = await api.get("/message/user");
+    return data;
+  } catch (error) {
+    console.log("getAllMessageUserApi Api error", error);
     toast.error(error.response.data.message);
   }
 };

@@ -1,8 +1,23 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useMessageContext } from "../../Context/MessageContext";
+import { useNavigate } from "react-router-dom";
 
 const MessageLeft = () => {
   const [searchMessageMmembers, setSearchMessageMmembers] = useState("");
+  const { allMessageUserData } = useMessageContext();
+  const navigate = useNavigate();
+
+  const timeAgo = (dateString) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diff = Math.floor((now - date) / 1000);
+    if (diff < 60) return `${diff} sec ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+    const days = Math.floor(diff / 86400);
+    return days === 1 ? `1 day ago` : `${days} days ago`;
+  };
 
   return (
     <div className="w-full h-full py-5">
@@ -22,24 +37,35 @@ const MessageLeft = () => {
       </div>
       {/* body */}
       <div className="flex flex-col gap-5 w-full pb-15 mt-5 overflow-y-scroll h-full">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((cur, id) => {
+        {allMessageUserData?.data?.map((cur, id) => {
           return (
             <div
               className="p-2 rounded-md bg-gray-100 w-full flex items-center justify-between gap-4 cursor-pointer"
-              key={id}
+              key={cur._id}
+              onClick={()=>{navigate(`${cur._id}`)}}
             >
               <div className="flex gap-2 items-center">
-                <div className="w-[3rem] h-[3rem] rounded-full overflow-hidden bg-gray-200"></div>
+                <div className="w-[3rem] h-[3rem] rounded-md overflow-hidden border-2 border-gray-100 bg-gray-200">
+                  <img src={cur.image} alt={name + "'s image"} />
+                </div>
                 <div className="flex items-start justify-center flex-col gap-1">
-                  <p className="text-md font-semibold capitalize">name</p>
+                  <p className="text-md font-semibold capitalize">{cur.name}</p>
                   <p className="text-gray-400 text-sm capitalize">
                     last message....
                   </p>
                 </div>
               </div>
               <div className="flex items-center justify-center flex-col gap-1">
-                <p className="text-gray-400 text-[.8rem] capitalize">1m ago</p>
-                <div className={`w-2 h-2 rounded-full ${id%2!=0?"bg-red-600":"bg-green-600"}`}></div>
+                <p className="text-gray-400 text-[.8rem] capitalize">
+                  {timeAgo(cur.lastMessageTime) === "20274 days ago"
+                    ? "N/A"
+                    : timeAgo(cur.lastMessageTime)}
+                </p>
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    id % 2 != 0 ? "bg-red-600" : "bg-green-600"
+                  }`}
+                ></div>
               </div>
             </div>
           );

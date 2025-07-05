@@ -1,5 +1,5 @@
 import express from "express";
-import { ChartstatController, getAllUserController, getTopUserController, updateProfileController, userProfileController } from "../Controller/user.controller.js";
+import { ChartstatController, getAllUserController, getTopUserController, getUserViaId, updateProfileController, userProfileController } from "../Controller/user.controller.js";
 import { userSecurityMiddleware } from "../Middleware/user.middleware.js";
 import { upload } from '../Middleware/multer.middleware.js';
 
@@ -24,6 +24,9 @@ router.get("/top-user", userSecurityMiddleware, getTopUserController);
 
 //? get request to "/chart-Stats" to get top user profile data
 router.get("/chart-stats", userSecurityMiddleware, ChartstatController);
+
+//? get request to "/user" to get user profile data via id
+router.get("/:id", userSecurityMiddleware, getUserViaId);
 
 //? get request to "/profile-update" to update user profile
 router.put("/profile-update", upload.single("image"), userSecurityMiddleware, updateProfileController);
