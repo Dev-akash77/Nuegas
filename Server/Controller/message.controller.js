@@ -11,7 +11,7 @@ import { v2 as cloudinary } from "cloudinary";
 //* - Currently does not handle online status or last seen
 //* - Can be extended later to include isOnline or last activity time
 // ?============================================================================================================================================
- 
+
 export const allMessageUser = async (req, res) => {
   try {
     const currentUserId = new mongoose.Types.ObjectId(req.user._id);
@@ -64,9 +64,7 @@ export const allMessageUser = async (req, res) => {
       },
       {
         $addFields: {
-          lastMessageTimeSortable: {
-            $ifNull: ["$lastMessageTime", new Date(0)],
-          },
+          lastMessageTimeSortable: "$lastMessageTime",
         },
       },
       {
@@ -81,13 +79,13 @@ export const allMessageUser = async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ success: true, data:users });
+    res.status(200).json({ success: true, data: users });
   } catch (error) {
     console.log("Error in allMessageUser:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
- 
+
 // !============================================================================================================================================
 // ?============================================================================================================================================
 

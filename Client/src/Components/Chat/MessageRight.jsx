@@ -32,10 +32,15 @@ const MessageRight = () => {
       <div className="flex items-center justify-between w-full border-b bg-white border-b-gray-100 py-2 px-5">
         <div className="flex gap-2 items-center">
           <div className="w-[3.5rem] h-[3.5rem] rounded-full overflow-hidden bg-gray-200">
-              <img src={userData?.data?.image} alt={userData?.data?.name + "'s image"} />
+            <img
+              src={userData?.data?.image}
+              alt={userData?.data?.name + "'s image"}
+            />
           </div>
           <div className="flex items-start justify-center flex-col">
-            <p className="text-md font-semibold capitalize">{userData?.data?.name}</p>
+            <p className="text-md font-semibold capitalize">
+              {userData?.data?.name}
+            </p>
             <div className="flex items-center justify-center gap-1">
               <div className="w-2 h-2 rounded-full bg-green-600"></div>
               online

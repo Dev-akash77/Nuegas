@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useMessageContext } from "../../Context/MessageContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MessageLeft = () => {
   const [searchMessageMmembers, setSearchMessageMmembers] = useState("");
   const { allMessageUserData } = useMessageContext();
   const navigate = useNavigate();
+  const { sender: currentUser } = useParams();
 
   const timeAgo = (dateString) => {
     const now = new Date();
@@ -40,9 +41,13 @@ const MessageLeft = () => {
         {allMessageUserData?.data?.map((cur, id) => {
           return (
             <div
-              className="p-2 rounded-md bg-gray-100 w-full flex items-center justify-between gap-4 cursor-pointer"
+              className={`p-2 rounded-md bg-gray-100 ${
+                currentUser === cur._id ? "border-black" : "border-transparent"
+              } border-2 w-full flex items-center justify-between gap-4 cursor-pointer`}
               key={cur._id}
-              onClick={()=>{navigate(`${cur._id}`)}}
+              onClick={() => {
+                navigate(`${cur._id}`);
+              }}
             >
               <div className="flex gap-2 items-center">
                 <div className="w-[3rem] h-[3rem] rounded-md overflow-hidden border-2 border-gray-100 bg-gray-200">
@@ -57,7 +62,7 @@ const MessageLeft = () => {
               </div>
               <div className="flex items-center justify-center flex-col gap-1">
                 <p className="text-gray-400 text-[.8rem] capitalize">
-                  {timeAgo(cur.lastMessageTime) === "20274 days ago"
+                  {cur.lastMessageTime === null
                     ? "N/A"
                     : timeAgo(cur.lastMessageTime)}
                 </p>

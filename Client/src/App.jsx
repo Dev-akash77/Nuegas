@@ -63,11 +63,11 @@ const App = () => {
       ],
     },
     {
-      path: "auth",
+      path: "/auth",
       element: <Auth />,
     },
     {
-      path: "binarySearch",
+      path: "/binarySearch",
       element: <BinarySearch />,
     },
   ]);

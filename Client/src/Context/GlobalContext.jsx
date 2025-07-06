@@ -8,21 +8,28 @@ export const GlobalContextProvider = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [popup, setPopup] = useState(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-  const [userIsLogin, setUserIsLogin] = useState(
-    JSON.parse(localStorage.getItem("isLoginUser")) || false
-  );
+  const [userIsLogin, setUserIsLogin] = useState(false);
   const [fromData, setFromData] = useState({
     name: "",
     email: "",
     password: "",
   });
 
+  // Load login state from localStorage when app starts
+  useEffect(() => {
+    const local = JSON.parse(localStorage.getItem("isLoginUser"));
+    setUserIsLogin(local || false);
+    setIsLoadingAuth(false);
+  }, []);
+
+  // Save login state to localStorage when it changes
   useEffect(() => {
     localStorage.setItem("isLoginUser", JSON.stringify(userIsLogin));
   }, [userIsLogin]);
 
-  // ! get user profile via tanstack query
+  // Fetch user profile if logged in
   const {
     data: profileData,
     refetch: profileRefetch,
@@ -33,7 +40,7 @@ export const GlobalContextProvider = ({ children }) => {
     enabled: !!userIsLogin,
   });
 
-  // ! get user Stat - Chart via tanstack query
+  // Fetch chart stats if logged in
   const {
     data: stat_ChartData,
     refetch: stat_ChartRefetch,
@@ -50,17 +57,17 @@ export const GlobalContextProvider = ({ children }) => {
         menuOpen,
         setMenuOpen,
         fromData,
+        setFromData,
         isLogin,
         setIsLogin,
-        setFromData,
         userIsLogin,
         setUserIsLogin,
+        isLoadingAuth,
         profileData,
         profileRefetch,
         profileIsLoading,
         popup,
         setPopup,
-        // !chart data
         stat_ChartData,
         stat_ChartRefetch,
         stat_ChartIsLoading,
