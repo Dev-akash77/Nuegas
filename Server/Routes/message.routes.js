@@ -21,7 +21,7 @@ const router = express.Router();
 //? post request to "/message/send" to handle user send message
  router.post("/send",userSecurityMiddleware,upload.single("image"),sendMessage);
 
-//? get request to "/message/getMessage/:sender" to handle user send message
+//? get request to "/message/getMessage/:sender" to get all message based on user
  router.get("/getMessage/:sender",userSecurityMiddleware,getConversationMessages);
 
 

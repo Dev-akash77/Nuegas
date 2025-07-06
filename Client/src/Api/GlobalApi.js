@@ -176,13 +176,25 @@ export const getAllChartStatApi = async () => {
 };
 // ! ===============================================================================================================================================
 
-// ! ================================================== api call for all user Data ==================================================================
+// ! ================================================== api call for all message user Data =========================================================
 export const getAllMessageUserApi = async () => {
   try {
     const { data } = await api.get("/message/user");
     return data;
   } catch (error) {
     console.log("getAllMessageUserApi Api error", error);
+    toast.error(error.response.data.message);
+  }
+};
+// ! ===============================================================================================================================================
+
+// ! ================================================== api call for all message ===================================================================
+export const getAllMessageApi = async (sender) => {
+  try {
+    const { data } = await api.get(`/message/getMessage/${sender}`);
+    return data;
+  } catch (error) {
+    console.log("getAllMessageApi Api error", error);
     toast.error(error.response.data.message);
   }
 };

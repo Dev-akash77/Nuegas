@@ -10,26 +10,33 @@ export const GlobalContextProvider = ({ children }) => {
   const [popup, setPopup] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-  const [userIsLogin, setUserIsLogin] = useState(false);
+  const [userIsLogin, setUserIsLogin] = useState(
+    JSON.parse(localStorage.getItem("isLoginUser")) || false
+  );
+
   const [fromData, setFromData] = useState({
     name: "",
     email: "",
     password: "",
   });
 
-  // Load login state from localStorage when app starts
+  //! Load login state from localStorage when app starts
   useEffect(() => {
-    const local = JSON.parse(localStorage.getItem("isLoginUser"));
-    setUserIsLogin(local || false);
+    const local = localStorage.getItem("isLoginUser");
+    if (local !== null) {
+      setUserIsLogin(JSON.parse(local));
+    } else {
+      setUserIsLogin(false);
+    }
     setIsLoadingAuth(false);
   }, []);
 
-  // Save login state to localStorage when it changes
+  //! Save login state to localStorage when it changes
   useEffect(() => {
     localStorage.setItem("isLoginUser", JSON.stringify(userIsLogin));
   }, [userIsLogin]);
 
-  // Fetch user profile if logged in
+  //! Fetch user profile if logged in
   const {
     data: profileData,
     refetch: profileRefetch,
@@ -40,7 +47,7 @@ export const GlobalContextProvider = ({ children }) => {
     enabled: !!userIsLogin,
   });
 
-  // Fetch chart stats if logged in
+  //! Fetch chart stats if logged in
   const {
     data: stat_ChartData,
     refetch: stat_ChartRefetch,

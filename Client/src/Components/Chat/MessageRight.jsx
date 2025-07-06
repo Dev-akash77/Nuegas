@@ -5,10 +5,17 @@ import { useMessageContext } from "../../Context/MessageContext";
 import { data, useParams } from "react-router-dom";
 import { api } from "../../Api/GlobalApi";
 import { toast } from "react-hot-toast";
+import MainLoader from "./../../UI/MainLoader";
 
 const MessageRight = () => {
-  const { setMessageFromData, messageFromData, handleSendMessage, message } =
-    useMessageContext();
+  const {
+    setMessageFromData,
+    messageFromData,
+    handleSendMessage,
+    message,
+    allMessageUserLoading,
+    getAllMessageRefetch,
+  } = useMessageContext();
   const { sender } = useParams();
   const [userData, setUserData] = useState(null);
 
@@ -25,6 +32,15 @@ const MessageRight = () => {
     };
     fetchUser();
   }, [sender]);
+
+  // ! time for mesage
+  function formatToWhatsAppTime(isoString) {
+    return new Date(isoString).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
 
   return (
     <div className="w-full h-full flex items-center justify-between flex-col">
@@ -50,19 +66,40 @@ const MessageRight = () => {
       </div>
 
       {/* body */}
-      <div className="p-5 w-full h-full flex flex-col gap-5">
-        {message.length != 0 &&
-          message &&
-          message?.map((cur, id) => {
-            return (
-              <div className="flex justify-end items-end" key={id}>
-                <div className="bg-[#f3f4f6] text-lg px-5 py-2 rounded-lg">
-                  {cur.message}
+      {allMessageUserLoading ? (
+        <div className="h-full w-full cc px-5 py-2">
+          <MainLoader />
+        </div>
+      ) : (
+        <div className="p-5 w-full h-full flex flex-col gap-5">
+          {message.length != 0 &&
+            message &&
+            message?.map((cur, id) => {
+              console.log(cur);
+
+              return cur.sender === userData?.data?._id ? (
+                <div className="flex justify-end items-end" key={id}>
+                  <div className="flex flex-col">
+                    <div className="bg-default text-white text-lg px-5 py-2 rounded-lg">
+                      {cur.message}
+                    </div>
+                    <p className="p-1 text-[.8rem] text-gray-600"> {formatToWhatsAppTime(cur.createdAt)}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-      </div>
+              ) : (
+                
+                <div className="flex justify-start items-start" key={id}>
+                  <div className="flex flex-col">
+                    <div className=" bg-[#fefefe] bs text-lg px-5 py-2 rounded-lg">
+                      {cur.message}
+                    </div>
+                    <p className="p-1 text-[.8rem] text-gray-600"> {formatToWhatsAppTime(cur.createdAt)}</p>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      )}
 
       {/* input, send message */}
       <form
