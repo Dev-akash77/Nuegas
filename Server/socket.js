@@ -16,18 +16,24 @@ export const io = new Server(server, {
 // ! start connection
 export const userSocketMap = new Map();
 
+// ! brod cast all online user
+const emitOnlineUser=()=>{
+  const onlineUsers = Array.from(userSocketMap.keys());
+  io.emit("online-user",onlineUsers);
+}
+
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   if (userId) userSocketMap.set(userId, socket.id);
   console.log("User connected:", userSocketMap);
-
+ emitOnlineUser();
   // ! Join task room
   socket.on("join-task", (taskId) => {
     socket.join(taskId);
     console.log(`User ${userId} joined task room: ${taskId}`);
   });
 
-  // ! Leave task room (optional cleanup)
+  // ! Leave task room  cleanup
   socket.on("leave-task", (taskId) => {
     socket.leave(taskId);
     console.log(`User ${userId} left task room: ${taskId}`);
@@ -41,5 +47,6 @@ io.on("connection", (socket) => {
       }
     }
     console.log("User disconnected:", userSocketMap);
+    emitOnlineUser();
   });
 });

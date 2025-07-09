@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { userModel } from "../Models/user.model.js";
 import { messageModel } from "./../Models/message.model.js";
 import { v2 as cloudinary } from "cloudinary";
+import { io, userSocketMap } from "../socket.js";
 
 //!=============================================================================================================================================
 // !====================================================  Get message User Controller ==========================================================
@@ -130,6 +131,17 @@ export const sendMessage = async (req, res) => {
     });
 
     await allmessages.save();
+    
+    const receiverSocket = userSocketMap.get(receiver.toString());
+    const senderSocket = userSocketMap.get(sender.toString());
+
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("new-message", allmessages);
+    }
+
+    if (senderSocket && receiver.toString() !== sender.toString()) {
+      io.to(senderSocket).emit("new-message", allmessages);
+    }
 
     res.status(200).json({ success: true, allmessages });
   } catch (error) {

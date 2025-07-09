@@ -99,7 +99,7 @@ export const addTaskController = async (req, res) => {
       message: "Task added successfully",
       task,
     });
-  } catch (error) {    
+  } catch (error) {
     console.error("Error adding task controller", error);
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -432,7 +432,7 @@ export const toggleAssesmentController = async (req, res) => {
 
     let progressStatus = "pending";
 
-    if (completedSubtodo === 0) { 
+    if (completedSubtodo === 0) {
       progressStatus = "pending";
     } else if (completedSubtodo > 0 && completedSubtodo < totalSubTodo) {
       progressStatus = "progress";

@@ -22,8 +22,8 @@ const Layout = () => {
   return (
     <>
       <TaskContextProvider>
-        <SocketContextProvider>
           <MessageContextProvider>
+        <SocketContextProvider>
             <div className="flex items-center justify-between w-full overflow-hidden">
               <nav
                 className={`md:bg-white flex flex-row md:flex-col justify-center items-center md:w-[18%] md:static fixed overflow-hidden z-[999] w-screen h-[100dvh] top-0 md:border-r md:border-r-gray-100 ${
@@ -49,8 +49,8 @@ const Layout = () => {
                 </div>
               </div>
             </div>
-          </MessageContextProvider>
         </SocketContextProvider>
+          </MessageContextProvider>
       </TaskContextProvider>
     </>
   );

@@ -14,7 +14,7 @@ const useSearch = (data = [], searchItem = "", key = "name", delay = 300) => {
   const filterData = useMemo(() => {
    return data?.filter((cur) => {
       if (!debounce.trim()) {
-        return data;
+        return [...data];
       }
 
       return cur[key].toLowerCase().includes(debounce.toLowerCase());

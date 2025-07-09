@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   addTaskApi,
   allTaskApi,
@@ -177,19 +177,19 @@ export const TaskContextProvider = ({ children }) => {
 
   const [searchMentors, setSearchMentors] = useState("");
   const [filteredMembers, setFilteredMembers] = useState([]); //! store final filtered list
-
+   const memoizedAllUsers = useMemo(() => allUserData?.alluser || [], [allUserData?.alluser]);
   //! Search result
   const searchMembers = useSearch(
-    allUserData?.alluser,
+    memoizedAllUsers,
     searchMentors,
     "name",
     300
   );
 
   //! Sync filteredMembers with searchMembers on search change
-  useEffect(() => {
-    setFilteredMembers(searchMembers);
-  }, [searchMembers]);
+useEffect(() => {
+  setFilteredMembers(searchMembers); 
+}, [searchMembers]);
 
   //! Filter by category (role)
   const handleMentorCategory = (mentor) => {
@@ -230,7 +230,8 @@ export const TaskContextProvider = ({ children }) => {
 
   // ! all task filter category and search function
   const [search, setSearch] = useState("");
-  const searchTasks = useSearch(allTaskData?.allTasks, search, "title", 300);
+   const memoizedAtasks = useMemo(() => allTaskData?.allTasks || [], [allTaskData?.allTasks]);
+  const searchTasks = useSearch(memoizedAtasks, search, "title", 300);
   const [filterTasks, setfilterTasks] = useState([]);
 
   //! Sync filteredMembers with searchMembers on search change
@@ -261,7 +262,6 @@ export const TaskContextProvider = ({ children }) => {
     } else if (category === "deadline") {
       sortedList.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
     } else if (category === "assesment") {
-      
       sortedList.sort(
         (a, b) => (b?.assesment.length || 0) - (a?.assesment.length || 0)
       );

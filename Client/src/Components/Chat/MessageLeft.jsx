@@ -2,10 +2,12 @@ import React, { use, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useMessageContext } from "../../Context/MessageContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSocket } from "../../Context/SocketContext";
 
 const MessageLeft = () => {
   const [searchMessageMmembers, setSearchMessageMmembers] = useState("");
   const { allMessageUserData } = useMessageContext();
+  const { onlineUser } = useSocket();
   const navigate = useNavigate();
   const { sender: currentUser } = useParams();
 
@@ -21,7 +23,7 @@ const MessageLeft = () => {
   };
 
   return (
-    <div className="w-full h-full py-5">
+    <div className="w-full h-full py-5">   
       {/* sarch members */}
       <div className="w-full rounded-md border-2 border-gray-200 overflow-hidden relative cc">
         <input
@@ -37,7 +39,7 @@ const MessageLeft = () => {
         <FaSearch className="absolute right-3 text-gray-500" />
       </div>
       {/* body */}
-      <div className="flex flex-col gap-5 w-full pb-15 mt-5 overflow-y-scroll h-full">
+      <div className="flex flex-col gap-5 w-full pb-30 md:pb-15 mt-5 overflow-y-scroll h-full">
         {allMessageUserData?.data?.map((cur, id) => {
           return (
             <div
@@ -66,9 +68,12 @@ const MessageLeft = () => {
                     ? "N/A"
                     : timeAgo(cur.lastMessageTime)}
                 </p>
+
                 <div
                   className={`w-2 h-2 rounded-full ${
-                    id % 2 != 0 ? "bg-red-600" : "bg-green-600"
+                    onlineUser?.includes(cur._id)
+                      ? "bg-green-600"
+                      : "bg-red-600"
                   }`}
                 ></div>
               </div>

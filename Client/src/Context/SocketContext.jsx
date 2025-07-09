@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useContext, createContext } from "react";
 import io from "socket.io-client";
 import { useGlobalContext } from "./GlobalContext";
+import { useMessageContext } from "./MessageContext";
 
 const socketContext = createContext();
 
@@ -10,6 +11,9 @@ const socketContext = createContext();
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState();
   const { profileData, profileRefetch } = useGlobalContext();
+  const {setMessage} = useMessageContext();
+  const [onlineUser, setOnlineUser] = useState([]);
+
 
  useEffect(() => {
   if (profileData && profileData?.profile._id) {
@@ -23,15 +27,26 @@ export const SocketContextProvider = ({ children }) => {
       console.log("Connected to WebSocket:", newSocket.id);
     });
 
+    newSocket.on("online-user",(user)=>{
+      setOnlineUser(user);
+    })
+    newSocket.on("new-message",(message)=>{
+      console.log(message);
+      setMessage((prev) => [...prev, message]);
+      
+    })
+
     newSocket.on("disconnect", () => {
       console.log("WebSocket Disconnected!");
     });
 
     setSocket(newSocket);
 
-    // ✅ Proper cleanup
+    //!  Proper cleanup
     return () => {
       newSocket.off("disconnect");
+      newSocket.off("online-user");
+      newSocket.off("new-message");
       newSocket.disconnect();
     };
   }
@@ -39,7 +54,7 @@ export const SocketContextProvider = ({ children }) => {
 
 
   return (
-    <socketContext.Provider value={{ socket }}>
+    <socketContext.Provider value={{ socket,onlineUser }}>
       {children}
     </socketContext.Provider>
   );
