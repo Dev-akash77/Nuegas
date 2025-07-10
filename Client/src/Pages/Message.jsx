@@ -10,13 +10,13 @@ const Message = () => {
   return (
     <div className="w-full flex items-center flex-col h-full">
       {/* heading */}
-      <div className="bg-white page_height_gap w-full cc md:border-b md:border-b-gray-100">
-        <div className="container">
+      <div className="md:bg-white md:block hidden page_height_gap w-full cc md:border-b md:border-b-gray-100">
+        <div className="container md:block hidden md:w-0">
           <PageHeading text={`Message`} />
         </div>
       </div>
       {/* body */}
-      <div className="w-full flex md:flex-row flex-col items-center justify-center overflow-hidden h-full">
+      <div className="w-full md:flex hidden md:flex-row flex-col items-center justify-center overflow-hidden h-full">
         {/* left part */}
         <div className={`md:w-[25%] w-full h-full bg-white cc`}>
           <div className="container h-full md:px-2">
@@ -41,6 +41,23 @@ const Message = () => {
               </p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* for mobile devices */}
+
+      <div className="w-full flex md:hidden md:w-0 md:h-0 md:flex-row flex-col items-center justify-center overflow-hidden h-full">
+        {/* left part */}
+        {!sender && (
+          <div className={`w-full h-full bg-white cc`}>
+            <div className="container h-full md:px-2">
+              <MessageLeft />
+            </div>
+          </div>
+        )}
+        {/* right part */}
+        <div className={`w-full h-full border-l border-l-gray-100 cc ${sender&&"fixed top-0 left-0 z-[99999]"}`}>
+          {sender && <Outlet />}
         </div>
       </div>
     </div>

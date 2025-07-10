@@ -11,50 +11,57 @@ const socketContext = createContext();
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState();
   const { profileData, profileRefetch } = useGlobalContext();
-  const {setMessage} = useMessageContext();
+  const { setMessage } = useMessageContext();
   const [onlineUser, setOnlineUser] = useState([]);
 
+  useEffect(() => {
+    if (profileData && profileData?.profile._id) {
+      const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
+        transports: ["websocket"],
+        withCredentials: true,
+        query: { userId: profileData?.profile._id },
+      });
 
- useEffect(() => {
-  if (profileData && profileData?.profile._id) {
-    const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
-      transports: ["websocket"],
-      withCredentials: true,
-      query: { userId: profileData?.profile._id },
-    });
+      newSocket.on("connect", () => {
+        console.log("Connected to WebSocket:", newSocket.id);
+      });
 
-    newSocket.on("connect", () => {
-      console.log("Connected to WebSocket:", newSocket.id);
-    });
+      newSocket.on("online-user", (user) => {
+        setOnlineUser(user);
+      });
 
-    newSocket.on("online-user",(user)=>{
-      setOnlineUser(user);
-    })
-    newSocket.on("new-message",(message)=>{
-      console.log(message);
-      setMessage((prev) => [...prev, message]);
-      
-    })
+      newSocket.on("sending-image", (msg) => {
+        setMessage((prev) => [...prev, msg]);
+      });
 
-    newSocket.on("disconnect", () => {
-      console.log("WebSocket Disconnected!");
-    });
+      newSocket.on("new-message", (msg) => {
+        setMessage((prev) => {
+          const filtered = prev.filter(
+            (m) => !(m.isLoading && m.sender === msg.sender)
+          );
+          return [...filtered, msg];
+        });
+      });
 
-    setSocket(newSocket);
+      newSocket.on("disconnect", () => {
+        console.log("WebSocket Disconnected!");
+      });
 
-    //!  Proper cleanup
-    return () => {
-      newSocket.off("disconnect");
-      newSocket.off("online-user");
-      newSocket.off("new-message");
-      newSocket.disconnect();
-    };
-  }
-}, [profileData?.profile]);
+      setSocket(newSocket);
 
+      //!  Proper cleanup
+      return () => {
+        newSocket.off("disconnect");
+        newSocket.off("online-user");
+        newSocket.off("new-message");
+        newSocket.off("sending-image");
+        newSocket.disconnect();
+      };
+    }
+  }, [profileData?.profile]);
 
   return (
-    <socketContext.Provider value={{ socket,onlineUser }}>
+    <socketContext.Provider value={{ socket, onlineUser }}>
       {children}
     </socketContext.Provider>
   );

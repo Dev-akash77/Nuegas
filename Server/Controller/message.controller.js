@@ -111,12 +111,35 @@ export const sendMessage = async (req, res) => {
         .json({ success: false, message: "sender not find" });
     }
 
-    // ! if image is available then get a url of image via cloudenary
+    const receiverSocket = userSocketMap.get(receiver.toString());
+    const senderSocket = userSocketMap.get(sender.toString());
+
+    if (image && (receiverSocket || senderSocket)) {
+      const tempMessage = {
+        sender,
+        receiver,
+        message: "[Uploading Image...]",
+        image: { url: "loading", public_id: "" },
+        createdAt: new Date().toISOString(),
+        tempId: Date.now(),
+        isLoading: true,
+      };
+
+      if (receiverSocket) {
+        io.to(receiverSocket).emit("sending-image", tempMessage);
+      }
+
+      if (senderSocket && receiver.toString() !== sender.toString()) {
+        io.to(senderSocket).emit("sending-image", tempMessage);
+      }
+    }
+
     if (image) {
       const result = await cloudinary.uploader.upload(image.path, {
         resource_type: "image",
         folder: "Nugas_Message",
       });
+
       imageData = {
         url: result.secure_url,
         public_id: result.public_id,
@@ -124,16 +147,13 @@ export const sendMessage = async (req, res) => {
     }
 
     const allmessages = new messageModel({
-      receiver: receiver,
-      sender: sender,
-      message: message,
+      receiver,
+      sender,
+      message,
       image: imageData,
     });
 
     await allmessages.save();
-    
-    const receiverSocket = userSocketMap.get(receiver.toString());
-    const senderSocket = userSocketMap.get(sender.toString());
 
     if (receiverSocket) {
       io.to(receiverSocket).emit("new-message", allmessages);
@@ -145,10 +165,11 @@ export const sendMessage = async (req, res) => {
 
     res.status(200).json({ success: true, allmessages });
   } catch (error) {
-    console.log("Error recent SendMessage controllre: " + error);
+    console.log("Error recent SendMessage controller: " + error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 // !============================================================================================================================================
 // ?============================================================================================================================================
 
