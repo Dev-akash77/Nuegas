@@ -1,7 +1,8 @@
 import express from "express";
-import { ChartstatController, getAllUserController, getTopUserController, getUserViaId, updateProfileController, userProfileController } from "../Controller/user.controller.js";
+import { changeRoleController, ChartstatController, getAllUserController, getTopUserController, getUserViaId, updateProfileController, userProfileController } from "../Controller/user.controller.js";
 import { userSecurityMiddleware } from "../Middleware/user.middleware.js";
 import { upload } from '../Middleware/multer.middleware.js';
+import { adminMiddleware } from './../Middleware/admin.middleware.js';
 
 // !===================================================
 // ?==============  Authentication Routes ============
@@ -15,6 +16,10 @@ const router = express.Router();
 
 //? get request to "/profile" to get user profile data
 router.get("/profile", userSecurityMiddleware, userProfileController);
+
+
+
+router.put("/role", userSecurityMiddleware, adminMiddleware,changeRoleController);
 
 //? get request to "/alluser" to get user profile data
 router.get("/all-user", userSecurityMiddleware, getAllUserController);

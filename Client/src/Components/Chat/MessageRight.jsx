@@ -6,8 +6,7 @@ import { useMessageContext } from "../../Context/MessageContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../Api/GlobalApi";
 import { toast } from "react-hot-toast";
-import MainLoader from "./../../UI/MainLoader";
-import Element_Loader from "./../../UI/Element_Loader";
+import MainLoader from "../../UI/MainLoader";
 
 const MessageRight = () => {
   const {
@@ -17,7 +16,6 @@ const MessageRight = () => {
     message,
     allMessageUserLoading,
     setAttachment,
-    getAllMessageRefetch,
   } = useMessageContext();
 
   const { sender } = useParams();
@@ -26,16 +24,17 @@ const MessageRight = () => {
   const navigate = useNavigate();
 
   const fileInputRef = useRef();
-    const scrollRef = useRef(null);
+  const scrollContainerRef = useRef(); // ✅ ref for scroll container
 
   //! Scroll to bottom on new message
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
     }
   }, [message]);
 
-  // ! Fetch user data
+  //! Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -49,16 +48,16 @@ const MessageRight = () => {
     fetchUser();
   }, [sender]);
 
-  // ! Format message time
-  function formatToWhatsAppTime(isoString) {
+  //! Format message time
+  const formatToWhatsAppTime = (isoString) => {
     return new Date(isoString).toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
     });
-  }
+  };
 
-  // ! Handle image file select
+  //! Handle image file select
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -67,7 +66,7 @@ const MessageRight = () => {
     }
   };
 
-  // ! Remove selected image
+  //! Remove selected image
   const removeFile = () => {
     setAttachment(null);
     setPreview("");
@@ -81,10 +80,18 @@ const MessageRight = () => {
     }
   }, [message]);
 
-  // ! Open dialog manually
+  //! Open dialog manually
   const openFileDialog = () => {
     fileInputRef.current.click();
   };
+
+  if (allMessageUserLoading) {
+    return (
+      <div className="h-full w-full cc px-5 py-2">
+        <MainLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
@@ -93,21 +100,20 @@ const MessageRight = () => {
         <div className="flex gap-2 items-center">
           <GrPrevious
             className="md:hidden text-2xl font-semibold block"
-            onClick={() => {
-              navigate(-1);
-            }}
+            onClick={() => navigate(-1)}
           />
           <div className="w-[3.5rem] h-[3.5rem] rounded-full overflow-hidden bg-gray-200">
             <img
               src={userData?.data?.image}
               alt={`${userData?.data?.name}'s image`}
+              className="w-full h-full object-cover"
             />
           </div>
           <div className="flex flex-col">
             <p className="text-md font-semibold capitalize">
               {userData?.data?.name}
             </p>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 text-sm text-gray-600">
               <div className="w-2 h-2 rounded-full bg-green-600"></div>
               online
             </div>
@@ -115,70 +121,61 @@ const MessageRight = () => {
         </div>
       </div>
 
-      {/* Messages Body */}
-      {allMessageUserLoading ? (
-        <div className="h-full w-full cc px-5 py-2">
-          <MainLoader />
-        </div>
-      ) : (
-        <div className="p-5 w-full h-full flex flex-col gap-5 overflow-y-auto">
-          {message?.length > 0 &&
-            message.map((cur, id) => {
-              const isSender = cur.sender === userData?.data?._id;
+      <div
+        ref={scrollContainerRef}
+        className="p-5 w-full flex-1 flex flex-col gap-5 overflow-y-auto"
+      >
+        {message?.length > 0 &&
+          message.map((cur, id) => {
+            const isSender = cur.sender === userData?.data?._id;
 
-              return (
-                <div
-                  key={id}
-                  className={`flex ${
-                    isSender ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div className="flex flex-col max-w-[70%]">
-                    {cur.isLoading ? (
-                      <div
-                        className={`w-[200px] h-[150px] rounded-md relative overflow-hidden ${
-                          isSender ? "bg-gray-200" : "bg-[#fefefe]"
-                        }`}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse" />
-
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-6 h-6 border-2 border-t-transparent border-gray-500 rounded-full animate-spin" />
-                        </div>
+            return (
+              <div
+                key={id}
+                className={`flex ${isSender ? "justify-end" : "justify-start"}`}
+              >
+                <div className="flex flex-col max-w-[70%]">
+                  {cur.isLoading ? (
+                    <div
+                      className={`w-[200px] h-[150px] rounded-md relative overflow-hidden ${
+                        isSender ? "bg-gray-200" : "bg-[#fefefe]"
+                      }`}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-6 h-6 border-2 border-t-transparent border-gray-500 rounded-full animate-spin" />
                       </div>
-                    ) : (
-                      <>
-                        {cur.message && (
-                          <div
-                            className={`text-lg px-5 py-2 rounded-lg ${
-                              isSender
-                                ? "bg-default text-white"
-                                : "bg-[#fefefe] text-black"
-                            }`}
-                          >
-                            {cur.message}
-                          </div>
-                        )}
-
-                        {cur.image?.url && cur.image.url !== "loading" && (
-                          <img
-                            src={cur.image.url}
-                            alt="attachment"
-                            className="mt-2 max-w-[200px] rounded-md"
-                          />
-                        )}
-                      </>
-                    )}
-                    <p className="p-1 text-[.8rem] text-gray-600">
-                      {formatToWhatsAppTime(cur.createdAt)}
-                    </p>
-                  </div>
+                    </div>
+                  ) : (
+                    <>
+                      {cur.message && (
+                        <div
+                          className={`text-lg px-5 py-2 rounded-lg ${
+                            isSender
+                              ? "bg-default text-white"
+                              : "bg-[#fefefe] text-black"
+                          }`}
+                        >
+                          {cur.message}
+                        </div>
+                      )}
+                      {cur.image?.url && cur.image.url !== "loading" && (
+                        <img
+                          src={cur.image.url}
+                          alt="attachment"
+                          className="mt-2 max-w-[200px] rounded-md"
+                        />
+                      )}
+                    </>
+                  )}
+                  <p className="p-1 text-[.8rem] text-gray-600">
+                    {formatToWhatsAppTime(cur.createdAt)}
+                  </p>
                 </div>
-              );
-            })}
-            <div ref={scrollRef}></div>
-        </div>
-      )}
+              </div>
+            );
+          })}
+      </div>
 
       {/* Image Preview Before Sending */}
       {preview && (
@@ -214,7 +211,6 @@ const MessageRight = () => {
         />
 
         <div className="flex items-center gap-5">
-          {/* Hidden file input */}
           <input
             type="file"
             accept="image/*"
@@ -222,12 +218,10 @@ const MessageRight = () => {
             onChange={handleFileChange}
             className="hidden"
           />
-          {/* Attachment icon to open dialog */}
           <GrAttachment
             onClick={openFileDialog}
             className="cursor-pointer text-xl"
           />
-          {/* Send button */}
           <button
             type="submit"
             className="w-[2.5rem] h-[2.5rem] bg-default text-white rounded-md cc cursor-pointer"

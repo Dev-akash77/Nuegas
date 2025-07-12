@@ -131,7 +131,9 @@ export const getTopUserController = async (req, res) => {
 export const getUserViaId = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await userModel.findById(id).select("name image role professions");
+    const user = await userModel
+      .findById(id)
+      .select("name image role professions");
     return res.status(200).json({ success: true, data: user });
   } catch (error) {
     console.error("Error getUserViaIdController:", error);
@@ -237,6 +239,67 @@ export const ChartstatController = async (req, res) => {
     return res.status(200).json({ success: true, data });
   } catch (error) {
     console.error("Error ChartstatController:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// !============================================================================================================================================
+// ?============================================================================================================================================
+
+//!=============================================================================================================================================
+//!==================================================== Change Role  Controller ===============================================================
+//  * - Validates input: ensures both `role` and `id` are provided
+//  * - Restricts role updates to only predefined values: admin, coordinator, employee
+//  * - Checks if the user exists by ID
+//  * - Updates the user's role in the database
+//  * - Returns structured JSON response including updated user info
+//  * - Responds with appropriate HTTP status codes for errors and success
+// ?============================================================================================================================================
+
+export const changeRoleController = async (req, res) => {
+  try {
+    const { role, id } = req.body;
+
+    if (!role || !id) {
+      return res.status(400).json({
+        success: false,
+        message: "Role and user ID are required",
+      });
+    }
+
+    const validRoles = ["admin", "coordinator", "employee"];
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role value",
+      });
+    }
+
+    //! Check if user exists
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+ console.log(role);
+ 
+    // !Update role
+    user.role = role;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Role updated successfully",
+      data: {
+        userId: user._id,
+        name: user.name,
+        newRole: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error changeRoleController:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

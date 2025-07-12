@@ -1,6 +1,11 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import noteIcon from "../assets/note-2.svg";
 import { FaStar } from "react-icons/fa";
+import { BsThreeDots } from "react-icons/bs";
+import toast from "react-hot-toast";
+import { api } from "../Api/GlobalApi";
+import { useGlobalContext } from "../Context/GlobalContext";
+import { useTaskContext } from "../Context/Task_Context";
 
 const Members = ({ data, fixWidth }) => {
   // ! Memoized optimized image URL
@@ -9,12 +14,63 @@ const Members = ({ data, fixWidth }) => {
     return data.image.replace("/upload/", "/upload/c_fill,q_auto,f_auto/");
   }, [data?.image]);
 
+  const [isOpenAdmin, setIsOpenAdmin] = useState(false);
+  const { profileRefetch, profileData } = useGlobalContext();
+  const {topUserRefetch} = useTaskContext();
+
+  // ! Handle role change request
+  const handleClickRole = async (role) => {
+    try {
+      const res = await api.put("/user/role", {
+        id: data?._id,
+        role,
+      });
+      console.log(res);
+
+      if (res?.data?.success) {
+        toast.success(res?.data?.message || "Role updated");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsOpenAdmin(false);
+      profileRefetch();
+      topUserRefetch();
+    }
+  };
+
   return (
     <div
-      className={`bg-white px-4 py-4 w-full ${
+      className={`bg-white px-4 py-4 w-full relative ${
         fixWidth ? "md:w-[22rem]" : ""
       } flex-shrink-0 rounded-md flex flex-col justify-center gap-5 box_shadow cursor-pointer`}
     >
+      {profileData?.profile?.role === "admin" && data.role != "admin" && (
+        <BsThreeDots
+          className="absolute top-3 right-3 text-xl"
+          onClick={() => {
+            setIsOpenAdmin(!isOpenAdmin);
+          }}
+        />
+      )}
+
+      {isOpenAdmin && (
+        <div className="absolute top-8 right-2 w-[50%] rounded-md border-gray-200 border-2 overflow-hidden z-[999]">
+          <p
+            className="bg-white w-full p-2 border-b-2 border-b-gray-300"
+            onClick={() => handleClickRole("coordinator")}
+          >
+            Make as coordinator
+          </p>
+          <p
+            className="bg-white w-full p-2"
+            onClick={() => handleClickRole("employee")}
+          >
+            Make as employee
+          </p>
+        </div>
+      )}
+
       <div className="flex items-center gap-3">
         <img
           loading="lazy"

@@ -16,7 +16,7 @@ const Message = () => {
         </div>
       </div>
       {/* body */}
-      <div className="w-full md:flex hidden md:flex-row flex-col items-center justify-center overflow-hidden h-full">
+        <div className="w-full md:flex hidden  items-center justify-center overflow-hidden h-full ">
         {/* left part */}
         <div className={`md:w-[25%] w-full h-full bg-white cc`}>
           <div className="container h-full md:px-2">
@@ -46,7 +46,7 @@ const Message = () => {
 
       {/* for mobile devices */}
 
-      <div className="w-full flex md:hidden md:w-0 md:h-0 md:flex-row flex-col items-center justify-center overflow-hidden h-full">
+      <div className="w-full flex md:hidden md:w-0 md:h-0 flex-col items-center justify-center overflow-hidden h-full">
         {/* left part */}
         {!sender && (
           <div className={`w-full h-full bg-white cc`}>

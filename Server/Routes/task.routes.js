@@ -12,6 +12,7 @@ import {
 
 import { userSecurityMiddleware } from "./../Middleware/user.middleware.js";
 import { upload } from "../Middleware/multer.middleware.js";
+import { adminMiddleware } from "../Middleware/admin.middleware.js";
 
 //? Initialize the express router for authentication routes
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post(
   "/add-task",
   upload.single("image"),
   userSecurityMiddleware,
+  adminMiddleware,
   addTaskController
 );
 
