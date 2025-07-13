@@ -1,6 +1,6 @@
 # Nuegas — Real-Time AI-Powered Task Management System
 
-**Nuegas** is a scalable, real-time task management and collaboration platform designed for modern teams. Built on the MERN stack and powered by WebSocket, WebRTC, Cloudinary, and Gemini AI, it provides seamless task management, chat, file sharing, video calling, real-time notifications, analytics, and AI assistance. It supports secure user authentication, email-based OTP verification, and scalable microservices-friendly architecture.
+**Nuegas** is a scalable, real-time task management and collaboration platform designed for modern teams. Built on the MERN stack and powered by WebSocket, WebRTC, Cloudinary, and Gemini AI, it provides seamless task management, chat, file sharing,real-time notifications, analytics, and AI assistance. It supports secure user authentication, email-based OTP verification, and scalable microservices-friendly architecture.
 
 ---
 
@@ -57,21 +57,17 @@
 
 ### 🔔 Notification System
 
-- Real-time notifications using Socket.io
+- Instant Notifications using nodemailer
 - Each user has their own notification record
 - Email alerts for:
   - Task assigned/updated
-  - Profile changed
-  - OTP for password reset
   - Important announcements
 
 ### 💬 Chat Module
 
 - One-to-one or task-based group chats
-- Typing indicators in real time
-- Upload files inside chat (image/docs)
+- Upload files inside chat (image)
 - Read receipts, timestamps
-- Emojis, reactions, and markdown support
 <!-- 
 ### 📞 Video & Audio Calling
 
@@ -129,7 +125,6 @@
 - MongoDB
 - JWT (Authentication)
 - Socket.io (Real-time)
-- WebRTC (Calling)
 - Cloudinary (File upload)
 - NodeMailer (OTP email)
 
@@ -137,6 +132,11 @@
 
 - Gemini 1.5
 - LangChain tool wrapper
+
+### Deployment & DevOps
+
+- Render (Backend Deployment)
+- Vercel (Frontend Hosting)
 
 ---
 
@@ -149,30 +149,33 @@
 │
 ├── components
 │   ├── Chat
-│   ├── Call
-│   ├── Task
-│   ├── Notification
-│   ├── Analytics
-│   └── UI
+│   
+├── Pages
 │
-├── pages
-│   ├── Login.jsx
-│   ├── Register.jsx
-│   ├── Dashboard.jsx
-│   ├── Profile.jsx
-│   ├── TaskBoard.jsx
-│   └── CallRoom.jsx
+├── Api
+│ 
+├── Common
+│ 
+├── Config
+│ 
+├── Data
+│ 
+├── Layout
+│ 
+├── Context
+│ 
+├── Security
+│ 
+├── UI
+│ 
+├── Hooks
+│   └── Animation
+│   └── Function
 │
-├── context
-│   └── AuthContext.jsx
-│
-├── hooks
-│   └── useSocket.js
-│
-├── utils
+├── Utils
 │   └── api.js
 │
-├── assets
+├── Assets
 │
 └── main.jsx
 ```
@@ -180,46 +183,20 @@
 ### Backend
 
 ```
-/src
+
+├── Controllers
+│   
+├── Models
+│  
+├── Routes
 │
-├── controllers
-│   ├── authController.js
-│   ├── userController.js
-│   ├── taskController.js
-│   ├── chatController.js
-│   ├── callController.js
-│   └── notificationController.js
+├── Middleware
+│   
+├── Config
+│   
+├── Services
 │
-├── models
-│   ├── User.js
-│   ├── Task.js
-│   ├── Notification.js
-│   ├── Message.js
-│   └── CallRoom.js
-│
-├── routes
-│   ├── authRoutes.js
-│   ├── userRoutes.js
-│   ├── taskRoutes.js
-│   ├── chatRoutes.js
-│   ├── callRoutes.js
-│   └── notificationRoutes.js
-│
-├── middleware
-│   ├── authMiddleware.js
-│   ├── errorHandler.js
-│   └── roleMiddleware.js
-│
-├── config
-│   ├── db.js
-│   ├── cloudinary.js
-│   └── mailer.js
-│
-├── services
-│   └── aiService.js
-│
-├── socket
-│   └── socketHandler.js
+├── Services
 │
 └── server.js
 ```

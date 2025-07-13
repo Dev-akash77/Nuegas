@@ -37,16 +37,16 @@ export const GlobalContextProvider = ({ children }) => {
   }, [userIsLogin]);
 
   //! Fetch user profile if logged in
-  const {
-    data: profileData,
-    refetch: profileRefetch,
-    isLoading: profileIsLoading,
-  } = useQuery({
-    queryKey: ["profile"],
-    queryFn: profileApi,
-    enabled: !!userIsLogin,
-  });
-
+const {
+  data: profileData,
+  refetch: profileRefetch,
+  isLoading: profileIsLoading,
+} = useQuery({
+  queryKey: ["profile"],
+  queryFn: ()=>profileApi(setUserIsLogin),
+  enabled: !!userIsLogin,
+});
+  
   //! Fetch chart stats if logged in
   const {
     data: stat_ChartData,

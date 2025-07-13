@@ -117,7 +117,7 @@ export const sendMessage = async (req, res) => {
     if (image && (receiverSocket || senderSocket)) {
       const tempMessage = {
         sender,
-        receiver,
+        receiver, 
         message: "[Uploading Image...]",
         image: { url: "loading", public_id: "" },
         createdAt: new Date().toISOString(),

@@ -1,5 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useGlobalContext } from "../Context/GlobalContext";
 // ! base url
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -43,12 +44,15 @@ export const logoutApi = async () => {
 // ! ===================================================================================================================================================
 
 // ! ================================================== api call for profile ===========================================================================
-export const profileApi = async () => {
+export const profileApi = async (setUserIsLogin) => {
   try {
     const { data } = await api.get("/user/profile");
     return data;
   } catch (error) {
     console.log("profile Api error", error);
+    if (error?.response?.status === 401 && setUserIsLogin) {
+      return setUserIsLogin(false);
+    }
     toast.error(error.response.data.message);
   }
 };

@@ -3,6 +3,8 @@ import { v2 as cloudinary } from "cloudinary";
 import { userModel } from "./../Models/user.model.js";
 import mongoose from "mongoose";
 import { io } from "../socket.js";
+import { assignTaskTemplate } from "../Email/assignTask.templete.js";
+import { sendEmail } from "../Services/sendEmail.service.js";
 
 //!=============================================================================================================================================
 // !====================================================  Add task Controller =====================================================================
@@ -88,6 +90,29 @@ export const addTaskController = async (req, res) => {
           userDoc.tasks.push({ taskId: task._id });
           userDoc.totalStar = (userDoc.totalStar || 0) + 5;
           await userDoc.save();
+
+          try {
+            const htmlContent = assignTaskTemplate(
+              userDoc.name,
+              title,
+              deadline,
+              description,
+              `https://nuegas-akash.vercel.app/task/${task._id}`
+            );
+
+            await sendEmail(
+              userDoc.email,
+              "📌 New Task Assigned in Nuegas",
+              `You’ve been assigned: ${title}`,
+              htmlContent
+            );
+          } catch (emailErr) {
+            console.error(
+              `Email failed for user ${userDoc.userEmail}:`,
+              emailErr
+            );
+          }
+
           return userDoc;
         }
         return null;

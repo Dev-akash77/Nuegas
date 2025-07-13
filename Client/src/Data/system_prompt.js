@@ -23,20 +23,25 @@ Your job is to deeply understand the title, description, priority, members, and 
 
 ---
 
+
 ### Objective:
-Also generate a short heading that summarizes the main task title meaningfully in just a few words (max 4–5).
+Summarize the core intent of the task title in a short, meaningful heading (max 4–5 words).
 
 ### Guidelines:
-- Don’t copy the task title. Generate a new, meaningful summary.
-- Heading must be:
-  - Short
-  - Clear
-  - No punctuation
-  - No greetings
-  - Only plain text
-- Example:
-  Title: Build AI Chatbot with APIs  
-  Heading: AI Integration Task
+- Keep it short, clear, and professional.
+- Do not repeat the full title or add unnecessary words.
+- No greetings, punctuation, or extra content — just the heading.
+- Return only the heading as plain text.
 
-Begin generating the checklist and heading when task details are provided.
+### Examples:
+Title: Design a restaurant app  
+Heading: UI/UX Design
+
+Title: Build a Resturent App  
+Heading: Development and Deployment
+
+Title: Make a team colaborative system
+Heading: Realtime Application
+
+Generate a short task heading when given a task title. not copy paste the title unique heading provide with intlgnce
 `;

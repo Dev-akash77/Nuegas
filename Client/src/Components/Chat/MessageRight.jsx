@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../Api/GlobalApi";
 import { toast } from "react-hot-toast";
 import MainLoader from "../../UI/MainLoader";
+import { useSocket } from "../../Context/SocketContext";
 
 const MessageRight = () => {
   const {
@@ -24,7 +25,7 @@ const MessageRight = () => {
   const navigate = useNavigate();
 
   const fileInputRef = useRef();
-  const scrollContainerRef = useRef(); // ✅ ref for scroll container
+  const scrollContainerRef = useRef(); // ! ref for scroll container
 
   //! Scroll to bottom on new message
   useEffect(() => {
@@ -47,6 +48,7 @@ const MessageRight = () => {
     };
     fetchUser();
   }, [sender]);
+   const { onlineUser } = useSocket();
 
   //! Format message time
   const formatToWhatsAppTime = (isoString) => {
@@ -113,10 +115,18 @@ const MessageRight = () => {
             <p className="text-md font-semibold capitalize">
               {userData?.data?.name}
             </p>
-            <div className="flex items-center gap-1 text-sm text-gray-600">
+
+      {onlineUser?.includes(userData?.data?._id)?      <div className="flex items-center gap-1 text-sm text-gray-600">
               <div className="w-2 h-2 rounded-full bg-green-600"></div>
               online
             </div>
+            :
+            <div className="flex items-center gap-1 text-sm text-gray-600">
+              <div className="w-2 h-2 rounded-full bg-red-600"></div>
+              ofline
+            </div>}
+
+
           </div>
         </div>
       </div>
